@@ -40,6 +40,7 @@ import skin.support.widget.SkinCompatRelativeLayout;
 import skin.support.widget.SkinCompatScrollView;
 import skin.support.widget.SkinCompatSeekBar;
 import skin.support.widget.SkinCompatSpinner;
+import skin.support.widget.SkinCompatSwitchCompat;
 import skin.support.widget.SkinCompatTextView;
 import skin.support.widget.SkinCompatToolbar;
 import skin.support.widget.SkinCompatView;
@@ -200,6 +201,9 @@ public class SkinCompatViewInflater {
             case "android.support.v7.widget.Toolbar":
                 view = new SkinCompatToolbar(context, attrs);
                 break;
+//            case "android.support.v7.widget.SwitchCompat":
+//                view = new SkinCompatSwitchCompat(context, attrs);
+//                break;
         }
         return view;
     }

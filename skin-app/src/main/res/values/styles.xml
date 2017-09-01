@@ -59,4 +59,8 @@
     <style name="counterTextAppearance" parent="TextAppearance.Design.Counter">
         <item name="android:textColor">@color/text_color_tip</item>
     </style>
+
+    <style name="SwitchTextAppearance" parent="@style/TextAppearance.AppCompat.Widget.Switch">
+        <item name="android:textColor">@color/text_color</item>
+    </style>
 </resources>
