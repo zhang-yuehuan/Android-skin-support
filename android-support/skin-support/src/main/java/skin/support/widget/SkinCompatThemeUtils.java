@@ -3,8 +3,11 @@ package skin.support.widget;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
+
+import skin.support.content.res.SkinCompatResources;
 
 import static skin.support.widget.SkinCompatHelper.INVALID_ID;
 
@@ -46,6 +49,17 @@ public class SkinCompatThemeUtils {
 
     public static int getWindowBackgroundResId(Context context) {
         return getResId(context, new int[]{android.R.attr.windowBackground});
+    }
+
+    public static Drawable getWindowBackgroundDrawable(Context context) {
+        Drawable drawable = null;
+        TypedArray a = SkinCompatResources.getInstance()
+                .obtainStyledAttributes(context, new int[]{android.R.attr.windowBackground});
+        if (a.hasValue(0)) {
+            drawable = a.getDrawable(0);
+        }
+        a.recycle();
+        return drawable;
     }
 
     private static int getResId(Context context, int[] attrs) {

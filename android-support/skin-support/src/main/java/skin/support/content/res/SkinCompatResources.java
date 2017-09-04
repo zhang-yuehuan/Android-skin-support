@@ -171,6 +171,11 @@ public class SkinCompatResources {
         return newCompatTheme(context).obtainStyledAttributes(resId, attrs);
     }
 
+    public TypedArray obtainStyledAttributes(Context context, @StyleableRes int[] attrs)
+            throws Resources.NotFoundException {
+        return newCompatTheme(context).obtainStyledAttributes(attrs);
+    }
+
     public final class SkinCompatTheme {
         private Context mContext;
         private int mThemeResId;
@@ -257,6 +262,24 @@ public class SkinCompatResources {
                     }
                 }
                 return mTheme.obtainStyledAttributes(resId, attrs);
+            }
+        }
+
+        public TypedArray obtainStyledAttributes(@StyleableRes int[] attrs) throws Resources.NotFoundException {
+            if (isDefaultSkin || mTheme == null) {
+                return mContext.obtainStyledAttributes(attrs);
+            } else {
+                if (attrs != null) {
+                    for (int i = 0; i < attrs.length; i++) {
+                        if (attrs[i] != 0) {
+                            int targetId = getTargetResId(attrs[i], "attr");
+                            if (targetId != 0) {
+                                attrs[i] = targetId;
+                            }
+                        }
+                    }
+                }
+                return mTheme.obtainStyledAttributes(attrs);
             }
         }
     }
