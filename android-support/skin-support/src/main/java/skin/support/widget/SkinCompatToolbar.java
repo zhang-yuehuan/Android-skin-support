@@ -8,7 +8,6 @@ import android.support.v7.widget.Toolbar;
 import android.util.AttributeSet;
 
 import skin.support.R;
-import skin.support.SkinCompatManager;
 import skin.support.content.res.SkinCompatResources;
 import skin.support.content.res.SkinCompatTypedValue;
 
@@ -49,47 +48,8 @@ public class SkinCompatToolbar extends Toolbar implements SkinCompatSupportable 
         int subtitleAp = a.getResourceId(R.styleable.Toolbar_subtitleTextAppearance, INVALID_ID);
         a.recycle();
 
-        if (SkinCompatManager.getInstance().isCompatibleMode()) {
-            if (!mNavigationIconTypedValue.isTypeRes()) {
-                a = context.obtainStyledAttributes(attrs, R.styleable.Toolbar, defStyleAttr, 0);
-                mNavigationIconTypedValue.type = SkinCompatTypedValue.TYPE_RESOURCES;
-                mNavigationIconTypedValue.data = a.getResourceId(R.styleable.Toolbar_navigationIcon, INVALID_ID);
-                a.recycle();
-            }
-            if (titleAp != INVALID_ID && !mTitleTextColorTypedValue.isTypeRes()) {
-                a = context.obtainStyledAttributes(titleAp, R.styleable.SkinTextAppearance);
-                int resId = a.getResourceId(R.styleable.SkinTextAppearance_android_textColor, INVALID_ID);
-                if (resId != INVALID_ID) {
-                    mTitleTextColorTypedValue.type = SkinCompatTypedValue.TYPE_RESOURCES;
-                    mTitleTextColorTypedValue.data = resId;
-                }
-                a.recycle();
-            }
-            if (subtitleAp != INVALID_ID && !mSubtitleTextColorTypedValue.isTypeRes()) {
-                a = context.obtainStyledAttributes(subtitleAp, R.styleable.SkinTextAppearance);
-                int resId = a.getResourceId(R.styleable.SkinTextAppearance_android_textColor, INVALID_ID);
-                if (resId != INVALID_ID) {
-                    mSubtitleTextColorTypedValue.type = SkinCompatTypedValue.TYPE_RESOURCES;
-                    mSubtitleTextColorTypedValue.data = resId;
-                }
-                a.recycle();
-            }
-            a = context.obtainStyledAttributes(attrs, R.styleable.Toolbar, defStyleAttr, 0);
-            int titleResId = a.getResourceId(R.styleable.Toolbar_titleTextColor, INVALID_ID);
-            if (titleResId != INVALID_ID) {
-                mTitleTextColorTypedValue.type = SkinCompatTypedValue.TYPE_RESOURCES;
-                mTitleTextColorTypedValue.data = titleResId;
-            }
-            int subtitleResId = a.getResourceId(R.styleable.Toolbar_subtitleTextColor, INVALID_ID);
-            if (subtitleResId != INVALID_ID) {
-                mSubtitleTextColorTypedValue.type = SkinCompatTypedValue.TYPE_RESOURCES;
-                mSubtitleTextColorTypedValue.data = subtitleResId;
-            }
-            a.recycle();
-        } else {
-            applyTitleTextAppearanceResource();
-            applySubtitleTextAppearanceResource();
-        }
+        applyTitleTextAppearanceResource();
+        applySubtitleTextAppearanceResource();
 
         applyTitleTextColor();
         applySubtitleTextColor();
@@ -222,10 +182,8 @@ public class SkinCompatToolbar extends Toolbar implements SkinCompatSupportable 
             mBackgroundTintHelper.applySkin();
         }
 
-        if (!SkinCompatManager.getInstance().isCompatibleMode()) {
-            applyTitleTextAppearanceResource();
-            applySubtitleTextAppearanceResource();
-        }
+        applyTitleTextAppearanceResource();
+        applySubtitleTextAppearanceResource();
 
         applyTitleTextColor();
         applySubtitleTextColor();

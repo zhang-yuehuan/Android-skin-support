@@ -41,14 +41,6 @@ public class SkinCompatAutoCompleteTextView extends AppCompatAutoCompleteTextVie
     public SkinCompatAutoCompleteTextView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         SkinCompatTypedValue.getValue(attrs, TINT_ATTRS, 0, mDropDownBackgroundTypedValue);
-        if (SkinCompatManager.getInstance().isCompatibleMode() && !mDropDownBackgroundTypedValue.isTypeRes()) {
-            TypedArray a = context.obtainStyledAttributes(attrs, TINT_ATTRS, defStyleAttr, 0);
-            if (a.hasValue(0)) {
-                mDropDownBackgroundTypedValue.type = SkinCompatTypedValue.TYPE_RESOURCES;
-                mDropDownBackgroundTypedValue.data = a.getResourceId(0, INVALID_ID);
-            }
-            a.recycle();
-        }
         applyDropDownBackgroundResource();
         mBackgroundTintHelper = new SkinCompatBackgroundHelper(this);
         mBackgroundTintHelper.loadFromAttributes(attrs, defStyleAttr);

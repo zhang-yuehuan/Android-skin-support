@@ -88,14 +88,6 @@ public class SkinCompatSpinner extends AppCompatSpinner implements SkinCompatSup
                         R.styleable.Spinner,
                         R.styleable.Spinner_android_popupBackground,
                         mPopupBackgroundTypedValue);
-                if (SkinCompatManager.getInstance().isCompatibleMode() && !mPopupBackgroundTypedValue.isTypeRes()) {
-                    final TypedArray pa = getPopupContext().obtainStyledAttributes(attrs, R.styleable.Spinner, defStyleAttr, 0);
-                    if (pa.hasValue(R.styleable.Spinner_android_popupBackground)) {
-                        mPopupBackgroundTypedValue.type = SkinCompatTypedValue.TYPE_RESOURCES;
-                        mPopupBackgroundTypedValue.data = pa.getResourceId(R.styleable.Spinner_android_popupBackground, INVALID_ID);
-                    }
-                    pa.recycle();
-                }
             }
         }
         a.recycle();

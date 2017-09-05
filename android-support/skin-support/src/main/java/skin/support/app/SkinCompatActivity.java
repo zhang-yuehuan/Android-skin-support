@@ -69,15 +69,6 @@ public class SkinCompatActivity extends AppCompatActivity implements SkinObserve
             if (color != 0) {
                 getWindow().setStatusBarColor(color);
             }
-            if (SkinCompatManager.getInstance().isCompatibleMode()) {
-                int statusBarColorResId = SkinCompatThemeUtils.getStatusBarColorResId(this);
-                int colorPrimaryDarkResId = SkinCompatThemeUtils.getColorPrimaryDarkResId(this);
-                if (checkResourceId(statusBarColorResId) != INVALID_ID) {
-                    getWindow().setStatusBarColor(SkinCompatResources.getInstance().getColor(statusBarColorResId));
-                } else if (checkResourceId(colorPrimaryDarkResId) != INVALID_ID) {
-                    getWindow().setStatusBarColor(SkinCompatResources.getInstance().getColor(colorPrimaryDarkResId));
-                }
-            }
         }
     }
 
@@ -88,22 +79,6 @@ public class SkinCompatActivity extends AppCompatActivity implements SkinObserve
         Drawable drawable = SkinCompatThemeUtils.getWindowBackgroundDrawable(this);
         if (drawable != null) {
             getWindow().setBackgroundDrawable(drawable);
-        }
-        if (SkinCompatManager.getInstance().isCompatibleMode()) {
-            int windowBackgroundResId = SkinCompatThemeUtils.getWindowBackgroundResId(this);
-            if (checkResourceId(windowBackgroundResId) != INVALID_ID) {
-                String typeName = getResources().getResourceTypeName(windowBackgroundResId);
-                if ("color".equals(typeName)) {
-                    getWindow().setBackgroundDrawable(
-                            new ColorDrawable(SkinCompatResources.getInstance().getColor(windowBackgroundResId)));
-                } else if ("drawable".equals(typeName)) {
-                    getWindow().setBackgroundDrawable(
-                            SkinCompatResources.getInstance().getDrawable(windowBackgroundResId));
-                } else if ("mipmap".equals(typeName)) {
-                    getWindow().setBackgroundDrawable(
-                            SkinCompatResources.getInstance().getMipmap(windowBackgroundResId));
-                }
-            }
         }
     }
 

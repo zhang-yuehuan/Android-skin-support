@@ -27,16 +27,6 @@ public class SkinCompatSeekBarHelper extends SkinCompatProgressBarHelper {
         super.loadFromAttributes(attrs, defStyleAttr);
 
         SkinCompatTypedValue.getValue(attrs, R.styleable.AppCompatSeekBar, R.styleable.AppCompatSeekBar_android_thumb, mThumbTypedValue);
-        if (SkinCompatManager.getInstance().isCompatibleMode()
-                && !mThumbTypedValue.isTypeRes()) {
-            TypedArray a = mView.getContext().obtainStyledAttributes(attrs, R.styleable.AppCompatSeekBar, defStyleAttr, 0);
-            if (a.hasValue(R.styleable.AppCompatSeekBar_android_thumb)) {
-                mThumbTypedValue.type = SkinCompatTypedValue.TYPE_RESOURCES;
-                mThumbTypedValue.data = a.getResourceId(R.styleable.AppCompatSeekBar_android_thumb, INVALID_ID);
-            }
-            a.recycle();
-        }
-
         applySkin();
     }
 

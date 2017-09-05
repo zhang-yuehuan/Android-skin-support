@@ -33,19 +33,6 @@ public class SkinCompatCompoundButtonHelper extends SkinCompatHelper {
                 R.styleable.CompoundButton,
                 R.styleable.CompoundButton_buttonTint,
                 mButtonTintTypedValue);
-        if (SkinCompatManager.getInstance().isCompatibleMode()) {
-            TypedArray a = mView.getContext().obtainStyledAttributes(attrs, R.styleable.CompoundButton,
-                    defStyleAttr, INVALID_ID);
-            if (a.hasValue(R.styleable.CompoundButton_android_button)) {
-                mButtonTypedValue.type = SkinCompatTypedValue.TYPE_RESOURCES;
-                mButtonTypedValue.data = a.getResourceId(R.styleable.CompoundButton_android_button, INVALID_ID);
-            }
-            if (a.hasValue(R.styleable.CompoundButton_buttonTint)) {
-                mButtonTintTypedValue.type = SkinCompatTypedValue.TYPE_RESOURCES;
-                mButtonTintTypedValue.data = a.getResourceId(R.styleable.CompoundButton_buttonTint, INVALID_ID);
-            }
-            a.recycle();
-        }
         applySkin();
     }
 

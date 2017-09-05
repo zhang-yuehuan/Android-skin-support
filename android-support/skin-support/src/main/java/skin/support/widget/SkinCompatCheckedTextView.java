@@ -43,15 +43,6 @@ public class SkinCompatCheckedTextView extends AppCompatCheckedTextView implemen
         mTextHelper.loadFromAttributes(attrs, defStyleAttr);
 
         SkinCompatTypedValue.getValue(attrs, TINT_ATTRS, 0, mCheckMarkTypedValue);
-        if (SkinCompatManager.getInstance().isCompatibleMode()
-                && !mCheckMarkTypedValue.isTypeRes()) {
-            TypedArray a = context.obtainStyledAttributes(attrs, TINT_ATTRS, defStyleAttr, 0);
-            if (a.hasValue(0)) {
-                mCheckMarkTypedValue.type = SkinCompatTypedValue.TYPE_RESOURCES;
-                mCheckMarkTypedValue.data = a.getResourceId(0, INVALID_ID);
-            }
-            a.recycle();
-        }
         applyCheckMark();
     }
 

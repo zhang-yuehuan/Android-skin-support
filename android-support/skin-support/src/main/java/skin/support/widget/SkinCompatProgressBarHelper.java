@@ -49,30 +49,8 @@ public class SkinCompatProgressBarHelper extends SkinCompatHelper {
     void loadFromAttributes(AttributeSet attrs, int defStyleAttr) {
         SkinCompatTypedValue.getValue(attrs, TINT_ATTRS, 0, mIndeterminateDrawableTypedValue);
         SkinCompatTypedValue.getValue(attrs, TINT_ATTRS, 1, mProgressDrawableTypedValue);
-        TypedArray a;
-        if (SkinCompatManager.getInstance().isCompatibleMode()) {
-            a = mView.getContext().obtainStyledAttributes(attrs, TINT_ATTRS, defStyleAttr, 0);
-            if (!mIndeterminateDrawableTypedValue.isTypeRes() && a.hasValue(0)) {
-                mIndeterminateDrawableTypedValue.type = SkinCompatTypedValue.TYPE_RESOURCES;
-                mIndeterminateDrawableTypedValue.data = a.getResourceId(0, INVALID_ID);
-            }
-            if (!mProgressDrawableTypedValue.isTypeRes() && a.hasValue(1)) {
-                mProgressDrawableTypedValue.type = SkinCompatTypedValue.TYPE_RESOURCES;
-                mProgressDrawableTypedValue.data = a.getResourceId(1, INVALID_ID);
-            }
-            a.recycle();
-        }
         if (Build.VERSION.SDK_INT > 21) {
             SkinCompatTypedValue.getValue(attrs, new int[]{android.R.attr.indeterminateTint}, 0, mIndeterminateTintTypedValue);
-            if (SkinCompatManager.getInstance().isCompatibleMode()
-                    && !mIndeterminateTintTypedValue.isTypeRes()) {
-                a = mView.getContext().obtainStyledAttributes(attrs, new int[]{android.R.attr.indeterminateTint}, defStyleAttr, 0);
-                if (a.hasValue(0)) {
-                    mIndeterminateTintTypedValue.type = SkinCompatTypedValue.TYPE_RESOURCES;
-                    mIndeterminateTintTypedValue.data = a.getResourceId(0, INVALID_ID);
-                }
-                a.recycle();
-            }
         }
         applySkin();
     }

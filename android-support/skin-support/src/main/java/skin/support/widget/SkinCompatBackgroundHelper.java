@@ -34,15 +34,6 @@ public class SkinCompatBackgroundHelper extends SkinCompatHelper {
                 R.styleable.SkinBackgroundHelper,
                 R.styleable.SkinBackgroundHelper_android_background,
                 mBackgroundTypedValue);
-        if (SkinCompatManager.getInstance().isCompatibleMode() && !mBackgroundTypedValue.isTypeRes()) {
-            TypedArray a = mView.getContext().obtainStyledAttributes(attrs, R.styleable.SkinBackgroundHelper, defStyleAttr, 0);
-            if (a.hasValue(R.styleable.SkinBackgroundHelper_android_background)) {
-                mBackgroundTypedValue.type = SkinCompatTypedValue.TYPE_RESOURCES;
-                mBackgroundTypedValue.data = a.getResourceId(
-                        R.styleable.SkinBackgroundHelper_android_background, INVALID_ID);
-            }
-            a.recycle();
-        }
         applySkin();
     }
 

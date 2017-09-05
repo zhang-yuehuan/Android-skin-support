@@ -35,7 +35,6 @@ public class App extends Application {
                 .addInflater(new SkinFlycoTabLayoutInflater())  // H07000223/FlycoTabLayout
 //                .setSkinStatusBarColorEnable(false)             // 关闭状态栏换肤
 //                .setSkinWindowBackgroundEnable(false)           // 关闭windowBackground换肤
-                .setCompatibleMode(true)
                 .loadSkin();
     }
 }

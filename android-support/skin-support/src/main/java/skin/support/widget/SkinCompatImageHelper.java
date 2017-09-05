@@ -38,18 +38,6 @@ public class SkinCompatImageHelper extends SkinCompatHelper {
                     R.styleable.SkinCompatImageView_android_src,
                     mSrcTypedValue);
         }
-        if (SkinCompatManager.getInstance().isCompatibleMode() && !mSrcTypedValue.isTypeRes()) {
-            TypedArray a = mView.getContext().obtainStyledAttributes(attrs, R.styleable.SkinCompatImageView, defStyleAttr, 0);
-            if (a.hasValue(R.styleable.SkinCompatImageView_android_src)) {
-                mSrcTypedValue.type = SkinCompatTypedValue.TYPE_RESOURCES;
-                mSrcTypedValue.data = a.getResourceId(R.styleable.SkinCompatImageView_android_src, INVALID_ID);
-            }
-            if (a.hasValue(R.styleable.SkinCompatImageView_srcCompat)) {
-                mSrcTypedValue.type = SkinCompatTypedValue.TYPE_RESOURCES;
-                mSrcTypedValue.data = a.getResourceId(R.styleable.SkinCompatImageView_srcCompat, INVALID_ID);
-            }
-            a.recycle();
-        }
         applySkin();
     }
 
