@@ -51,6 +51,28 @@ public class SkinCompatThemeUtils {
         return getResId(context, new int[]{android.R.attr.windowBackground});
     }
 
+    public static int getStatusBarColor(Context context) {
+        int color = 0;
+        TypedArray a;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            a = SkinCompatResources.getInstance()
+                    .obtainStyledAttributes(context, new int[]{android.R.attr.statusBarColor});
+            if (a.hasValue(0)) {
+                color = a.getColor(0, 0);
+            }
+            a.recycle();
+        }
+        if (color == 0) {
+            a = SkinCompatResources.getInstance()
+                    .obtainStyledAttributes(context, APPCOMPAT_COLOR_PRIMARY_ATTRS);
+            if (a.hasValue(0)) {
+                color = a.getColor(0, 0);
+            }
+            a.recycle();
+        }
+        return color;
+    }
+
     public static Drawable getWindowBackgroundDrawable(Context context) {
         Drawable drawable = null;
         TypedArray a = SkinCompatResources.getInstance()
@@ -65,9 +87,7 @@ public class SkinCompatThemeUtils {
     private static int getResId(Context context, int[] attrs) {
         TypedArray a = context.obtainStyledAttributes(attrs);
         final int resId = a.getResourceId(0, INVALID_ID);
-        if (a != null) {
-            a.recycle();
-        }
+        a.recycle();
         return resId;
     }
 }
