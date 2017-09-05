@@ -6,62 +6,77 @@ import android.util.AttributeSet;
 import android.widget.CompoundButton;
 
 import skin.support.R;
+import skin.support.SkinCompatManager;
 import skin.support.content.res.SkinCompatResources;
+import skin.support.content.res.SkinCompatTypedValue;
 
 /**
  * Created by ximsfei on 17-1-14.
  */
 public class SkinCompatCompoundButtonHelper extends SkinCompatHelper {
     private final CompoundButton mView;
-    private int mButtonResourceId = INVALID_ID;
-    private int mButtonTintResId = INVALID_ID;
+    private SkinCompatTypedValue mButtonTypedValue = new SkinCompatTypedValue();
+    private SkinCompatTypedValue mButtonTintTypedValue = new SkinCompatTypedValue();
 
     public SkinCompatCompoundButtonHelper(CompoundButton view) {
         mView = view;
     }
 
     void loadFromAttributes(AttributeSet attrs, int defStyleAttr) {
-        TypedArray a = mView.getContext().obtainStyledAttributes(attrs, R.styleable.CompoundButton,
-                defStyleAttr, INVALID_ID);
-        try {
+        SkinCompatTypedValue.getValue(
+                attrs,
+                R.styleable.CompoundButton,
+                R.styleable.CompoundButton_android_button,
+                mButtonTypedValue);
+        SkinCompatTypedValue.getValue(
+                attrs,
+                R.styleable.CompoundButton,
+                R.styleable.CompoundButton_buttonTint,
+                mButtonTintTypedValue);
+        if (SkinCompatManager.getInstance().isCompatibleMode()) {
+            TypedArray a = mView.getContext().obtainStyledAttributes(attrs, R.styleable.CompoundButton,
+                    defStyleAttr, INVALID_ID);
             if (a.hasValue(R.styleable.CompoundButton_android_button)) {
-                mButtonResourceId = a.getResourceId(
-                        R.styleable.CompoundButton_android_button, INVALID_ID);
+                mButtonTypedValue.type = SkinCompatTypedValue.TYPE_RESOURCES;
+                mButtonTypedValue.data = a.getResourceId(R.styleable.CompoundButton_android_button, INVALID_ID);
             }
-//                if (resourceId != 0) {
-//                    mView.setButtonDrawable(
-//                            AppCompatResources.getDrawable(mView.getContext(), resourceId));
-//                }
-//            }
             if (a.hasValue(R.styleable.CompoundButton_buttonTint)) {
-                mButtonTintResId = a.getResourceId(R.styleable.CompoundButton_buttonTint, INVALID_ID);
+                mButtonTintTypedValue.type = SkinCompatTypedValue.TYPE_RESOURCES;
+                mButtonTintTypedValue.data = a.getResourceId(R.styleable.CompoundButton_buttonTint, INVALID_ID);
             }
-//            if (a.hasValue(R.styleable.CompoundButton_buttonTintMode)) {
-//                CompoundButtonCompat.setButtonTintMode(mView,
-//                        DrawableUtils.parseTintMode(
-//                                a.getInt(R.styleable.CompoundButton_buttonTintMode, -1),
-//                                null));
-//            }
-        } finally {
             a.recycle();
         }
         applySkin();
     }
 
     public void setButtonDrawable(int resId) {
-        mButtonResourceId = resId;
+        mButtonTintTypedValue.type = SkinCompatTypedValue.TYPE_RESOURCES;
+        mButtonTintTypedValue.data = resId;
         applySkin();
     }
 
     @Override
     public void applySkin() {
-        mButtonResourceId = SkinCompatHelper.checkResourceId(mButtonResourceId);
-        if (mButtonResourceId != INVALID_ID) {
-            mView.setButtonDrawable(SkinCompatResources.getInstance().getDrawable(mButtonResourceId));
+        if (!mButtonTypedValue.isDataInvalid() && !mButtonTypedValue.isTypeNull()) {
+            if (mButtonTypedValue.isTypeAttr()) {
+                TypedArray a = SkinCompatResources.getInstance().obtainStyledAttributes(
+                        mView.getContext(), new int[]{mButtonTypedValue.data});
+                mView.setButtonDrawable(a.getDrawable(0));
+                a.recycle();
+            } else if (mButtonTypedValue.isTypeRes()) {
+                mView.setButtonDrawable(SkinCompatResources.getInstance().getDrawable(mButtonTypedValue.data));
+            }
         }
-        mButtonTintResId = SkinCompatHelper.checkResourceId(mButtonTintResId);
-        if (mButtonTintResId != INVALID_ID) {
-            CompoundButtonCompat.setButtonTintList(mView, SkinCompatResources.getInstance().getColorStateList(mButtonTintResId));
+        if (!mButtonTintTypedValue.isDataInvalid() && !mButtonTintTypedValue.isTypeNull()) {
+            if (mButtonTintTypedValue.isTypeAttr()) {
+                TypedArray a = SkinCompatResources.getInstance().obtainStyledAttributes(
+                        mView.getContext(), new int[]{mButtonTintTypedValue.data});
+                CompoundButtonCompat.setButtonTintList(mView, a.getColorStateList(0));
+                a.recycle();
+            } else if (mButtonTintTypedValue.isTypeRes()) {
+                CompoundButtonCompat.setButtonTintList(mView,
+                        SkinCompatResources.getInstance().getColorStateList(mButtonTintTypedValue.data));
+            }
         }
     }
 }

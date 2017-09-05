@@ -11,7 +11,9 @@ import android.util.AttributeSet;
 import android.view.View;
 
 import skin.support.R;
+import skin.support.SkinCompatManager;
 import skin.support.content.res.SkinCompatResources;
+import skin.support.content.res.SkinCompatTypedValue;
 
 /**
  * Created by ximsfei on 2017/1/10.
@@ -20,59 +22,72 @@ import skin.support.content.res.SkinCompatResources;
 public class SkinCompatBackgroundHelper extends SkinCompatHelper {
     private final View mView;
 
-    private int mBackgroundResId = INVALID_ID;
+    private SkinCompatTypedValue mBackgroundTypedValue = new SkinCompatTypedValue();
 
     public SkinCompatBackgroundHelper(View view) {
         mView = view;
     }
 
     public void loadFromAttributes(AttributeSet attrs, int defStyleAttr) {
-        TypedArray a = mView.getContext().obtainStyledAttributes(attrs, R.styleable.SkinBackgroundHelper, defStyleAttr, 0);
-        try {
+        SkinCompatTypedValue.getValue(
+                attrs,
+                R.styleable.SkinBackgroundHelper,
+                R.styleable.SkinBackgroundHelper_android_background,
+                mBackgroundTypedValue);
+        if (SkinCompatManager.getInstance().isCompatibleMode() && !mBackgroundTypedValue.isTypeRes()) {
+            TypedArray a = mView.getContext().obtainStyledAttributes(attrs, R.styleable.SkinBackgroundHelper, defStyleAttr, 0);
             if (a.hasValue(R.styleable.SkinBackgroundHelper_android_background)) {
-                mBackgroundResId = a.getResourceId(
+                mBackgroundTypedValue.type = SkinCompatTypedValue.TYPE_RESOURCES;
+                mBackgroundTypedValue.data = a.getResourceId(
                         R.styleable.SkinBackgroundHelper_android_background, INVALID_ID);
             }
-        } finally {
             a.recycle();
         }
         applySkin();
     }
 
     public void onSetBackgroundResource(int resId) {
-        mBackgroundResId = resId;
+        mBackgroundTypedValue.type = SkinCompatTypedValue.TYPE_RESOURCES;
+        mBackgroundTypedValue.data = resId;
         // Update the default background tint
         applySkin();
     }
 
     public void applySkin() {
-        mBackgroundResId = checkResourceId(mBackgroundResId);
-        if (mBackgroundResId == INVALID_ID) {
+        if (mBackgroundTypedValue.isTypeNull() || mBackgroundTypedValue.isDataInvalid()) {
             return;
         }
-        String typeName = mView.getResources().getResourceTypeName(mBackgroundResId);
-        if ("color".equals(typeName)) {
-            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-                int color = SkinCompatResources.getInstance().getColor(mBackgroundResId);
-                mView.setBackgroundColor(color);
-            } else {
-                ColorStateList colorStateList = SkinCompatResources.getInstance().getColorStateList(mBackgroundResId);
-                Drawable drawable = mView.getBackground();
-                if (drawable != null) {
-                    DrawableCompat.setTintList(drawable, colorStateList);
-                    ViewCompat.setBackground(mView, drawable);
+
+        if (mBackgroundTypedValue.isTypeAttr()) {
+            TypedArray a = SkinCompatResources.getInstance().obtainStyledAttributes(
+                    mView.getContext(), new int[]{mBackgroundTypedValue.data});
+            ViewCompat.setBackground(mView, a.getDrawable(0));
+            a.recycle();
+        } else if (mBackgroundTypedValue.isTypeRes()) {
+            String typeName = mView.getResources().getResourceTypeName(mBackgroundTypedValue.data);
+            if ("color".equals(typeName)) {
+                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+                    int color = SkinCompatResources.getInstance().getColor(mBackgroundTypedValue.data);
+                    mView.setBackgroundColor(color);
                 } else {
-                    ColorDrawable colorDrawable = new ColorDrawable();
-                    colorDrawable.setTintList(colorStateList);
-                    ViewCompat.setBackground(mView, colorDrawable);
+                    ColorStateList colorStateList = SkinCompatResources.getInstance().getColorStateList(mBackgroundTypedValue.data);
+                    Drawable drawable = mView.getBackground();
+                    if (drawable != null) {
+                        DrawableCompat.setTintList(drawable, colorStateList);
+                        ViewCompat.setBackground(mView, drawable);
+                    } else {
+                        ColorDrawable colorDrawable = new ColorDrawable();
+                        colorDrawable.setTintList(colorStateList);
+                        ViewCompat.setBackground(mView, colorDrawable);
+                    }
                 }
+            } else if ("drawable".equals(typeName)) {
+                Drawable drawable = SkinCompatResources.getInstance().getDrawable(mBackgroundTypedValue.data);
+                ViewCompat.setBackground(mView, drawable);
+            } else if ("mipmap".equals(typeName)) {
+                Drawable drawable = SkinCompatResources.getInstance().getMipmap(mBackgroundTypedValue.data);
+                ViewCompat.setBackground(mView, drawable);
             }
-        } else if ("drawable".equals(typeName)) {
-            Drawable drawable = SkinCompatResources.getInstance().getDrawable(mBackgroundResId);
-            ViewCompat.setBackground(mView, drawable);
-        } else if ("mipmap".equals(typeName)) {
-            Drawable drawable = SkinCompatResources.getInstance().getMipmap(mBackgroundResId);
-            ViewCompat.setBackground(mView, drawable);
         }
     }
 }

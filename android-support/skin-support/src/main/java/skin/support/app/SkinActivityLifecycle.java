@@ -80,7 +80,8 @@ public class SkinActivityLifecycle implements Application.ActivityLifecycleCallb
             int color = SkinCompatThemeUtils.getStatusBarColor(activity);
             if (color != 0) {
                 activity.getWindow().setStatusBarColor(color);
-            } else {
+            }
+            if (SkinCompatManager.getInstance().isCompatibleMode()) {
                 int statusBarColorResId = SkinCompatThemeUtils.getStatusBarColorResId(activity);
                 int colorPrimaryDarkResId = SkinCompatThemeUtils.getColorPrimaryDarkResId(activity);
                 if (checkResourceId(statusBarColorResId) != INVALID_ID) {
@@ -97,7 +98,8 @@ public class SkinActivityLifecycle implements Application.ActivityLifecycleCallb
             Drawable drawable = SkinCompatThemeUtils.getWindowBackgroundDrawable(activity);
             if (drawable != null) {
                 activity.getWindow().setBackgroundDrawable(drawable);
-            } else {
+            }
+            if (SkinCompatManager.getInstance().isCompatibleMode()) {
                 int windowBackgroundResId = SkinCompatThemeUtils.getWindowBackgroundResId(activity);
                 if (checkResourceId(windowBackgroundResId) != INVALID_ID) {
                     String typeName = activity.getResources().getResourceTypeName(windowBackgroundResId);

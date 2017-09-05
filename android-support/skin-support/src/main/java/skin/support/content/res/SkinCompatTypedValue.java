@@ -11,11 +11,24 @@ public class SkinCompatTypedValue {
     public int type = TYPE_NULL;
     public int data = INVALID_ID;
 
+    public boolean isTypeNull() {
+        return type == TYPE_NULL;
+    }
 
-    static public SkinCompatTypedValue getValue(AttributeSet set, int[] attrs, int index) {
-        SkinCompatTypedValue outValue = new SkinCompatTypedValue();
-        if (attrs == null || index >= attrs.length)
-            return outValue;
+    public boolean isTypeRes() {
+        return type == TYPE_RESOURCES;
+    }
+
+    public boolean isTypeAttr() {
+        return type == TYPE_ATTR;
+    }
+
+    public boolean isDataInvalid() {
+        return data == INVALID_ID;
+    }
+
+    static public void getValue(AttributeSet set, int[] attrs, int index, SkinCompatTypedValue outValue) {
+        if (outValue == null || attrs == null || index >= attrs.length) return;
 
         for (int i = 0; i < set.getAttributeCount(); i++) {
             int attrResource = set.getAttributeNameResource(i);
@@ -33,6 +46,5 @@ public class SkinCompatTypedValue {
                 break;
             }
         }
-        return outValue;
     }
 }

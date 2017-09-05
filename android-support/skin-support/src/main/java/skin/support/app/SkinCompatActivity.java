@@ -62,30 +62,47 @@ public class SkinCompatActivity extends AppCompatActivity implements SkinObserve
     }
 
     protected void updateStatusBarColor() {
-        if (skinStatusBarColorEnable() && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            int statusBarColorResId = SkinCompatThemeUtils.getStatusBarColorResId(this);
-            int colorPrimaryDarkResId = SkinCompatThemeUtils.getColorPrimaryDarkResId(this);
-            if (checkResourceId(statusBarColorResId) != INVALID_ID) {
-                getWindow().setStatusBarColor(SkinCompatResources.getInstance().getColor(statusBarColorResId));
-            } else if (checkResourceId(colorPrimaryDarkResId) != INVALID_ID) {
-                getWindow().setStatusBarColor(SkinCompatResources.getInstance().getColor(colorPrimaryDarkResId));
+        if (SkinCompatManager.getInstance().isSkinStatusBarColorEnable()
+                && skinStatusBarColorEnable()
+                && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            int color = SkinCompatThemeUtils.getStatusBarColor(this);
+            if (color != 0) {
+                getWindow().setStatusBarColor(color);
+            }
+            if (SkinCompatManager.getInstance().isCompatibleMode()) {
+                int statusBarColorResId = SkinCompatThemeUtils.getStatusBarColorResId(this);
+                int colorPrimaryDarkResId = SkinCompatThemeUtils.getColorPrimaryDarkResId(this);
+                if (checkResourceId(statusBarColorResId) != INVALID_ID) {
+                    getWindow().setStatusBarColor(SkinCompatResources.getInstance().getColor(statusBarColorResId));
+                } else if (checkResourceId(colorPrimaryDarkResId) != INVALID_ID) {
+                    getWindow().setStatusBarColor(SkinCompatResources.getInstance().getColor(colorPrimaryDarkResId));
+                }
             }
         }
     }
 
     protected void updateWindowBackground() {
-        int windowBackgroundResId = SkinCompatThemeUtils.getWindowBackgroundResId(this);
-        if (checkResourceId(windowBackgroundResId) != INVALID_ID) {
-            String typeName = getResources().getResourceTypeName(windowBackgroundResId);
-            if ("color".equals(typeName)) {
-                Drawable drawable = new ColorDrawable(SkinCompatResources.getInstance().getColor(windowBackgroundResId));
-                getWindow().setBackgroundDrawable(drawable);
-            } else if ("drawable".equals(typeName)) {
-                Drawable drawable = SkinCompatResources.getInstance().getDrawable(windowBackgroundResId);
-                getWindow().setBackgroundDrawable(drawable);
-            } else if ("mipmap".equals(typeName)) {
-                Drawable drawable = SkinCompatResources.getInstance().getMipmap(windowBackgroundResId);
-                getWindow().setBackgroundDrawable(drawable);
+        if (!SkinCompatManager.getInstance().isSkinWindowBackgroundEnable()) {
+            return;
+        }
+        Drawable drawable = SkinCompatThemeUtils.getWindowBackgroundDrawable(this);
+        if (drawable != null) {
+            getWindow().setBackgroundDrawable(drawable);
+        }
+        if (SkinCompatManager.getInstance().isCompatibleMode()) {
+            int windowBackgroundResId = SkinCompatThemeUtils.getWindowBackgroundResId(this);
+            if (checkResourceId(windowBackgroundResId) != INVALID_ID) {
+                String typeName = getResources().getResourceTypeName(windowBackgroundResId);
+                if ("color".equals(typeName)) {
+                    getWindow().setBackgroundDrawable(
+                            new ColorDrawable(SkinCompatResources.getInstance().getColor(windowBackgroundResId)));
+                } else if ("drawable".equals(typeName)) {
+                    getWindow().setBackgroundDrawable(
+                            SkinCompatResources.getInstance().getDrawable(windowBackgroundResId));
+                } else if ("mipmap".equals(typeName)) {
+                    getWindow().setBackgroundDrawable(
+                            SkinCompatResources.getInstance().getMipmap(windowBackgroundResId));
+                }
             }
         }
     }

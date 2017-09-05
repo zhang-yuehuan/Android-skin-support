@@ -40,6 +40,10 @@ public class SkinCompatManager extends SkinObservable {
     private Map<Integer, SkinLoaderStrategy> mStrategyMap = new HashMap<>();
     private boolean mSkinStatusBarColorEnable = true;
     private boolean mSkinWindowBackgroundColorEnable = true;
+    /**
+     * 兼容2.0+换肤框架.
+     */
+    private boolean isCompatibleMode = false;
 
     /**
      * 皮肤包加载监听.
@@ -229,6 +233,15 @@ public class SkinCompatManager extends SkinObservable {
 
     public boolean isSkinWindowBackgroundEnable() {
         return mSkinWindowBackgroundColorEnable;
+    }
+
+    public SkinCompatManager setCompatibleMode(boolean compatible) {
+        isCompatibleMode = compatible;
+        return this;
+    }
+
+    public boolean isCompatibleMode() {
+        return isCompatibleMode;
     }
 
     /**

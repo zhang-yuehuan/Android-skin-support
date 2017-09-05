@@ -1,12 +1,15 @@
 package skin.support.widget;
 
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.support.annotation.DrawableRes;
 import android.support.v7.widget.AppCompatCheckedTextView;
 import android.support.v7.widget.TintTypedArray;
 import android.util.AttributeSet;
 
+import skin.support.SkinCompatManager;
 import skin.support.content.res.SkinCompatResources;
+import skin.support.content.res.SkinCompatTypedValue;
 
 import static skin.support.widget.SkinCompatHelper.INVALID_ID;
 
@@ -19,7 +22,7 @@ public class SkinCompatCheckedTextView extends AppCompatCheckedTextView implemen
     private static final int[] TINT_ATTRS = {
             android.R.attr.checkMark
     };
-    private int mCheckMarkResId = INVALID_ID;
+    private SkinCompatTypedValue mCheckMarkTypedValue = new SkinCompatTypedValue();
 
     private SkinCompatTextHelper mTextHelper;
     private SkinCompatBackgroundHelper mBackgroundTintHelper;
@@ -39,16 +42,23 @@ public class SkinCompatCheckedTextView extends AppCompatCheckedTextView implemen
         mTextHelper = SkinCompatTextHelper.create(this);
         mTextHelper.loadFromAttributes(attrs, defStyleAttr);
 
-        TintTypedArray a = TintTypedArray.obtainStyledAttributes(getContext(), attrs,
-                TINT_ATTRS, defStyleAttr, 0);
-        mCheckMarkResId = a.getResourceId(0, INVALID_ID);
-        a.recycle();
+        SkinCompatTypedValue.getValue(attrs, TINT_ATTRS, 0, mCheckMarkTypedValue);
+        if (SkinCompatManager.getInstance().isCompatibleMode()
+                && !mCheckMarkTypedValue.isTypeRes()) {
+            TypedArray a = context.obtainStyledAttributes(attrs, TINT_ATTRS, defStyleAttr, 0);
+            if (a.hasValue(0)) {
+                mCheckMarkTypedValue.type = SkinCompatTypedValue.TYPE_RESOURCES;
+                mCheckMarkTypedValue.data = a.getResourceId(0, INVALID_ID);
+            }
+            a.recycle();
+        }
         applyCheckMark();
     }
 
     @Override
     public void setCheckMarkDrawable(@DrawableRes int resId) {
-        mCheckMarkResId = resId;
+        mCheckMarkTypedValue.type = SkinCompatTypedValue.TYPE_RESOURCES;
+        mCheckMarkTypedValue.data = resId;
         applyCheckMark();
     }
 
@@ -103,9 +113,16 @@ public class SkinCompatCheckedTextView extends AppCompatCheckedTextView implemen
     }
 
     private void applyCheckMark() {
-        mCheckMarkResId = SkinCompatHelper.checkResourceId(mCheckMarkResId);
-        if (mCheckMarkResId != INVALID_ID) {
-            setCheckMarkDrawable(SkinCompatResources.getInstance().getDrawable(mCheckMarkResId));
+        if (mCheckMarkTypedValue.isDataInvalid() || mCheckMarkTypedValue.isTypeNull()) {
+            return;
+        }
+        if (mCheckMarkTypedValue.isTypeAttr()) {
+            TypedArray a = SkinCompatResources.getInstance().obtainStyledAttributes(
+                    getContext(), new int[]{mCheckMarkTypedValue.data});
+            setCheckMarkDrawable(a.getDrawable(0));
+            a.recycle();
+        } else if (mCheckMarkTypedValue.isTypeRes()) {
+            setCheckMarkDrawable(SkinCompatResources.getInstance().getDrawable(mCheckMarkTypedValue.data));
         }
     }
 }

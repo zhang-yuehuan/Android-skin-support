@@ -10,6 +10,7 @@ import android.util.AttributeSet;
 import android.widget.TextView;
 
 import skin.support.R;
+import skin.support.SkinCompatManager;
 import skin.support.content.res.SkinCompatResources;
 import skin.support.content.res.SkinCompatTypedValue;
 import skin.support.utils.SkinLog;
@@ -20,9 +21,9 @@ import skin.support.utils.SkinLog;
 
 public class SkinCompatTextHelper extends SkinCompatHelper {
     private static final String TAG = SkinCompatTextHelper.class.getSimpleName();
-    private int mTextAppearanceResId;
-    private SkinCompatTypedValue mTextColorTypedValue;
-    private SkinCompatTypedValue mTextColorHintTypedValue;
+    private SkinCompatTypedValue mTextAppearanceTypedValue = new SkinCompatTypedValue();
+    private SkinCompatTypedValue mTextColorTypedValue = new SkinCompatTypedValue();
+    private SkinCompatTypedValue mTextColorHintTypedValue = new SkinCompatTypedValue();
 
     public static SkinCompatTextHelper create(TextView textView) {
         if (Build.VERSION.SDK_INT >= 17) {
@@ -47,8 +48,7 @@ public class SkinCompatTextHelper extends SkinCompatHelper {
 
         // First read the TextAppearance style id
         TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.SkinCompatTextHelper, defStyleAttr, 0);
-        mTextAppearanceResId = a.getResourceId(R.styleable.SkinCompatTextHelper_android_textAppearance, INVALID_ID);
-        SkinLog.d(TAG, "ap = " + mTextAppearanceResId);
+        int ap = a.getResourceId(R.styleable.SkinCompatTextHelper_android_textAppearance, INVALID_ID);
 
         if (a.hasValue(R.styleable.SkinCompatTextHelper_android_drawableLeft)) {
             mDrawableLeftResId = a.getResourceId(R.styleable.SkinCompatTextHelper_android_drawableLeft, INVALID_ID);
@@ -64,76 +64,137 @@ public class SkinCompatTextHelper extends SkinCompatHelper {
         }
         a.recycle();
 
-        // Now read the style's values
-        a = context.obtainStyledAttributes(attrs, R.styleable.SkinTextAppearance, defStyleAttr, 0);
-        if (a.hasValue(R.styleable.SkinTextAppearance_android_textColor)) {
-            mTextColorTypedValue = SkinCompatTypedValue.getValue(
-                    attrs, R.styleable.SkinTextAppearance, R.styleable.SkinTextAppearance_android_textColor);
+        SkinCompatTypedValue.getValue(attrs,
+                R.styleable.SkinCompatTextHelper,
+                R.styleable.SkinCompatTextHelper_android_textAppearance,
+                mTextAppearanceTypedValue);
+        SkinCompatTypedValue.getValue(
+                attrs,
+                R.styleable.SkinTextAppearance,
+                R.styleable.SkinTextAppearance_android_textColor,
+                mTextColorTypedValue);
+        SkinCompatTypedValue.getValue(
+                attrs,
+                R.styleable.SkinTextAppearance,
+                R.styleable.SkinTextAppearance_android_textColorHint,
+                mTextColorHintTypedValue);
+        if (SkinCompatManager.getInstance().isCompatibleMode()) {
+            if (ap != INVALID_ID) {
+                if (!mTextColorHintTypedValue.isTypeRes()) {
+                    mTextColorHintTypedValue.type = SkinCompatTypedValue.TYPE_RESOURCES;
+                    mTextColorHintTypedValue.data = ap;
+                }
+                a = context.obtainStyledAttributes(ap, R.styleable.SkinTextAppearance);
+                int textColorResId = a.getResourceId(R.styleable.SkinTextAppearance_android_textColor, INVALID_ID);
+                if (textColorResId != INVALID_ID) {
+                    mTextColorTypedValue.type = SkinCompatTypedValue.TYPE_RESOURCES;
+                    mTextColorTypedValue.data = textColorResId;
+                }
+                int textColorHintResId = a.getResourceId(R.styleable.SkinTextAppearance_android_textColorHint, INVALID_ID);
+                if (textColorHintResId != INVALID_ID) {
+                    mTextColorHintTypedValue.type = SkinCompatTypedValue.TYPE_RESOURCES;
+                    mTextColorHintTypedValue.data = textColorHintResId;
+                }
+                a.recycle();
+            }
+            a = context.obtainStyledAttributes(attrs, R.styleable.SkinTextAppearance, defStyleAttr, 0);
+            int textColorResId = a.getResourceId(R.styleable.SkinTextAppearance_android_textColor, INVALID_ID);
+            if (textColorResId != INVALID_ID) {
+                mTextColorTypedValue.type = SkinCompatTypedValue.TYPE_RESOURCES;
+                mTextColorTypedValue.data = textColorResId;
+            }
+            int textColorHintResId = a.getResourceId(R.styleable.SkinTextAppearance_android_textColorHint, INVALID_ID);
+            if (textColorHintResId != INVALID_ID) {
+                mTextColorHintTypedValue.type = SkinCompatTypedValue.TYPE_RESOURCES;
+                mTextColorHintTypedValue.data = textColorHintResId;
+            }
+            a.recycle();
         }
-        if (a.hasValue(R.styleable.SkinTextAppearance_android_textColorHint)) {
-            mTextColorHintTypedValue = SkinCompatTypedValue.getValue(
-                    attrs, R.styleable.SkinTextAppearance, R.styleable.SkinTextAppearance_android_textColorHint);
-        }
-        a.recycle();
         applySkin();
     }
 
     public void onSetTextAppearance(Context context, int resId) {
-        mTextAppearanceResId = resId;
-        applyTextAppearanceResource(context);
+        mTextAppearanceTypedValue.type = SkinCompatTypedValue.TYPE_RESOURCES;
+        mTextAppearanceTypedValue.data = resId;
+        if (SkinCompatManager.getInstance().isCompatibleMode()) {
+            if (resId != INVALID_ID) {
+                TypedArray a = context.obtainStyledAttributes(resId, R.styleable.SkinTextAppearance);
+                if (a.hasValue(R.styleable.SkinTextAppearance_android_textColor)) {
+                    mTextColorTypedValue.type = SkinCompatTypedValue.TYPE_RESOURCES;
+                    mTextColorTypedValue.data = a.getResourceId(R.styleable.SkinTextAppearance_android_textColor, INVALID_ID);
+                    applyTextColorResource();
+                }
+                if (a.hasValue(R.styleable.SkinTextAppearance_android_textColorHint)) {
+                    mTextColorHintTypedValue.type = SkinCompatTypedValue.TYPE_RESOURCES;
+                    mTextColorHintTypedValue.data = a.getResourceId(
+                            R.styleable.SkinTextAppearance_android_textColorHint, INVALID_ID);
+                    applyTextColorHintResource();
+                }
+                a.recycle();
+            }
+        } else {
+            applyTextAppearanceResource(context);
+        }
     }
 
     private void applyTextAppearanceResource(Context context) {
-        if (mTextAppearanceResId != INVALID_ID) {
-            final TypedArray a = SkinCompatResources.getInstance()
-                    .obtainStyledAttributes(context, mTextAppearanceResId, R.styleable.SkinTextAppearance);
-            if (a.hasValue(R.styleable.SkinTextAppearance_android_textColor)) {
-                mView.setTextColor(a.getColorStateList(R.styleable.SkinTextAppearance_android_textColor));
-            }
-            if (a.hasValue(R.styleable.SkinTextAppearance_android_textColorHint)) {
-                mView.setHintTextColor(a.getResourceId(R.styleable.SkinTextAppearance_android_textColorHint, INVALID_ID));
-            }
+        if (mTextAppearanceTypedValue.isTypeNull() || mTextAppearanceTypedValue.isDataInvalid()) {
+            return;
+        }
+        if (mTextAppearanceTypedValue.isTypeAttr()) {
+            TypedArray a = context.obtainStyledAttributes(new int[]{mTextAppearanceTypedValue.data});
+            int ap = a.getResourceId(0, INVALID_ID);
             a.recycle();
+            if (ap != INVALID_ID) {
+                applyTextAppearance(context, ap);
+            }
+        } else if (mTextAppearanceTypedValue.isTypeRes()) {
+            applyTextAppearance(context, mTextAppearanceTypedValue.data);
         }
     }
 
+    private void applyTextAppearance(Context context, int ap) {
+        if (ap == INVALID_ID)
+            return;
+
+        TypedArray a = SkinCompatResources.getInstance()
+                .obtainStyledAttributes(context, ap, R.styleable.SkinTextAppearance);
+        if (a.hasValue(R.styleable.SkinTextAppearance_android_textColor)) {
+            mView.setTextColor(a.getColorStateList(R.styleable.SkinTextAppearance_android_textColor));
+        }
+        if (a.hasValue(R.styleable.SkinTextAppearance_android_textColorHint)) {
+            mView.setHintTextColor(a.getResourceId(R.styleable.SkinTextAppearance_android_textColorHint, INVALID_ID));
+        }
+        a.recycle();
+    }
+
     private void applyTextColorHintResource() {
-        if (mTextColorHintTypedValue == null
-                || mTextColorHintTypedValue.type == SkinCompatTypedValue.TYPE_NULL) {
+        if (mTextColorHintTypedValue.isDataInvalid() || mTextColorHintTypedValue.isTypeNull()) {
             return;
         }
-        if (mTextColorHintTypedValue.type == SkinCompatTypedValue.TYPE_ATTR) {
-            if (mTextColorHintTypedValue.data != INVALID_ID) {
-                TypedArray a = SkinCompatResources.getInstance().obtainStyledAttributes(
-                        mView.getContext(), 0, new int[]{mTextColorHintTypedValue.data});
-                mView.setHintTextColor(a.getColorStateList(0));
-                a.recycle();
-            }
-        } else if (mTextColorHintTypedValue.type == SkinCompatTypedValue.TYPE_RESOURCES) {
-            if (mTextColorHintTypedValue.data != INVALID_ID) {
-                ColorStateList color = SkinCompatResources.getInstance().getColorStateList(mTextColorHintTypedValue.data);
-                mView.setHintTextColor(color);
-            }
+        if (mTextColorHintTypedValue.isTypeAttr()) {
+            TypedArray a = SkinCompatResources.getInstance().obtainStyledAttributes(
+                    mView.getContext(), new int[]{mTextColorHintTypedValue.data});
+            mView.setHintTextColor(a.getColorStateList(0));
+            a.recycle();
+        } else if (mTextColorHintTypedValue.isTypeRes()) {
+            ColorStateList color = SkinCompatResources.getInstance().getColorStateList(mTextColorHintTypedValue.data);
+            mView.setHintTextColor(color);
         }
     }
 
     private void applyTextColorResource() {
-        if (mTextColorTypedValue == null
-                || mTextColorTypedValue.type == SkinCompatTypedValue.TYPE_NULL) {
+        if (mTextColorTypedValue.isDataInvalid() || mTextColorTypedValue.isTypeNull()) {
             return;
         }
-        if (mTextColorTypedValue.type == SkinCompatTypedValue.TYPE_ATTR) {
-            if (mTextColorTypedValue.data != INVALID_ID) {
-                TypedArray a = SkinCompatResources.getInstance().obtainStyledAttributes(
-                        mView.getContext(), 0, new int[]{mTextColorTypedValue.data});
-                mView.setTextColor(a.getColorStateList(0));
-                a.recycle();
-            }
-        } else if (mTextColorTypedValue.type == SkinCompatTypedValue.TYPE_RESOURCES) {
-            if (mTextColorTypedValue.data != INVALID_ID) {
-                ColorStateList color = SkinCompatResources.getInstance().getColorStateList(mTextColorTypedValue.data);
-                mView.setTextColor(color);
-            }
+        if (mTextColorTypedValue.isTypeAttr()) {
+            TypedArray a = SkinCompatResources.getInstance().obtainStyledAttributes(
+                    mView.getContext(), 0, new int[]{mTextColorTypedValue.data});
+            mView.setTextColor(a.getColorStateList(0));
+            a.recycle();
+        } else if (mTextColorTypedValue.isTypeRes()) {
+            ColorStateList color = SkinCompatResources.getInstance().getColorStateList(mTextColorTypedValue.data);
+            mView.setTextColor(color);
         }
     }
 

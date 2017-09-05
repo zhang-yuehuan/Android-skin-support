@@ -11,7 +11,9 @@ import android.util.AttributeSet;
 import android.util.Log;
 
 import skin.support.R;
+import skin.support.SkinCompatManager;
 import skin.support.content.res.SkinCompatResources;
+import skin.support.content.res.SkinCompatTypedValue;
 
 import static skin.support.widget.SkinCompatHelper.INVALID_ID;
 import static skin.support.widget.SkinCompatHelper.checkResourceId;
@@ -30,7 +32,7 @@ public class SkinCompatSpinner extends AppCompatSpinner implements SkinCompatSup
     private static final int MODE_THEME = -1;
 
     private SkinCompatBackgroundHelper mBackgroundTintHelper;
-    private int mPopupBackgroundResId = INVALID_ID;
+    private SkinCompatTypedValue mPopupBackgroundTypedValue = new SkinCompatTypedValue();
 
     public SkinCompatSpinner(Context context) {
         this(context, null);
@@ -82,10 +84,18 @@ public class SkinCompatSpinner extends AppCompatSpinner implements SkinCompatSup
             }
 
             if (mode == MODE_DROPDOWN) {
-                final TintTypedArray pa = TintTypedArray.obtainStyledAttributes(
-                        getPopupContext(), attrs, R.styleable.Spinner, defStyleAttr, 0);
-                mPopupBackgroundResId = pa.getResourceId(R.styleable.Spinner_android_popupBackground, INVALID_ID);
-                pa.recycle();
+                SkinCompatTypedValue.getValue(attrs,
+                        R.styleable.Spinner,
+                        R.styleable.Spinner_android_popupBackground,
+                        mPopupBackgroundTypedValue);
+                if (SkinCompatManager.getInstance().isCompatibleMode() && !mPopupBackgroundTypedValue.isTypeRes()) {
+                    final TypedArray pa = getPopupContext().obtainStyledAttributes(attrs, R.styleable.Spinner, defStyleAttr, 0);
+                    if (pa.hasValue(R.styleable.Spinner_android_popupBackground)) {
+                        mPopupBackgroundTypedValue.type = SkinCompatTypedValue.TYPE_RESOURCES;
+                        mPopupBackgroundTypedValue.data = pa.getResourceId(R.styleable.Spinner_android_popupBackground, INVALID_ID);
+                    }
+                    pa.recycle();
+                }
             }
         }
         a.recycle();
@@ -97,14 +107,22 @@ public class SkinCompatSpinner extends AppCompatSpinner implements SkinCompatSup
     @Override
     public void setPopupBackgroundResource(@DrawableRes int resId) {
         super.setPopupBackgroundResource(resId);
-        mPopupBackgroundResId = resId;
+        mPopupBackgroundTypedValue.type = SkinCompatTypedValue.TYPE_RESOURCES;
+        mPopupBackgroundTypedValue.data = resId;
         applyPopupBackground();
     }
 
     private void applyPopupBackground() {
-        mPopupBackgroundResId = checkResourceId(mPopupBackgroundResId);
-        if (mPopupBackgroundResId != INVALID_ID) {
-            setPopupBackgroundDrawable(SkinCompatResources.getInstance().getDrawable(mPopupBackgroundResId));
+        if (mPopupBackgroundTypedValue.isDataInvalid() || mPopupBackgroundTypedValue.isTypeNull()) {
+            return;
+        }
+        if (mPopupBackgroundTypedValue.isTypeAttr()) {
+            TypedArray a = SkinCompatResources.getInstance().obtainStyledAttributes(
+                    getContext(), new int[]{mPopupBackgroundTypedValue.data});
+            setPopupBackgroundDrawable(a.getDrawable(0));
+            a.recycle();
+        } else if (mPopupBackgroundTypedValue.isTypeRes()) {
+            setPopupBackgroundDrawable(SkinCompatResources.getInstance().getDrawable(mPopupBackgroundTypedValue.data));
         }
     }
 

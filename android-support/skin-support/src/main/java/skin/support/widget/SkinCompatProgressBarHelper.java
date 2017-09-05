@@ -20,7 +20,9 @@ import android.view.Gravity;
 import android.widget.ProgressBar;
 
 import skin.support.R;
+import skin.support.SkinCompatManager;
 import skin.support.content.res.SkinCompatResources;
+import skin.support.content.res.SkinCompatTypedValue;
 
 /**
  * Created by ximsfei on 2017/1/20.
@@ -36,25 +38,41 @@ public class SkinCompatProgressBarHelper extends SkinCompatHelper {
     private final ProgressBar mView;
 
     private Bitmap mSampleTile;
-    private int mIndeterminateDrawableResId = INVALID_ID;
-    private int mProgressDrawableResId = INVALID_ID;
-    private int mIndeterminateTintResId = INVALID_ID;
+    private SkinCompatTypedValue mIndeterminateDrawableTypedValue = new SkinCompatTypedValue();
+    private SkinCompatTypedValue mProgressDrawableTypedValue = new SkinCompatTypedValue();
+    private SkinCompatTypedValue mIndeterminateTintTypedValue = new SkinCompatTypedValue();
 
     SkinCompatProgressBarHelper(ProgressBar view) {
         mView = view;
     }
 
     void loadFromAttributes(AttributeSet attrs, int defStyleAttr) {
-        TypedArray a = mView.getContext().obtainStyledAttributes(attrs, TINT_ATTRS, defStyleAttr, 0);
-
-        mIndeterminateDrawableResId = a.getResourceId(0, INVALID_ID);
-        mProgressDrawableResId = a.getResourceId(1, INVALID_ID);
-
-        a.recycle();
-        if (Build.VERSION.SDK_INT > 21) {
-            a = mView.getContext().obtainStyledAttributes(attrs, new int[]{android.R.attr.indeterminateTint}, defStyleAttr, 0);
-            mIndeterminateTintResId = a.getResourceId(0, INVALID_ID);
+        SkinCompatTypedValue.getValue(attrs, TINT_ATTRS, 0, mIndeterminateDrawableTypedValue);
+        SkinCompatTypedValue.getValue(attrs, TINT_ATTRS, 1, mProgressDrawableTypedValue);
+        TypedArray a;
+        if (SkinCompatManager.getInstance().isCompatibleMode()) {
+            a = mView.getContext().obtainStyledAttributes(attrs, TINT_ATTRS, defStyleAttr, 0);
+            if (!mIndeterminateDrawableTypedValue.isTypeRes() && a.hasValue(0)) {
+                mIndeterminateDrawableTypedValue.type = SkinCompatTypedValue.TYPE_RESOURCES;
+                mIndeterminateDrawableTypedValue.data = a.getResourceId(0, INVALID_ID);
+            }
+            if (!mProgressDrawableTypedValue.isTypeRes() && a.hasValue(1)) {
+                mProgressDrawableTypedValue.type = SkinCompatTypedValue.TYPE_RESOURCES;
+                mProgressDrawableTypedValue.data = a.getResourceId(1, INVALID_ID);
+            }
             a.recycle();
+        }
+        if (Build.VERSION.SDK_INT > 21) {
+            SkinCompatTypedValue.getValue(attrs, new int[]{android.R.attr.indeterminateTint}, 0, mIndeterminateTintTypedValue);
+            if (SkinCompatManager.getInstance().isCompatibleMode()
+                    && !mIndeterminateTintTypedValue.isTypeRes()) {
+                a = mView.getContext().obtainStyledAttributes(attrs, new int[]{android.R.attr.indeterminateTint}, defStyleAttr, 0);
+                if (a.hasValue(0)) {
+                    mIndeterminateTintTypedValue.type = SkinCompatTypedValue.TYPE_RESOURCES;
+                    mIndeterminateTintTypedValue.data = a.getResourceId(0, INVALID_ID);
+                }
+                a.recycle();
+            }
         }
         applySkin();
     }
@@ -137,22 +155,42 @@ public class SkinCompatProgressBarHelper extends SkinCompatHelper {
 
     @Override
     public void applySkin() {
-        mIndeterminateDrawableResId = checkResourceId(mIndeterminateDrawableResId);
-        if (mIndeterminateDrawableResId != INVALID_ID) {
-            Drawable drawable = SkinCompatResources.getInstance().getDrawable(mIndeterminateDrawableResId);
-            drawable.setBounds(mView.getIndeterminateDrawable().getBounds());
-            mView.setIndeterminateDrawable(tileifyIndeterminate(drawable));
+        if (!mIndeterminateDrawableTypedValue.isDataInvalid()) {
+            if (mIndeterminateDrawableTypedValue.isTypeAttr()) {
+                TypedArray a = SkinCompatResources.getInstance().obtainStyledAttributes(
+                        mView.getContext(), new int[]{mIndeterminateDrawableTypedValue.data});
+                Drawable drawable = a.getDrawable(0);
+                if (drawable != null) {
+                    drawable.setBounds(mView.getIndeterminateDrawable().getBounds());
+                    mView.setIndeterminateDrawable(tileifyIndeterminate(drawable));
+                }
+                a.recycle();
+            } else if (mIndeterminateDrawableTypedValue.isTypeRes()) {
+                Drawable drawable = SkinCompatResources.getInstance().getDrawable(mIndeterminateDrawableTypedValue.data);
+                drawable.setBounds(mView.getIndeterminateDrawable().getBounds());
+                mView.setIndeterminateDrawable(tileifyIndeterminate(drawable));
+            }
         }
 
-        mProgressDrawableResId = checkProgressDrawableResId(mProgressDrawableResId);
-        if (mProgressDrawableResId != INVALID_ID) {
-            Drawable drawable = SkinCompatResources.getInstance().getDrawable(mProgressDrawableResId);
-            mView.setProgressDrawable(tileify(drawable, false));
+        if (!mProgressDrawableTypedValue.isDataInvalid()) {
+            if (mProgressDrawableTypedValue.isTypeAttr()) {
+                TypedArray a = SkinCompatResources.getInstance().obtainStyledAttributes(
+                        mView.getContext(), new int[]{mProgressDrawableTypedValue.data});
+                mView.setProgressDrawable(tileify(a.getDrawable(0), false));
+            } else if (mProgressDrawableTypedValue.isTypeRes()) {
+                Drawable drawable = SkinCompatResources.getInstance().getDrawable(mProgressDrawableTypedValue.data);
+                mView.setProgressDrawable(tileify(drawable, false));
+            }
         }
         if (Build.VERSION.SDK_INT > 21) {
-            mIndeterminateTintResId = checkResourceId(mIndeterminateTintResId);
-            if (mIndeterminateTintResId != INVALID_ID) {
-                mView.setIndeterminateTintList(SkinCompatResources.getInstance().getColorStateList(mIndeterminateTintResId));
+            if (!mIndeterminateTintTypedValue.isDataInvalid()) {
+                if (mIndeterminateTintTypedValue.isTypeAttr()) {
+                    TypedArray a = SkinCompatResources.getInstance().obtainStyledAttributes(
+                            mView.getContext(), new int[]{mIndeterminateTintTypedValue.data});
+                    mView.setIndeterminateTintList(a.getColorStateList(0));
+                } else if (mIndeterminateTintTypedValue.isTypeRes()) {
+                    mView.setIndeterminateTintList(SkinCompatResources.getInstance().getColorStateList(mIndeterminateTintTypedValue.data));
+                }
             }
         }
     }
