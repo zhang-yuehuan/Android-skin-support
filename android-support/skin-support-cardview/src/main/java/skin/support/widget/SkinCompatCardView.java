@@ -9,6 +9,7 @@ import android.util.AttributeSet;
 
 import skin.support.cardview.R;
 import skin.support.content.res.SkinCompatResources;
+import skin.support.content.res.SkinCompatTypedValue;
 import skin.support.utils.SkinLog;
 
 import static skin.support.widget.SkinCompatHelper.INVALID_ID;
@@ -19,8 +20,8 @@ import static skin.support.widget.SkinCompatHelper.INVALID_ID;
 
 public class SkinCompatCardView extends CardView implements SkinCompatSupportable {
     private static final int[] COLOR_BACKGROUND_ATTR = {android.R.attr.colorBackground};
-    private int mThemeColorBackgroundResId = INVALID_ID;
-    private int mBackgroundColorResId = INVALID_ID;
+
+    private SkinCompatTypedValue mBackgroundColorTypedValue = new SkinCompatTypedValue();
 
     public SkinCompatCardView(Context context) {
         this(context, null);
@@ -32,37 +33,41 @@ public class SkinCompatCardView extends CardView implements SkinCompatSupportabl
 
     public SkinCompatCardView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.CardView, defStyleAttr,
-                R.style.CardView);
-        if (a.hasValue(R.styleable.CardView_cardBackgroundColor)) {
-            mBackgroundColorResId = a.getResourceId(R.styleable.CardView_cardBackgroundColor, INVALID_ID);
-        } else {
-            final TypedArray aa = getContext().obtainStyledAttributes(COLOR_BACKGROUND_ATTR);
-            mThemeColorBackgroundResId = aa.getResourceId(0, INVALID_ID);
-            aa.recycle();
-        }
+        SkinCompatTypedValue.getValue(attrs,
+                R.styleable.CardView,
+                R.styleable.CardView_cardBackgroundColor,
+                mBackgroundColorTypedValue);
+
         applyBackgroundColorResource();
     }
 
     private void applyBackgroundColorResource() {
-        mBackgroundColorResId = SkinCompatHelper.checkResourceId(mBackgroundColorResId);
-        mThemeColorBackgroundResId = SkinCompatHelper.checkResourceId(mThemeColorBackgroundResId);
-        ColorStateList backgroundColor;
-        if (mBackgroundColorResId != INVALID_ID) {
-            SkinLog.d("CardView", "mBackgroundColorResId = " + mBackgroundColorResId
-                    + ", res name = " + getResources().getResourceName(mBackgroundColorResId));
-            backgroundColor = SkinCompatResources.getInstance().getColorStateList(mBackgroundColorResId);
-            setCardBackgroundColor(backgroundColor);
-        } else if (mThemeColorBackgroundResId != INVALID_ID) {
-            SkinLog.d("CardView", "mThemeColorBackgroundResId = " + mThemeColorBackgroundResId
-                    + ", res name = " + getResources().getResourceName(mThemeColorBackgroundResId));
-            int themeColorBackground = SkinCompatResources.getInstance().getColor(mThemeColorBackgroundResId);
-            final float[] hsv = new float[3];
-            Color.colorToHSV(themeColorBackground, hsv);
-            backgroundColor = ColorStateList.valueOf(hsv[2] > 0.5f
-                    ? getResources().getColor(R.color.cardview_light_background)
-                    : getResources().getColor(R.color.cardview_dark_background));
-            setCardBackgroundColor(backgroundColor);
+        if (!mBackgroundColorTypedValue.isTypeNull() && !mBackgroundColorTypedValue.isDataInvalid()) {
+            if (mBackgroundColorTypedValue.isTypeAttr()) {
+                final TypedArray a = SkinCompatResources.getInstance()
+                        .obtainStyledAttributes(getContext(), new int[]{mBackgroundColorTypedValue.data});
+                ColorStateList backgroundColor = a.getColorStateList(0);
+                if (backgroundColor != null) {
+                    setCardBackgroundColor(backgroundColor);
+                }
+                a.recycle();
+            } else if (mBackgroundColorTypedValue.isTypeRes()) {
+                setCardBackgroundColor(
+                        SkinCompatResources.getInstance()
+                                .getColorStateList(mBackgroundColorTypedValue.data));
+            }
+        } else {
+            final TypedArray a = SkinCompatResources.getInstance().obtainStyledAttributes(getContext(), COLOR_BACKGROUND_ATTR);
+            int themeColorBackground = a.getColor(0, 0);
+            if (themeColorBackground != 0) {
+                final float[] hsv = new float[3];
+                Color.colorToHSV(themeColorBackground, hsv);
+                ColorStateList backgroundColor = ColorStateList.valueOf(hsv[2] > 0.5f
+                        ? getResources().getColor(R.color.cardview_light_background)
+                        : getResources().getColor(R.color.cardview_dark_background));
+                setCardBackgroundColor(backgroundColor);
+            }
+            a.recycle();
         }
     }
 
