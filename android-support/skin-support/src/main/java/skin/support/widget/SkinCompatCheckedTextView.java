@@ -46,8 +46,7 @@ public class SkinCompatCheckedTextView extends AppCompatCheckedTextView implemen
 
     @Override
     public void setCheckMarkDrawable(@DrawableRes int resId) {
-        mCheckMarkTypedValue.type = SkinCompatTypedValue.TYPE_RESOURCES;
-        mCheckMarkTypedValue.data = resId;
+        mCheckMarkTypedValue.setData(resId);
         applyCheckMark();
     }
 

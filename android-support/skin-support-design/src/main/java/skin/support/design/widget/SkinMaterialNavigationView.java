@@ -88,7 +88,6 @@ public class SkinMaterialNavigationView extends NavigationView implements SkinCo
     @Override
     public void setItemBackgroundResource(@DrawableRes int resId) {
         super.setItemBackgroundResource(resId);
-        mItemBackgroundTypedValue.setType(SkinCompatTypedValue.TYPE_RESOURCES);
         mItemBackgroundTypedValue.setData(resId);
         applyItemBackgroundResource();
     }
@@ -103,7 +102,6 @@ public class SkinMaterialNavigationView extends NavigationView implements SkinCo
     @Override
     public void setItemTextAppearance(@StyleRes int resId) {
         super.setItemTextAppearance(resId);
-        mItemTextAppearanceTypedValue.setType(SkinCompatTypedValue.TYPE_RESOURCES);
         mItemTextAppearanceTypedValue.setData(resId);
         mTextColorTypedValue.reset();
         applyItemTextAppearanceResource();

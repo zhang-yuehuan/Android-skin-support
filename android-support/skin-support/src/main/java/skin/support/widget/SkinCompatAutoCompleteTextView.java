@@ -48,8 +48,7 @@ public class SkinCompatAutoCompleteTextView extends AppCompatAutoCompleteTextVie
     @Override
     public void setDropDownBackgroundResource(@DrawableRes int resId) {
         super.setDropDownBackgroundResource(resId);
-        mDropDownBackgroundTypedValue.type = SkinCompatTypedValue.TYPE_RESOURCES;
-        mDropDownBackgroundTypedValue.data = resId;
+        mDropDownBackgroundTypedValue.setData(resId);
         applyDropDownBackgroundResource();
     }
 

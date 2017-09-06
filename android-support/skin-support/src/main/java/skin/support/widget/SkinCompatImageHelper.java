@@ -46,8 +46,7 @@ public class SkinCompatImageHelper extends SkinCompatHelper {
     }
 
     public void setImageResource(int resId) {
-        mSrcTypedValue.type = SkinCompatTypedValue.TYPE_RESOURCES;
-        mSrcTypedValue.data = resId;
+        mSrcTypedValue.setData(resId);
         applySkin();
     }
 

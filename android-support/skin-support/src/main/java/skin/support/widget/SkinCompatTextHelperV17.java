@@ -51,13 +51,9 @@ public class SkinCompatTextHelperV17 extends SkinCompatTextHelper {
 
     public void onSetCompoundDrawablesRelativeWithIntrinsicBounds(
             @DrawableRes int start, @DrawableRes int top, @DrawableRes int end, @DrawableRes int bottom) {
-        mDrawableStartTypedValue.setType(SkinCompatTypedValue.TYPE_RESOURCES);
         mDrawableStartTypedValue.setData(start);
-        mDrawableEndTypedValue.setType(SkinCompatTypedValue.TYPE_RESOURCES);
         mDrawableEndTypedValue.setData(end);
-        mDrawableTopTypedValue.setType(SkinCompatTypedValue.TYPE_RESOURCES);
         mDrawableTopTypedValue.setData(top);
-        mDrawableBottomTypedValue.setType(SkinCompatTypedValue.TYPE_RESOURCES);
         mDrawableBottomTypedValue.setData(bottom);
         applyCompoundDrawablesRelativeResource();
     }

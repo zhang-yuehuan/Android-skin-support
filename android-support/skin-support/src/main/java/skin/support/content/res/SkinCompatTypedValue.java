@@ -15,21 +15,17 @@ public class SkinCompatTypedValue {
     public static final int TYPE_NULL = 0;
     public static final int TYPE_ATTR = 1;
     public static final int TYPE_RESOURCES = 2;
-    public Context context;
-    public AttributeSet set;
-    public int defStyleAttr = INVALID_ID;
-    public int defStyleRes = INVALID_ID;
-    public int[] attrs;
-    public int index;
-    public int type = TYPE_NULL;
-    public int data = INVALID_ID;
+    protected Context context;
+    protected AttributeSet set;
+    protected int defStyleAttr = INVALID_ID;
+    protected int defStyleRes = INVALID_ID;
+    protected int[] attrs;
+    protected int index;
+    protected int type = TYPE_NULL;
+    protected int data = INVALID_ID;
 
     public int getType() {
         return type;
-    }
-
-    public void setType(int type) {
-        this.type = type;
     }
 
     public int getData() {
@@ -37,6 +33,12 @@ public class SkinCompatTypedValue {
     }
 
     public void setData(int data) {
+        this.data = data;
+        this.type = TYPE_RESOURCES;
+    }
+
+    public void setData(int type, int data) {
+        this.type = type;
         this.data = data;
     }
 

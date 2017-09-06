@@ -33,8 +33,7 @@ public class SkinCompatBackgroundHelper extends SkinCompatHelper {
     }
 
     public void onSetBackgroundResource(int resId) {
-        mBackgroundTypedValue.type = SkinCompatTypedValue.TYPE_RESOURCES;
-        mBackgroundTypedValue.data = resId;
+        mBackgroundTypedValue.setData(resId);
         // Update the default background tint
         applySkin();
     }

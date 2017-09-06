@@ -133,7 +133,6 @@ public class SkinMaterialTextInputLayout extends TextInputLayout implements Skin
     @Override
     public void setErrorTextAppearance(@StyleRes int resId) {
         super.setErrorTextAppearance(resId);
-        mErrorTextAppearanceTypedValue.setType(SkinCompatTypedValue.TYPE_RESOURCES);
         mErrorTextAppearanceTypedValue.setData(resId);
         applyErrorTextAppearanceResource();
     }

@@ -43,8 +43,7 @@ public class SkinCompatCompoundButtonHelper extends SkinCompatHelper {
     }
 
     public void setButtonDrawable(int resId) {
-        mButtonTintTypedValue.type = SkinCompatTypedValue.TYPE_RESOURCES;
-        mButtonTintTypedValue.data = resId;
+        mButtonTintTypedValue.setData(resId);
         applySkin();
     }
 

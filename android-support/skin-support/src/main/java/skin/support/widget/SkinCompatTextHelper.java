@@ -97,7 +97,6 @@ public class SkinCompatTextHelper extends SkinCompatHelper {
     }
 
     public void onSetTextAppearance(Context context, int resId) {
-        mTextAppearanceTypedValue.setType(SkinCompatTypedValue.TYPE_RESOURCES);
         mTextAppearanceTypedValue.setData(resId);
         mTextColorTypedValue.reset();
         mTextColorHintTypedValue.reset();
@@ -133,26 +132,18 @@ public class SkinCompatTextHelper extends SkinCompatHelper {
 
     public void onSetCompoundDrawablesRelativeWithIntrinsicBounds(
             @DrawableRes int start, @DrawableRes int top, @DrawableRes int end, @DrawableRes int bottom) {
-        mDrawableLeftTypedValue.setType(SkinCompatTypedValue.TYPE_RESOURCES);
         mDrawableLeftTypedValue.setData(start);
-        mDrawableRightTypedValue.setType(SkinCompatTypedValue.TYPE_RESOURCES);
         mDrawableRightTypedValue.setData(end);
-        mDrawableTopTypedValue.setType(SkinCompatTypedValue.TYPE_RESOURCES);
         mDrawableTopTypedValue.setData(top);
-        mDrawableBottomTypedValue.setType(SkinCompatTypedValue.TYPE_RESOURCES);
         mDrawableBottomTypedValue.setData(bottom);
         applyCompoundDrawablesRelativeResource();
     }
 
     public void onSetCompoundDrawablesWithIntrinsicBounds(
             @DrawableRes int left, @DrawableRes int top, @DrawableRes int right, @DrawableRes int bottom) {
-        mDrawableLeftTypedValue.setType(SkinCompatTypedValue.TYPE_RESOURCES);
         mDrawableLeftTypedValue.setData(left);
-        mDrawableRightTypedValue.setType(SkinCompatTypedValue.TYPE_RESOURCES);
         mDrawableRightTypedValue.setData(right);
-        mDrawableTopTypedValue.setType(SkinCompatTypedValue.TYPE_RESOURCES);
         mDrawableTopTypedValue.setData(top);
-        mDrawableBottomTypedValue.setType(SkinCompatTypedValue.TYPE_RESOURCES);
         mDrawableBottomTypedValue.setData(bottom);
         applyCompoundDrawablesResource();
     }

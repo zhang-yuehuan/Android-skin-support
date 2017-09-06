@@ -111,8 +111,7 @@ public class SkinCompatToolbar extends Toolbar implements SkinCompatSupportable 
     @Override
     public void setNavigationIcon(@DrawableRes int resId) {
         super.setNavigationIcon(resId);
-        mNavigationIconTypedValue.type = SkinCompatTypedValue.TYPE_RESOURCES;
-        mNavigationIconTypedValue.data = resId;
+        mNavigationIconTypedValue.setData(resId);
         applyNavigationIcon();
     }
 

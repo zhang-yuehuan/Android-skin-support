@@ -100,8 +100,7 @@ public class SkinCompatSpinner extends AppCompatSpinner implements SkinCompatSup
     @Override
     public void setPopupBackgroundResource(@DrawableRes int resId) {
         super.setPopupBackgroundResource(resId);
-        mPopupBackgroundTypedValue.type = SkinCompatTypedValue.TYPE_RESOURCES;
-        mPopupBackgroundTypedValue.data = resId;
+        mPopupBackgroundTypedValue.setData(resId);
         applyPopupBackground();
     }
 
