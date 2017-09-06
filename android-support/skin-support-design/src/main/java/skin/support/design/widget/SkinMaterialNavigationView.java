@@ -12,6 +12,7 @@ import android.util.AttributeSet;
 import android.util.TypedValue;
 
 import skin.support.content.res.SkinCompatResources;
+import skin.support.content.res.SkinCompatTypedValue;
 import skin.support.design.R;
 import skin.support.widget.SkinCompatBackgroundHelper;
 import skin.support.widget.SkinCompatHelper;
@@ -27,10 +28,11 @@ import static skin.support.widget.SkinCompatHelper.INVALID_ID;
 public class SkinMaterialNavigationView extends NavigationView implements SkinCompatSupportable {
     private static final int[] CHECKED_STATE_SET = {android.R.attr.state_checked};
     private static final int[] DISABLED_STATE_SET = {-android.R.attr.state_enabled};
-    private int mItemBackgroundResId = INVALID_ID;
-    private int mTextColorResId = INVALID_ID;
-    private int mDefaultTintResId = INVALID_ID;
-    private int mIconTintResId = INVALID_ID;
+    private SkinCompatTypedValue mItemTextAppearanceTypedValue = new SkinCompatTypedValue();
+    private SkinCompatTypedValue mItemBackgroundTypedValue = new SkinCompatTypedValue();
+    private SkinCompatTypedValue mTextColorTypedValue = new SkinCompatTypedValue();
+    private SkinCompatTypedValue mIconTintTypedValue = new SkinCompatTypedValue();
+
     private SkinCompatBackgroundHelper mBackgroundTintHelper;
 
     public SkinMaterialNavigationView(Context context) {
@@ -45,34 +47,39 @@ public class SkinMaterialNavigationView extends NavigationView implements SkinCo
         super(context, attrs, defStyleAttr);
         mBackgroundTintHelper = new SkinCompatBackgroundHelper(this);
         mBackgroundTintHelper.loadFromAttributes(attrs, 0);
-
-        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.NavigationView, defStyleAttr,
-                R.style.Widget_Design_NavigationView);
-        if (a.hasValue(R.styleable.NavigationView_itemIconTint)) {
-            mIconTintResId = a.getResourceId(R.styleable.NavigationView_itemIconTint, INVALID_ID);
-        } else {
-            mDefaultTintResId = SkinCompatThemeUtils.getColorPrimaryResId(context);
-        }
-        if (a.hasValue(R.styleable.NavigationView_itemTextAppearance)) {
-            int textAppearance = a.getResourceId(R.styleable.NavigationView_itemTextAppearance, INVALID_ID);
-            if (textAppearance != INVALID_ID) {
-                TypedArray ap = context.obtainStyledAttributes(textAppearance, R.styleable.SkinTextAppearance);
-                if (ap.hasValue(R.styleable.SkinTextAppearance_android_textColor)) {
-                    mTextColorResId = ap.getResourceId(R.styleable.SkinTextAppearance_android_textColor, INVALID_ID);
-                }
-                ap.recycle();
-            }
-        }
-        if (a.hasValue(R.styleable.NavigationView_itemTextColor)) {
-            mTextColorResId = a.getResourceId(R.styleable.NavigationView_itemTextColor, INVALID_ID);
-        } else {
-            mDefaultTintResId = SkinCompatThemeUtils.getColorPrimaryResId(context);
-        }
-        if (mTextColorResId == INVALID_ID) {
-            mTextColorResId = SkinCompatThemeUtils.getTextColorPrimaryResId(context);
-        }
-        mItemBackgroundResId = a.getResourceId(R.styleable.NavigationView_itemBackground, INVALID_ID);
-        a.recycle();
+        SkinCompatTypedValue.getValue(
+                context,
+                attrs,
+                defStyleAttr,
+                R.style.Widget_Design_NavigationView,
+                R.styleable.NavigationView,
+                R.styleable.NavigationView_itemTextAppearance,
+                mItemTextAppearanceTypedValue);
+        SkinCompatTypedValue.getValue(
+                context,
+                attrs,
+                defStyleAttr,
+                R.style.Widget_Design_NavigationView,
+                R.styleable.NavigationView,
+                R.styleable.NavigationView_itemIconTint,
+                mIconTintTypedValue);
+        SkinCompatTypedValue.getValue(
+                context,
+                attrs,
+                defStyleAttr,
+                R.style.Widget_Design_NavigationView,
+                R.styleable.NavigationView,
+                R.styleable.NavigationView_itemTextColor,
+                mTextColorTypedValue);
+        SkinCompatTypedValue.getValue(
+                context,
+                attrs,
+                defStyleAttr,
+                R.style.Widget_Design_NavigationView,
+                R.styleable.NavigationView,
+                R.styleable.NavigationView_itemBackground,
+                mItemBackgroundTypedValue);
+        applyItemTextAppearanceResource();
         applyItemIconTintResource();
         applyItemTextColorResource();
         applyItemBackgroundResource();
@@ -81,24 +88,14 @@ public class SkinMaterialNavigationView extends NavigationView implements SkinCo
     @Override
     public void setItemBackgroundResource(@DrawableRes int resId) {
         super.setItemBackgroundResource(resId);
-        mItemBackgroundResId = resId;
+        mItemBackgroundTypedValue.setType(SkinCompatTypedValue.TYPE_RESOURCES);
+        mItemBackgroundTypedValue.setData(resId);
         applyItemBackgroundResource();
     }
 
     private void applyItemBackgroundResource() {
-        mItemBackgroundResId = SkinCompatHelper.checkResourceId(mItemBackgroundResId);
-        if (mItemBackgroundResId == INVALID_ID) {
-            return;
-        }
-        String typeName = getResources().getResourceTypeName(mItemBackgroundResId);
-        if ("color".equals(typeName)) {
-            Drawable drawable = new ColorDrawable(SkinCompatResources.getInstance().getColor(mItemBackgroundResId));
-            setItemBackground(drawable);
-        } else if ("drawable".equals(typeName)) {
-            Drawable drawable = SkinCompatResources.getInstance().getDrawable(mItemBackgroundResId);
-            setItemBackground(drawable);
-        } else if ("mipmap".equals(typeName)) {
-            Drawable drawable = SkinCompatResources.getInstance().getMipmap(mItemBackgroundResId);
+        Drawable drawable = mItemBackgroundTypedValue.getDrawable();
+        if (drawable != null) {
             setItemBackground(drawable);
         }
     }
@@ -106,48 +103,50 @@ public class SkinMaterialNavigationView extends NavigationView implements SkinCo
     @Override
     public void setItemTextAppearance(@StyleRes int resId) {
         super.setItemTextAppearance(resId);
-        if (resId != INVALID_ID) {
-            TypedArray a = getContext().obtainStyledAttributes(resId, R.styleable.SkinTextAppearance);
+        mItemTextAppearanceTypedValue.setType(SkinCompatTypedValue.TYPE_RESOURCES);
+        mItemTextAppearanceTypedValue.setData(resId);
+        mTextColorTypedValue.reset();
+        applyItemTextAppearanceResource();
+    }
+
+    private void applyItemTextAppearanceResource() {
+        if (mTextColorTypedValue.isTypeNull()) {
+            TypedArray a = mItemTextAppearanceTypedValue.obtainStyledAttributes(R.styleable.SkinTextAppearance);
             if (a.hasValue(R.styleable.SkinTextAppearance_android_textColor)) {
-                mTextColorResId = a.getResourceId(R.styleable.SkinTextAppearance_android_textColor, INVALID_ID);
+                setItemTextColor(a.getColorStateList(R.styleable.SkinTextAppearance_android_textColor));
             }
             a.recycle();
-            applyItemTextColorResource();
         }
     }
 
     private void applyItemTextColorResource() {
-        mTextColorResId = SkinCompatHelper.checkResourceId(mTextColorResId);
-        if (mTextColorResId != INVALID_ID) {
-            setItemTextColor(SkinCompatResources.getInstance().getColorStateList(mTextColorResId));
-        } else {
-            mDefaultTintResId = SkinCompatHelper.checkResourceId(mDefaultTintResId);
-            if (mDefaultTintResId != INVALID_ID) {
-                setItemTextColor(createDefaultColorStateList(android.R.attr.textColorPrimary));
-            }
+        ColorStateList textColor = mTextColorTypedValue.getColorStateList();
+        if (textColor != null) {
+            setItemTextColor(textColor);
+        } else if (mItemTextAppearanceTypedValue.isTypeNull()) {
+            setItemTextColor(createDefaultColorStateList(android.R.attr.textColorPrimary));
         }
     }
 
     private void applyItemIconTintResource() {
-        mIconTintResId = SkinCompatHelper.checkResourceId(mIconTintResId);
-        if (mIconTintResId != INVALID_ID) {
-            setItemIconTintList(SkinCompatResources.getInstance().getColorStateList(mIconTintResId));
+        ColorStateList iconTint = mIconTintTypedValue.getColorStateList();
+        if (iconTint != null) {
+            setItemIconTintList(iconTint);
         } else {
-            mDefaultTintResId = SkinCompatHelper.checkResourceId(mDefaultTintResId);
-            if (mDefaultTintResId != INVALID_ID) {
-                setItemIconTintList(createDefaultColorStateList(android.R.attr.textColorSecondary));
-            }
+            setItemIconTintList(createDefaultColorStateList(android.R.attr.textColorSecondary));
         }
     }
 
     private ColorStateList createDefaultColorStateList(int baseColorThemeAttr) {
-        final TypedValue value = new TypedValue();
-        if (!getContext().getTheme().resolveAttribute(baseColorThemeAttr, value, true)) {
+        ColorStateList baseColor = SkinCompatResources.getInstance()
+                .obtainStyledAttributes(getContext(), new int[]{baseColorThemeAttr}).getColorStateList(0);
+
+        int colorPrimary = SkinCompatResources.getInstance()
+                .obtainStyledAttributes(getContext(), new int[]{R.attr.colorPrimary}).getColor(0, 0);
+        if (baseColor == null || colorPrimary == 0) {
             return null;
         }
-        ColorStateList baseColor = SkinCompatResources.getInstance().getColorStateList(value.resourceId);
 
-        int colorPrimary = SkinCompatResources.getInstance().getColor(mDefaultTintResId);
         int defaultColor = baseColor.getDefaultColor();
         return new ColorStateList(new int[][]{
                 DISABLED_STATE_SET,
@@ -165,6 +164,7 @@ public class SkinMaterialNavigationView extends NavigationView implements SkinCo
         if (mBackgroundTintHelper != null) {
             mBackgroundTintHelper.applySkin();
         }
+        applyItemTextAppearanceResource();
         applyItemIconTintResource();
         applyItemTextColorResource();
         applyItemBackgroundResource();

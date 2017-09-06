@@ -9,6 +9,7 @@ import android.util.AttributeSet;
 import android.util.TypedValue;
 
 import skin.support.content.res.SkinCompatResources;
+import skin.support.content.res.SkinCompatTypedValue;
 import skin.support.design.R;
 import skin.support.widget.SkinCompatHelper;
 import skin.support.widget.SkinCompatSupportable;
@@ -24,9 +25,9 @@ public class SkinMaterialBottomNavigationView extends BottomNavigationView imple
     private static final int[] CHECKED_STATE_SET = {android.R.attr.state_checked};
     private static final int[] DISABLED_STATE_SET = {-android.R.attr.state_enabled};
 
-    private int mTextColorResId = INVALID_ID;
-    private int mIconTintResId = INVALID_ID;
-    private int mDefaultTintResId = INVALID_ID;
+    private SkinCompatTypedValue mTextColorTypedValue = new SkinCompatTypedValue();
+    private SkinCompatTypedValue mIconTintTypedValue = new SkinCompatTypedValue();
+    private SkinCompatTypedValue mDefaultTintTypedValue = new SkinCompatTypedValue();
 
     public SkinMaterialBottomNavigationView(@NonNull Context context) {
         this(context, null);
@@ -38,56 +39,53 @@ public class SkinMaterialBottomNavigationView extends BottomNavigationView imple
 
     public SkinMaterialBottomNavigationView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.BottomNavigationView, defStyleAttr,
-                R.style.Widget_Design_BottomNavigationView);
-
-        if (a.hasValue(R.styleable.BottomNavigationView_itemIconTint)) {
-            mIconTintResId = a.getResourceId(R.styleable.BottomNavigationView_itemIconTint, INVALID_ID);
-        } else {
-            mDefaultTintResId = resolveColorPrimary();
-        }
-        if (a.hasValue(R.styleable.BottomNavigationView_itemTextColor)) {
-            mTextColorResId = a.getResourceId(R.styleable.BottomNavigationView_itemTextColor, INVALID_ID);
-        } else {
-            mDefaultTintResId = resolveColorPrimary();
-        }
-        a.recycle();
+        SkinCompatTypedValue.getValue(
+                context,
+                attrs,
+                defStyleAttr,
+                R.style.Widget_Design_BottomNavigationView,
+                R.styleable.BottomNavigationView,
+                R.styleable.BottomNavigationView_itemTextColor,
+                mTextColorTypedValue);
+        SkinCompatTypedValue.getValue(
+                context,
+                attrs,
+                defStyleAttr,
+                R.style.Widget_Design_BottomNavigationView,
+                R.styleable.BottomNavigationView,
+                R.styleable.BottomNavigationView_itemIconTint,
+                mIconTintTypedValue);
         applyItemIconTintResource();
         applyItemTextColorResource();
     }
 
     private void applyItemTextColorResource() {
-        mTextColorResId = SkinCompatHelper.checkResourceId(mTextColorResId);
-        if (mTextColorResId != INVALID_ID) {
-            setItemTextColor(SkinCompatResources.getInstance().getColorStateList(mTextColorResId));
+        ColorStateList textColor = mTextColorTypedValue.getColorStateList();
+        if (textColor != null) {
+            setItemTextColor(textColor);
         } else {
-            mDefaultTintResId = SkinCompatHelper.checkResourceId(mDefaultTintResId);
-            if (mDefaultTintResId != INVALID_ID) {
-                setItemTextColor(createDefaultColorStateList(android.R.attr.textColorSecondary));
-            }
+            setItemTextColor(createDefaultColorStateList(android.R.attr.textColorSecondary));
         }
     }
 
     private void applyItemIconTintResource() {
-        mIconTintResId = SkinCompatHelper.checkResourceId(mIconTintResId);
-        if (mIconTintResId != INVALID_ID) {
-            setItemIconTintList(SkinCompatResources.getInstance().getColorStateList(mIconTintResId));
+        ColorStateList iconTint = mIconTintTypedValue.getColorStateList();
+        if (iconTint != null) {
+            setItemIconTintList(iconTint);
         } else {
-            mDefaultTintResId = SkinCompatHelper.checkResourceId(mDefaultTintResId);
-            if (mDefaultTintResId != INVALID_ID) {
-                setItemIconTintList(createDefaultColorStateList(android.R.attr.textColorSecondary));
-            }
+            setItemIconTintList(createDefaultColorStateList(android.R.attr.textColorSecondary));
         }
     }
 
     private ColorStateList createDefaultColorStateList(int baseColorThemeAttr) {
-        final TypedValue value = new TypedValue();
-        if (!getContext().getTheme().resolveAttribute(baseColorThemeAttr, value, true)) {
+        ColorStateList baseColor = SkinCompatResources.getInstance()
+                .obtainStyledAttributes(getContext(), new int[]{baseColorThemeAttr}).getColorStateList(0);
+
+        int colorPrimary = SkinCompatResources.getInstance()
+                .obtainStyledAttributes(getContext(), new int[]{R.attr.colorPrimary}).getColor(0, 0);
+        if (baseColor == null || colorPrimary == 0) {
             return null;
         }
-        ColorStateList baseColor = SkinCompatResources.getInstance().getColorStateList(value.resourceId);
-
-        int colorPrimary = SkinCompatResources.getInstance().getColor(mDefaultTintResId);
         int defaultColor = baseColor.getDefaultColor();
         return new ColorStateList(new int[][]{
                 DISABLED_STATE_SET,
@@ -98,15 +96,6 @@ public class SkinMaterialBottomNavigationView extends BottomNavigationView imple
                 colorPrimary,
                 defaultColor
         });
-    }
-
-    private int resolveColorPrimary() {
-        final TypedValue value = new TypedValue();
-        if (!getContext().getTheme().resolveAttribute(
-                R.attr.colorPrimary, value, true)) {
-            return INVALID_ID;
-        }
-        return value.resourceId;
     }
 
     @Override

@@ -6,6 +6,7 @@ import android.support.design.widget.TextInputEditText;
 import android.support.v7.appcompat.R;
 import android.util.AttributeSet;
 
+import skin.support.content.res.SkinCompatTypedValue;
 import skin.support.widget.SkinCompatBackgroundHelper;
 import skin.support.widget.SkinCompatSupportable;
 import skin.support.widget.SkinCompatTextHelper;
@@ -57,8 +58,12 @@ public class SkinMaterialTextInputEditText extends TextInputEditText implements 
         }
     }
 
-    public int getTextColorResId() {
-        return mTextHelper != null ? mTextHelper.getTextColorResId() : INVALID_ID;
+    public SkinCompatTypedValue getTextColorTypedValue() {
+        return mTextHelper != null ? mTextHelper.getTextColorTypedValue() : new SkinCompatTypedValue();
+    }
+
+    public SkinCompatTypedValue getTextAppearanceTypedValue() {
+        return mTextHelper != null ? mTextHelper.getTextAppearanceTypedValue() : new SkinCompatTypedValue();
     }
 
     @Override

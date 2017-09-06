@@ -20,6 +20,8 @@
             </intent-filter>
         </activity>
 
+        <activity android:name="theme.support.demo.basic.BasicWidgetActivity" />
+
     </application>
 
 </manifest>

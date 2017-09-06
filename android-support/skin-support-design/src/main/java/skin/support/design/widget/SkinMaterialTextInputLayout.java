@@ -2,6 +2,8 @@ package skin.support.design.widget;
 
 import android.content.Context;
 import android.content.res.ColorStateList;
+import android.content.res.TypedArray;
+import android.graphics.drawable.Drawable;
 import android.support.annotation.StyleRes;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.widget.TintTypedArray;
@@ -12,6 +14,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
 import skin.support.content.res.SkinCompatResources;
+import skin.support.content.res.SkinCompatTypedValue;
 import skin.support.design.R;
 import skin.support.utils.SkinLog;
 import skin.support.widget.SkinCompatBackgroundHelper;
@@ -28,11 +31,11 @@ import static skin.support.widget.SkinCompatHelper.INVALID_ID;
 public class SkinMaterialTextInputLayout extends TextInputLayout implements SkinCompatSupportable {
     private static final String TAG = SkinMaterialTextInputLayout.class.getSimpleName();
     private SkinCompatBackgroundHelper mBackgroundTintHelper;
-    private int mPasswordToggleResId = INVALID_ID;
-    private int mCounterTextColorResId = INVALID_ID;
-    private int mErrorTextColorResId = INVALID_ID;
-    private int mFocusedTextColorResId = INVALID_ID;
-    private int mDefaultTextColorResId = INVALID_ID;
+
+    private SkinCompatTypedValue mPasswordToggleTypedValue = new SkinCompatTypedValue();
+    private SkinCompatTypedValue mCounterTextAppearanceTypedValue = new SkinCompatTypedValue();
+    private SkinCompatTypedValue mErrorTextAppearanceTypedValue = new SkinCompatTypedValue();
+    private SkinCompatTypedValue mFocusedTextColorTypedValue = new SkinCompatTypedValue();
 
     public SkinMaterialTextInputLayout(Context context) {
         this(context, null);
@@ -47,55 +50,73 @@ public class SkinMaterialTextInputLayout extends TextInputLayout implements Skin
         mBackgroundTintHelper = new SkinCompatBackgroundHelper(this);
         mBackgroundTintHelper.loadFromAttributes(attrs, defStyleAttr);
 
-        final TintTypedArray a = TintTypedArray.obtainStyledAttributes(context, attrs,
-                R.styleable.TextInputLayout, defStyleAttr, R.style.Widget_Design_TextInputLayout);
-        if (a.hasValue(R.styleable.TextInputLayout_android_textColorHint)) {
-            mDefaultTextColorResId = mFocusedTextColorResId =
-                    a.getResourceId(R.styleable.TextInputLayout_android_textColorHint, INVALID_ID);
-            SkinLog.e(TAG, "mDefaultTextColorResId = " + mDefaultTextColorResId
-                    + ", hex = " + Integer.toHexString(getResources().getColor(mDefaultTextColorResId))
-                    + ", res name = " + getResources().getResourceName(mDefaultTextColorResId));
-            applyFocusedTextColorResource();
-        }
+        SkinCompatTypedValue.getValue(
+                context,
+                attrs,
+                defStyleAttr,
+                R.style.Widget_Design_TextInputLayout,
+                R.styleable.TextInputLayout,
+                R.styleable.TextInputLayout_android_textColorHint,
+                mFocusedTextColorTypedValue);
+        applyFocusedTextColorResource();
 
-        int errorTextAppearance = a.getResourceId(R.styleable.TextInputLayout_errorTextAppearance, INVALID_ID);
-        loadErrorTextColorResFromAttributes(errorTextAppearance);
-        int counterTextAppearance = a.getResourceId(R.styleable.TextInputLayout_counterTextAppearance, INVALID_ID);
-        loadCounterTextColorResFromAttributes(counterTextAppearance);
-        mPasswordToggleResId = a.getResourceId(R.styleable.TextInputLayout_passwordToggleDrawable, INVALID_ID);
-        a.recycle();
+        SkinCompatTypedValue.getValue(
+                context,
+                attrs,
+                defStyleAttr,
+                R.style.Widget_Design_TextInputLayout,
+                R.styleable.TextInputLayout,
+                R.styleable.TextInputLayout_errorTextAppearance,
+                mErrorTextAppearanceTypedValue);
+        applyErrorTextAppearanceResource();
+
+        SkinCompatTypedValue.getValue(
+                context,
+                attrs,
+                defStyleAttr,
+                R.style.Widget_Design_TextInputLayout,
+                R.styleable.TextInputLayout,
+                R.styleable.TextInputLayout_counterTextAppearance,
+                mCounterTextAppearanceTypedValue);
+        applyCounterTextAppearanceResource();
+
+        SkinCompatTypedValue.getValue(
+                context,
+                attrs,
+                defStyleAttr,
+                R.style.Widget_Design_TextInputLayout,
+                R.styleable.TextInputLayout,
+                R.styleable.TextInputLayout_passwordToggleDrawable,
+                mPasswordToggleTypedValue);
+        applyPasswordToggleResource();
     }
 
-    private void loadCounterTextColorResFromAttributes(@StyleRes int resId) {
-        if (resId != INVALID_ID) {
-            TintTypedArray counterTA = TintTypedArray.obtainStyledAttributes(getContext(), resId, skin.support.R.styleable.SkinTextAppearance);
-            if (counterTA.hasValue(skin.support.R.styleable.SkinTextAppearance_android_textColor)) {
-                mCounterTextColorResId = counterTA.getResourceId(skin.support.R.styleable.SkinTextAppearance_android_textColor, INVALID_ID);
-                SkinLog.d(TAG, "mCounterTextColorResId name = " + getResources().getResourceName(mCounterTextColorResId));
-            }
-            counterTA.recycle();
+    private void applyPasswordToggleResource() {
+        Drawable drawable = mPasswordToggleTypedValue.getDrawable();
+        if (drawable != null) {
+            setPasswordVisibilityToggleDrawable(drawable);
         }
-        applyCounterTextColorResource();
     }
 
     @Override
     public void setCounterEnabled(boolean enabled) {
         super.setCounterEnabled(enabled);
         if (enabled) {
-            applyCounterTextColorResource();
+            applyCounterTextAppearanceResource();
         }
     }
 
-    private void applyCounterTextColorResource() {
-        mCounterTextColorResId = SkinCompatHelper.checkResourceId(mCounterTextColorResId);
-        if (mCounterTextColorResId != INVALID_ID) {
+    private void applyCounterTextAppearanceResource() {
+        TypedArray a = mCounterTextAppearanceTypedValue.obtainStyledAttributes(R.styleable.SkinTextAppearance);
+        int counterTextColor = a.getColor(R.styleable.SkinTextAppearance_android_textColor, 0);
+        if (counterTextColor != 0) {
             TextView counterView = getCounterView();
             if (counterView != null) {
-//                SkinLog.e(TAG, "mCounterTextColor = " +Integer.toHexString(SkinCompatResources.getInstance().getColor(mCounterTextColorResId)));
-                counterView.setTextColor(SkinCompatResources.getInstance().getColor(mCounterTextColorResId));
+                counterView.setTextColor(counterTextColor);
                 updateEditTextBackground();
             }
         }
+        a.recycle();
     }
 
     private TextView getCounterView() {
@@ -112,39 +133,30 @@ public class SkinMaterialTextInputLayout extends TextInputLayout implements Skin
     @Override
     public void setErrorTextAppearance(@StyleRes int resId) {
         super.setErrorTextAppearance(resId);
-        loadErrorTextColorResFromAttributes(resId);
-    }
-
-    private void loadErrorTextColorResFromAttributes(@StyleRes int resId) {
-        if (resId != INVALID_ID) {
-            TintTypedArray errorTA = TintTypedArray.obtainStyledAttributes(getContext(),
-                    resId, skin.support.R.styleable.SkinTextAppearance);
-            if (errorTA.hasValue(skin.support.R.styleable.SkinTextAppearance_android_textColor)) {
-                mErrorTextColorResId = errorTA.getResourceId(skin.support.R.styleable.SkinTextAppearance_android_textColor, INVALID_ID);
-                SkinLog.d(TAG, "mErrorTextColorResId = " + SkinCompatHelper.checkResourceId(mErrorTextColorResId));
-            }
-            errorTA.recycle();
-        }
-        applyErrorTextColorResource();
+        mErrorTextAppearanceTypedValue.setType(SkinCompatTypedValue.TYPE_RESOURCES);
+        mErrorTextAppearanceTypedValue.setData(resId);
+        applyErrorTextAppearanceResource();
     }
 
     @Override
     public void setErrorEnabled(boolean enabled) {
         super.setErrorEnabled(enabled);
         if (enabled) {
-            applyErrorTextColorResource();
+            applyErrorTextAppearanceResource();
         }
     }
 
-    private void applyErrorTextColorResource() {
-        mErrorTextColorResId = SkinCompatHelper.checkResourceId(mErrorTextColorResId);
-        if (mErrorTextColorResId != INVALID_ID && mErrorTextColorResId != R.color.design_error) {
+    private void applyErrorTextAppearanceResource() {
+        TypedArray a = mCounterTextAppearanceTypedValue.obtainStyledAttributes(R.styleable.SkinTextAppearance);
+        int errorTextColor = a.getColor(R.styleable.SkinTextAppearance_android_textColor, 0);
+        if (errorTextColor != 0) {
             TextView errorView = getErrorView();
             if (errorView != null) {
-                errorView.setTextColor(SkinCompatResources.getInstance().getColor(mErrorTextColorResId));
+                errorView.setTextColor(errorTextColor);
                 updateEditTextBackground();
             }
         }
+        a.recycle();
     }
 
     private TextView getErrorView() {
@@ -180,21 +192,30 @@ public class SkinMaterialTextInputLayout extends TextInputLayout implements Skin
     }
 
     private void applyFocusedTextColorResource() {
-        mFocusedTextColorResId = SkinCompatHelper.checkResourceId(mFocusedTextColorResId);
-        if (mFocusedTextColorResId != INVALID_ID && mFocusedTextColorResId != R.color.abc_hint_foreground_material_light) {
-            setFocusedTextColor(SkinCompatResources.getInstance().getColorStateList(mFocusedTextColorResId));
-        } else if (getEditText() != null) {
-            int textColorResId = INVALID_ID;
+        ColorStateList focusedTextColor = mFocusedTextColorTypedValue.getColorStateList();
+        if (focusedTextColor == null && getEditText() != null) {
             if (getEditText() instanceof SkinCompatEditText) {
-                textColorResId = ((SkinCompatEditText) getEditText()).getTextColorResId();
+                SkinCompatTypedValue typedValue = ((SkinCompatEditText) getEditText()).getTextColorTypedValue();
+                focusedTextColor = typedValue.getColorStateList();
+                if (focusedTextColor == null) {
+                    typedValue = ((SkinCompatEditText) getEditText()).getTextAppearanceTypedValue();
+                    TypedArray a = typedValue.obtainStyledAttributes(R.styleable.SkinTextAppearance);
+                    focusedTextColor = a.getColorStateList(R.styleable.SkinTextAppearance_android_textColor);
+                    a.recycle();
+                }
             } else if (getEditText() instanceof SkinMaterialTextInputEditText) {
-                textColorResId = ((SkinMaterialTextInputEditText) getEditText()).getTextColorResId();
+                SkinCompatTypedValue typedValue = ((SkinMaterialTextInputEditText) getEditText()).getTextColorTypedValue();
+                focusedTextColor = typedValue.getColorStateList();
+                if (focusedTextColor == null) {
+                    typedValue = ((SkinMaterialTextInputEditText) getEditText()).getTextAppearanceTypedValue();
+                    TypedArray a = typedValue.obtainStyledAttributes(R.styleable.SkinTextAppearance);
+                    focusedTextColor = a.getColorStateList(R.styleable.SkinTextAppearance_android_textColor);
+                    a.recycle();
+                }
             }
-            textColorResId = SkinCompatHelper.checkResourceId(textColorResId);
-            if (textColorResId != INVALID_ID) {
-                ColorStateList colors = SkinCompatResources.getInstance().getColorStateList(textColorResId);
-                setFocusedTextColor(colors);
-            }
+        }
+        if (focusedTextColor != null) {
+            setFocusedTextColor(focusedTextColor);
         }
     }
 
@@ -221,8 +242,8 @@ public class SkinMaterialTextInputLayout extends TextInputLayout implements Skin
 
     @Override
     public void applySkin() {
-        applyErrorTextColorResource();
-        applyCounterTextColorResource();
+        applyErrorTextAppearanceResource();
+        applyCounterTextAppearanceResource();
         applyFocusedTextColorResource();
         if (mBackgroundTintHelper != null) {
             mBackgroundTintHelper.applySkin();

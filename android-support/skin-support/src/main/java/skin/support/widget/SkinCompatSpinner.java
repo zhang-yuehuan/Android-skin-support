@@ -3,6 +3,7 @@ package skin.support.widget;
 import android.content.Context;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.annotation.DrawableRes;
 import android.support.v7.widget.AppCompatSpinner;
@@ -11,12 +12,8 @@ import android.util.AttributeSet;
 import android.util.Log;
 
 import skin.support.R;
-import skin.support.SkinCompatManager;
 import skin.support.content.res.SkinCompatResources;
 import skin.support.content.res.SkinCompatTypedValue;
-
-import static skin.support.widget.SkinCompatHelper.INVALID_ID;
-import static skin.support.widget.SkinCompatHelper.checkResourceId;
 
 /**
  * Created by ximsfei on 17-1-21.
@@ -84,7 +81,10 @@ public class SkinCompatSpinner extends AppCompatSpinner implements SkinCompatSup
             }
 
             if (mode == MODE_DROPDOWN) {
-                SkinCompatTypedValue.getValue(attrs,
+                SkinCompatTypedValue.getValue(
+                        context,
+                        attrs,
+                        defStyleAttr,
                         R.styleable.Spinner,
                         R.styleable.Spinner_android_popupBackground,
                         mPopupBackgroundTypedValue);
@@ -105,16 +105,9 @@ public class SkinCompatSpinner extends AppCompatSpinner implements SkinCompatSup
     }
 
     private void applyPopupBackground() {
-        if (mPopupBackgroundTypedValue.isDataInvalid() || mPopupBackgroundTypedValue.isTypeNull()) {
-            return;
-        }
-        if (mPopupBackgroundTypedValue.isTypeAttr()) {
-            TypedArray a = SkinCompatResources.getInstance().obtainStyledAttributes(
-                    getContext(), new int[]{mPopupBackgroundTypedValue.data});
-            setPopupBackgroundDrawable(a.getDrawable(0));
-            a.recycle();
-        } else if (mPopupBackgroundTypedValue.isTypeRes()) {
-            setPopupBackgroundDrawable(SkinCompatResources.getInstance().getDrawable(mPopupBackgroundTypedValue.data));
+        Drawable drawable = mPopupBackgroundTypedValue.getDrawable();
+        if (drawable != null) {
+            setPopupBackgroundDrawable(drawable);
         }
     }
 

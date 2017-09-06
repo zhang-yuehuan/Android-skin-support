@@ -42,15 +42,6 @@ public class SkinCompatThemeUtils {
         return getResId(context, new int[]{android.R.attr.textColorPrimary});
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-    public static int getStatusBarColorResId(Context context) {
-        return getResId(context, new int[]{android.R.attr.statusBarColor});
-    }
-
-    public static int getWindowBackgroundResId(Context context) {
-        return getResId(context, new int[]{android.R.attr.windowBackground});
-    }
-
     public static int getStatusBarColor(Context context) {
         int color = 0;
         TypedArray a;

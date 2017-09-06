@@ -1,11 +1,13 @@
 package skin.support.design.widget;
 
 import android.content.Context;
+import android.content.res.ColorStateList;
 import android.content.res.TypedArray;
 import android.support.design.widget.FloatingActionButton;
 import android.util.AttributeSet;
 
 import skin.support.content.res.SkinCompatResources;
+import skin.support.content.res.SkinCompatTypedValue;
 import skin.support.design.R;
 import skin.support.widget.SkinCompatHelper;
 import skin.support.widget.SkinCompatImageHelper;
@@ -18,8 +20,8 @@ import static skin.support.widget.SkinCompatHelper.INVALID_ID;
  */
 
 public class SkinMaterialFloatingActionButton extends FloatingActionButton implements SkinCompatSupportable {
-    private int mRippleColorResId = INVALID_ID;
-    private int mBackgroundTintResId = INVALID_ID;
+    private SkinCompatTypedValue mRippleColorTypedValue = new SkinCompatTypedValue();
+    private SkinCompatTypedValue mBackgroundTintTypedValue = new SkinCompatTypedValue();
 
     private SkinCompatImageHelper mImageHelper;
 
@@ -33,12 +35,22 @@ public class SkinMaterialFloatingActionButton extends FloatingActionButton imple
 
     public SkinMaterialFloatingActionButton(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        TypedArray a = context.obtainStyledAttributes(attrs,
-                R.styleable.FloatingActionButton, defStyleAttr,
-                R.style.Widget_Design_FloatingActionButton);
-        mBackgroundTintResId = a.getResourceId(R.styleable.FloatingActionButton_backgroundTint, INVALID_ID);
-        mRippleColorResId = a.getResourceId(R.styleable.FloatingActionButton_rippleColor, INVALID_ID);
-        a.recycle();
+        SkinCompatTypedValue.getValue(
+                context,
+                attrs,
+                defStyleAttr,
+                R.style.Widget_Design_FloatingActionButton,
+                R.styleable.FloatingActionButton,
+                R.styleable.FloatingActionButton_backgroundTint,
+                mBackgroundTintTypedValue);
+        SkinCompatTypedValue.getValue(
+                context,
+                attrs,
+                defStyleAttr,
+                R.style.Widget_Design_FloatingActionButton,
+                R.styleable.FloatingActionButton,
+                R.styleable.FloatingActionButton_rippleColor,
+                mRippleColorTypedValue);
         applyBackgroundTintResource();
         applyRippleColorResource();
 
@@ -47,16 +59,16 @@ public class SkinMaterialFloatingActionButton extends FloatingActionButton imple
     }
 
     private void applyBackgroundTintResource() {
-        mBackgroundTintResId = SkinCompatHelper.checkResourceId(mBackgroundTintResId);
-        if (mBackgroundTintResId != INVALID_ID) {
-            setBackgroundTintList(SkinCompatResources.getInstance().getColorStateList(mBackgroundTintResId));
+        ColorStateList backgroundTint = mBackgroundTintTypedValue.getColorStateList();
+        if (backgroundTint != null) {
+            setBackgroundTintList(backgroundTint);
         }
     }
 
     private void applyRippleColorResource() {
-        mRippleColorResId = SkinCompatHelper.checkResourceId(mRippleColorResId);
-        if (mRippleColorResId != INVALID_ID) {
-            setRippleColor(SkinCompatResources.getInstance().getColor(mRippleColorResId));
+        int rippleColor = mRippleColorTypedValue.getColor();
+        if (rippleColor != 0) {
+            setRippleColor(rippleColor);
         }
     }
 

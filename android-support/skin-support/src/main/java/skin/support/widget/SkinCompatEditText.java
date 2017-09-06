@@ -8,6 +8,8 @@ import android.support.v7.appcompat.R;
 import android.support.v7.widget.AppCompatEditText;
 import android.util.AttributeSet;
 
+import skin.support.content.res.SkinCompatTypedValue;
+
 import static skin.support.widget.SkinCompatHelper.INVALID_ID;
 
 /**
@@ -55,8 +57,12 @@ public class SkinCompatEditText extends AppCompatEditText implements SkinCompatS
         }
     }
 
-    public int getTextColorResId() {
-        return mTextHelper != null ? mTextHelper.getTextColorResId() : INVALID_ID;
+    public SkinCompatTypedValue getTextColorTypedValue() {
+        return mTextHelper != null ? mTextHelper.getTextColorTypedValue() : new SkinCompatTypedValue();
+    }
+
+    public SkinCompatTypedValue getTextAppearanceTypedValue() {
+        return mTextHelper != null ? mTextHelper.getTextAppearanceTypedValue() : new SkinCompatTypedValue();
     }
 
     @Override

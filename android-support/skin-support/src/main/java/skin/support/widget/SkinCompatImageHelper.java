@@ -10,10 +10,8 @@ import android.util.AttributeSet;
 import android.widget.ImageView;
 
 import skin.support.R;
-import skin.support.SkinCompatManager;
 import skin.support.content.res.SkinCompatResources;
 import skin.support.content.res.SkinCompatTypedValue;
-import skin.support.utils.SkinLog;
 
 /**
  * Created by ximsfei on 2017/1/12.
@@ -28,12 +26,18 @@ public class SkinCompatImageHelper extends SkinCompatHelper {
     }
 
     public void loadFromAttributes(AttributeSet attrs, int defStyleAttr) {
-        SkinCompatTypedValue.getValue(attrs,
+        SkinCompatTypedValue.getValue(
+                mView.getContext(),
+                attrs,
+                defStyleAttr,
                 R.styleable.SkinCompatImageView,
                 R.styleable.SkinCompatImageView_srcCompat,
                 mSrcTypedValue);
         if (mSrcTypedValue.isDataInvalid()) {
-            SkinCompatTypedValue.getValue(attrs,
+            SkinCompatTypedValue.getValue(
+                    mView.getContext(),
+                    attrs,
+                    defStyleAttr,
                     R.styleable.SkinCompatImageView,
                     R.styleable.SkinCompatImageView_android_src,
                     mSrcTypedValue);
@@ -48,44 +52,9 @@ public class SkinCompatImageHelper extends SkinCompatHelper {
     }
 
     public void applySkin() {
-        if (mSrcTypedValue.isDataInvalid() || mSrcTypedValue.isTypeNull()) {
-            return;
-        }
-        if (mSrcTypedValue.isTypeAttr()) {
-            TypedArray a = SkinCompatResources.getInstance().obtainStyledAttributes(
-                    mView.getContext(), new int[]{mSrcTypedValue.data});
-            mView.setImageDrawable(a.getDrawable(0));
-            a.recycle();
-        } else {
-            String typeName = mView.getResources().getResourceTypeName(mSrcTypedValue.data);
-            if ("color".equals(typeName)) {
-                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-                    int color = SkinCompatResources.getInstance().getColor(mSrcTypedValue.data);
-                    Drawable drawable = mView.getDrawable();
-                    if (drawable != null && drawable instanceof ColorDrawable) {
-                        ((ColorDrawable) drawable.mutate()).setColor(color);
-                    } else {
-                        mView.setImageDrawable(new ColorDrawable(color));
-                    }
-                } else {
-                    ColorStateList colorStateList = SkinCompatResources.getInstance().getColorStateList(mSrcTypedValue.data);
-                    Drawable drawable = mView.getDrawable();
-                    if (drawable != null) {
-                        DrawableCompat.setTintList(drawable, colorStateList);
-                        mView.setImageDrawable(drawable);
-                    } else {
-                        ColorDrawable colorDrawable = new ColorDrawable();
-                        colorDrawable.setTintList(colorStateList);
-                        mView.setImageDrawable(colorDrawable);
-                    }
-                }
-            } else if ("drawable".equals(typeName)) {
-                Drawable drawable = SkinCompatResources.getInstance().getDrawable(mSrcTypedValue.data);
-                mView.setImageDrawable(drawable);
-            } else if ("mipmap".equals(typeName)) {
-                Drawable drawable = SkinCompatResources.getInstance().getMipmap(mSrcTypedValue.data);
-                mView.setImageDrawable(drawable);
-            }
+        Drawable drawable = mSrcTypedValue.getDrawable();
+        if (drawable != null) {
+            mView.setImageDrawable(drawable);
         }
     }
 

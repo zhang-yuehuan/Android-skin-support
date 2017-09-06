@@ -19,7 +19,7 @@ public class BaseActivity extends AppCompatActivity {
             public void onClick(View v) {
 //                startActivity(new Intent(BaseActivity.this, SettingsActivity.class));
                 if (SkinPreference.getInstance().getSkinName().equals("")) {
-                    SkinCompatManager.getInstance().loadSkin("night", null, SkinCompatManager.SKIN_LOADER_STRATEGY_BUILD_IN);
+                    SkinCompatManager.getInstance().loadSkin("night.theme", null, SkinCompatManager.SKIN_LOADER_STRATEGY_ASSETS);
                 } else {
                     SkinCompatManager.getInstance().restoreDefaultTheme();
                 }

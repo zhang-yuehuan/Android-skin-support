@@ -11,6 +11,7 @@ import android.support.v4.graphics.drawable.DrawableCompat;
 import android.util.AttributeSet;
 
 import skin.support.content.res.SkinCompatResources;
+import skin.support.content.res.SkinCompatTypedValue;
 import skin.support.design.R;
 import skin.support.widget.SkinCompatBackgroundHelper;
 import skin.support.widget.SkinCompatHelper;
@@ -23,8 +24,8 @@ import static skin.support.widget.SkinCompatHelper.INVALID_ID;
  */
 
 public class SkinMaterialCollapsingToolbarLayout extends CollapsingToolbarLayout implements SkinCompatSupportable {
-    private int mContentScrimResId = INVALID_ID;
-    private int mStatusBarScrimResId = INVALID_ID;
+    private SkinCompatTypedValue mContentScrimTypedValue = new SkinCompatTypedValue();
+    private SkinCompatTypedValue mStatusBarScrimTypedValue = new SkinCompatTypedValue();
     private SkinCompatBackgroundHelper mBackgroundTintHelper;
 
     public SkinMaterialCollapsingToolbarLayout(Context context) {
@@ -37,13 +38,22 @@ public class SkinMaterialCollapsingToolbarLayout extends CollapsingToolbarLayout
 
     public SkinMaterialCollapsingToolbarLayout(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-
-        TypedArray a = context.obtainStyledAttributes(attrs,
-                R.styleable.CollapsingToolbarLayout, defStyleAttr,
-                R.style.Widget_Design_CollapsingToolbar);
-        mContentScrimResId = a.getResourceId(R.styleable.CollapsingToolbarLayout_contentScrim, INVALID_ID);
-        mStatusBarScrimResId = a.getResourceId(R.styleable.CollapsingToolbarLayout_statusBarScrim, INVALID_ID);
-        a.recycle();
+        SkinCompatTypedValue.getValue(
+                context,
+                attrs,
+                defStyleAttr,
+                R.style.Widget_Design_CollapsingToolbar,
+                R.styleable.CollapsingToolbarLayout,
+                R.styleable.CollapsingToolbarLayout_contentScrim,
+                mContentScrimTypedValue);
+        SkinCompatTypedValue.getValue(
+                context,
+                attrs,
+                defStyleAttr,
+                R.style.Widget_Design_CollapsingToolbar,
+                R.styleable.CollapsingToolbarLayout,
+                R.styleable.CollapsingToolbarLayout_statusBarScrim,
+                mStatusBarScrimTypedValue);
         applyContentScrimResource();
         applyStatusBarScrimResource();
         mBackgroundTintHelper = new SkinCompatBackgroundHelper(this);
@@ -51,62 +61,16 @@ public class SkinMaterialCollapsingToolbarLayout extends CollapsingToolbarLayout
     }
 
     private void applyStatusBarScrimResource() {
-        mStatusBarScrimResId = SkinCompatHelper.checkResourceId(mStatusBarScrimResId);
-        if (mStatusBarScrimResId != INVALID_ID) {
-            String typeName = getResources().getResourceTypeName(mStatusBarScrimResId);
-            if ("color".equals(typeName)) {
-                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-                    int color = SkinCompatResources.getInstance().getColor(mStatusBarScrimResId);
-                    setStatusBarScrimColor(color);
-                } else {
-                    ColorStateList colorStateList = SkinCompatResources.getInstance().getColorStateList(mStatusBarScrimResId);
-                    Drawable drawable = getStatusBarScrim();
-                    if (drawable != null) {
-                        DrawableCompat.setTintList(drawable, colorStateList);
-                        setStatusBarScrim(drawable);
-                    } else {
-                        ColorDrawable colorDrawable = new ColorDrawable();
-                        colorDrawable.setTintList(colorStateList);
-                        setStatusBarScrim(colorDrawable);
-                    }
-                }
-            } else if ("drawable".equals(typeName)) {
-                Drawable drawable = SkinCompatResources.getInstance().getDrawable(mStatusBarScrimResId);
-                setStatusBarScrim(drawable);
-            } else if ("mipmap".equals(typeName)) {
-                Drawable drawable = SkinCompatResources.getInstance().getMipmap(mStatusBarScrimResId);
-                setStatusBarScrim(drawable);
-            }
+        Drawable drawable = mStatusBarScrimTypedValue.getDrawable();
+        if (drawable != null) {
+            setStatusBarScrim(drawable);
         }
     }
 
     private void applyContentScrimResource() {
-        mContentScrimResId = SkinCompatHelper.checkResourceId(mContentScrimResId);
-        if (mContentScrimResId != INVALID_ID) {
-            String typeName = getResources().getResourceTypeName(mContentScrimResId);
-            if ("color".equals(typeName)) {
-                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-                    int color = SkinCompatResources.getInstance().getColor(mContentScrimResId);
-                    setContentScrimColor(color);
-                } else {
-                    ColorStateList colorStateList = SkinCompatResources.getInstance().getColorStateList(mContentScrimResId);
-                    Drawable drawable = getContentScrim();
-                    if (drawable != null) {
-                        DrawableCompat.setTintList(drawable, colorStateList);
-                        setContentScrim(drawable);
-                    } else {
-                        ColorDrawable colorDrawable = new ColorDrawable();
-                        colorDrawable.setTintList(colorStateList);
-                        setContentScrim(colorDrawable);
-                    }
-                }
-            } else if ("drawable".equals(typeName)) {
-                Drawable drawable = SkinCompatResources.getInstance().getDrawable(mContentScrimResId);
-                setContentScrim(drawable);
-            } else if ("mipmap".equals(typeName)) {
-                Drawable drawable = SkinCompatResources.getInstance().getMipmap(mContentScrimResId);
-                setContentScrim(drawable);
-            }
+        Drawable drawable = mContentScrimTypedValue.getDrawable();
+        if (drawable != null) {
+            setContentScrim(drawable);
         }
     }
 

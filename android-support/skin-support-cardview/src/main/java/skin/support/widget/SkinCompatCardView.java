@@ -10,9 +10,6 @@ import android.util.AttributeSet;
 import skin.support.cardview.R;
 import skin.support.content.res.SkinCompatResources;
 import skin.support.content.res.SkinCompatTypedValue;
-import skin.support.utils.SkinLog;
-
-import static skin.support.widget.SkinCompatHelper.INVALID_ID;
 
 /**
  * Created by ximsfei on 2017/3/5.
@@ -33,7 +30,10 @@ public class SkinCompatCardView extends CardView implements SkinCompatSupportabl
 
     public SkinCompatCardView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        SkinCompatTypedValue.getValue(attrs,
+        SkinCompatTypedValue.getValue(
+                context,
+                attrs,
+                defStyleAttr,
                 R.styleable.CardView,
                 R.styleable.CardView_cardBackgroundColor,
                 mBackgroundColorTypedValue);
@@ -42,32 +42,22 @@ public class SkinCompatCardView extends CardView implements SkinCompatSupportabl
     }
 
     private void applyBackgroundColorResource() {
-        if (!mBackgroundColorTypedValue.isTypeNull() && !mBackgroundColorTypedValue.isDataInvalid()) {
-            if (mBackgroundColorTypedValue.isTypeAttr()) {
-                final TypedArray a = SkinCompatResources.getInstance()
-                        .obtainStyledAttributes(getContext(), new int[]{mBackgroundColorTypedValue.data});
-                ColorStateList backgroundColor = a.getColorStateList(0);
-                if (backgroundColor != null) {
-                    setCardBackgroundColor(backgroundColor);
-                }
-                a.recycle();
-            } else if (mBackgroundColorTypedValue.isTypeRes()) {
-                setCardBackgroundColor(
-                        SkinCompatResources.getInstance()
-                                .getColorStateList(mBackgroundColorTypedValue.data));
-            }
-        } else {
+        ColorStateList backgroundColor = mBackgroundColorTypedValue.getColorStateList();
+        if (backgroundColor == null) {
             final TypedArray a = SkinCompatResources.getInstance().obtainStyledAttributes(getContext(), COLOR_BACKGROUND_ATTR);
             int themeColorBackground = a.getColor(0, 0);
             if (themeColorBackground != 0) {
                 final float[] hsv = new float[3];
                 Color.colorToHSV(themeColorBackground, hsv);
-                ColorStateList backgroundColor = ColorStateList.valueOf(hsv[2] > 0.5f
+                backgroundColor = ColorStateList.valueOf(hsv[2] > 0.5f
                         ? getResources().getColor(R.color.cardview_light_background)
                         : getResources().getColor(R.color.cardview_dark_background));
                 setCardBackgroundColor(backgroundColor);
             }
             a.recycle();
+        }
+        if (backgroundColor != null) {
+            setCardBackgroundColor(backgroundColor);
         }
     }
 

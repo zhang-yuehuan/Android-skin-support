@@ -2,6 +2,7 @@ package skin.support.widget;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.graphics.drawable.Drawable;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.Toolbar;
@@ -37,16 +38,11 @@ public class SkinCompatToolbar extends Toolbar implements SkinCompatSupportable 
         super(context, attrs, defStyleAttr);
         mBackgroundTintHelper = new SkinCompatBackgroundHelper(this);
         mBackgroundTintHelper.loadFromAttributes(attrs, defStyleAttr);
-        SkinCompatTypedValue.getValue(attrs, R.styleable.Toolbar, R.styleable.Toolbar_navigationIcon, mNavigationIconTypedValue);
-        SkinCompatTypedValue.getValue(attrs, R.styleable.Toolbar, R.styleable.Toolbar_titleTextAppearance, mTitleTextAppearanceTypedValue);
-        SkinCompatTypedValue.getValue(attrs, R.styleable.Toolbar, R.styleable.Toolbar_subtitleTextAppearance, mSubtitleTextAppearanceTypedValue);
-        SkinCompatTypedValue.getValue(attrs, R.styleable.Toolbar, R.styleable.Toolbar_titleTextColor, mTitleTextColorTypedValue);
-        SkinCompatTypedValue.getValue(attrs, R.styleable.Toolbar, R.styleable.Toolbar_subtitleTextColor, mSubtitleTextColorTypedValue);
-
-        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.Toolbar, defStyleAttr, 0);
-        int titleAp = a.getResourceId(R.styleable.Toolbar_titleTextAppearance, INVALID_ID);
-        int subtitleAp = a.getResourceId(R.styleable.Toolbar_subtitleTextAppearance, INVALID_ID);
-        a.recycle();
+        SkinCompatTypedValue.getValue(context, attrs, defStyleAttr, R.styleable.Toolbar, R.styleable.Toolbar_navigationIcon, mNavigationIconTypedValue);
+        SkinCompatTypedValue.getValue(context, attrs, defStyleAttr, R.styleable.Toolbar, R.styleable.Toolbar_titleTextAppearance, mTitleTextAppearanceTypedValue);
+        SkinCompatTypedValue.getValue(context, attrs, defStyleAttr, R.styleable.Toolbar, R.styleable.Toolbar_subtitleTextAppearance, mSubtitleTextAppearanceTypedValue);
+        SkinCompatTypedValue.getValue(context, attrs, defStyleAttr, R.styleable.Toolbar, R.styleable.Toolbar_titleTextColor, mTitleTextColorTypedValue);
+        SkinCompatTypedValue.getValue(context, attrs, defStyleAttr, R.styleable.Toolbar, R.styleable.Toolbar_subtitleTextColor, mSubtitleTextColorTypedValue);
 
         applyTitleTextAppearanceResource();
         applySubtitleTextAppearanceResource();
@@ -58,105 +54,49 @@ public class SkinCompatToolbar extends Toolbar implements SkinCompatSupportable 
     }
 
     private void applyTitleTextAppearanceResource() {
-        if (mTitleTextAppearanceTypedValue.isTypeNull() || mTitleTextAppearanceTypedValue.isDataInvalid()) {
-            return;
-        }
-        if (mTitleTextAppearanceTypedValue.isTypeAttr()) {
-            TypedArray a = getContext().obtainStyledAttributes(new int[]{mTitleTextAppearanceTypedValue.data});
-            int ap = a.getResourceId(0, INVALID_ID);
-            a.recycle();
-            if (ap != INVALID_ID) {
-                applyTitleTextAppearance(ap);
-            }
-        } else if (mTitleTextAppearanceTypedValue.isTypeRes()) {
-            applyTitleTextAppearance(mTitleTextAppearanceTypedValue.data);
-        }
-    }
-
-    private void applyTitleTextAppearance(int ap) {
-        if (ap != INVALID_ID) {
-            final TypedArray a = SkinCompatResources.getInstance()
-                    .obtainStyledAttributes(getContext(), ap, R.styleable.SkinTextAppearance);
-            int titleTextColor = a.getColor(R.styleable.SkinTextAppearance_android_textColor, 0);
-            if (titleTextColor != 0) {
-                setTitleTextColor(titleTextColor);
+        if (mTitleTextColorTypedValue.isTypeNull()) {
+            TypedArray a = mTitleTextAppearanceTypedValue.obtainStyledAttributes(R.styleable.SkinTextAppearance);
+            if (a.hasValue(R.styleable.SkinTextAppearance_android_textColor)) {
+                int color = a.getColor(R.styleable.SkinTextAppearance_android_textColor, 0);
+                if (color != 0) {
+                    setTitleTextColor(color);
+                }
             }
             a.recycle();
         }
     }
 
     private void applySubtitleTextAppearanceResource() {
-        if (mSubtitleTextAppearanceTypedValue.isTypeNull() || mSubtitleTextAppearanceTypedValue.isDataInvalid()) {
-            return;
-        }
-        if (mSubtitleTextAppearanceTypedValue.isTypeAttr()) {
-            TypedArray a = getContext().obtainStyledAttributes(new int[]{mSubtitleTextAppearanceTypedValue.data});
-            int ap = a.getResourceId(0, INVALID_ID);
-            a.recycle();
-            if (ap != INVALID_ID) {
-                applySubtitleTextAppearance(ap);
-            }
-        } else if (mSubtitleTextAppearanceTypedValue.isTypeRes()) {
-            applySubtitleTextAppearance(mSubtitleTextAppearanceTypedValue.data);
-        }
-    }
-
-    private void applySubtitleTextAppearance(int ap) {
-        if (ap != INVALID_ID) {
-            final TypedArray a = SkinCompatResources.getInstance()
-                    .obtainStyledAttributes(getContext(), ap, R.styleable.SkinTextAppearance);
-            int subtitleTextColor = a.getColor(R.styleable.SkinTextAppearance_android_textColor, 0);
-            if (subtitleTextColor != 0) {
-                setSubtitleTextColor(subtitleTextColor);
+        if (mSubtitleTextColorTypedValue.isTypeNull()) {
+            TypedArray a = mSubtitleTextAppearanceTypedValue.obtainStyledAttributes(R.styleable.SkinTextAppearance);
+            if (a.hasValue(R.styleable.SkinTextAppearance_android_textColor)) {
+                int color = a.getColor(R.styleable.SkinTextAppearance_android_textColor, 0);
+                if (color != 0) {
+                    setSubtitleTextColor(color);
+                }
             }
             a.recycle();
         }
     }
 
     private void applyTitleTextColor() {
-        if (mTitleTextColorTypedValue.isDataInvalid() || mTitleTextColorTypedValue.isTypeNull()) {
-            return;
-        }
-        if (mTitleTextColorTypedValue.isTypeAttr()) {
-            TypedArray a = SkinCompatResources.getInstance().obtainStyledAttributes(
-                    getContext(), new int[]{mTitleTextColorTypedValue.data});
-            int titleTextColor = a.getColor(R.styleable.SkinTextAppearance_android_textColor, 0);
-            if (titleTextColor != 0) {
-                setTitleTextColor(titleTextColor);
-            }
-            a.recycle();
-        } else if (mTitleTextColorTypedValue.isTypeRes()) {
-            setTitleTextColor(SkinCompatResources.getInstance().getColor(mTitleTextColorTypedValue.data));
+        int titleTextColor = mTitleTextColorTypedValue.getColor();
+        if (titleTextColor != 0) {
+            setTitleTextColor(titleTextColor);
         }
     }
 
     private void applySubtitleTextColor() {
-        if (mSubtitleTextColorTypedValue.isDataInvalid() || mSubtitleTextColorTypedValue.isTypeNull()) {
-            return;
-        }
-        if (mSubtitleTextColorTypedValue.isTypeAttr()) {
-            TypedArray a = SkinCompatResources.getInstance().obtainStyledAttributes(
-                    getContext(), new int[]{mSubtitleTextColorTypedValue.data});
-            int subtitleTextColor = a.getColor(R.styleable.SkinTextAppearance_android_textColor, 0);
-            if (subtitleTextColor != 0) {
-                setSubtitleTextColor(subtitleTextColor);
-            }
-            a.recycle();
-        } else if (mSubtitleTextColorTypedValue.isTypeRes()) {
-            setSubtitleTextColor(SkinCompatResources.getInstance().getColor(mSubtitleTextColorTypedValue.data));
+        int subtitleTextColor = mSubtitleTextColorTypedValue.getColor();
+        if (subtitleTextColor != 0) {
+            setSubtitleTextColor(subtitleTextColor);
         }
     }
 
     private void applyNavigationIcon() {
-        if (mNavigationIconTypedValue.isDataInvalid() || mNavigationIconTypedValue.isTypeNull()) {
-            return;
-        }
-        if (mNavigationIconTypedValue.isTypeAttr()) {
-            TypedArray a = SkinCompatResources.getInstance().obtainStyledAttributes(
-                    getContext(), new int[]{mNavigationIconTypedValue.data});
-            setNavigationIcon(a.getDrawable(0));
-        } else if (mNavigationIconTypedValue.isTypeRes()) {
-            setNavigationIcon(SkinCompatResources.getInstance().getDrawable(mNavigationIconTypedValue.data));
+        Drawable drawable = mNavigationIconTypedValue.getDrawable();
+        if (drawable != null) {
+            setNavigationIcon(drawable);
         }
     }
 

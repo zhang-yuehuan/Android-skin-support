@@ -17,11 +17,13 @@ import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import theme.support.demo.basic.BasicWidgetActivity;
+
 public class MainActivity extends BaseActivity {
     private ListView mListView;
     private Context mContext = this;
-    private final String[] mItems = {"基础控件", "Material Design", "ConstraintLayout", "FlycoTabLayout", "AlertDialog"};
-    private final Class<?>[] mClasses = {};//MainActivity.class, MaterialDesignActivity.class, ConstraintLayoutActivity.class,
+    private final String[] mItems = {"基础控件"}; //, "Material Design", "ConstraintLayout", "FlycoTabLayout", "AlertDialog"
+    private final Class<?>[] mClasses = {BasicWidgetActivity.class};//MainActivity.class, MaterialDesignActivity.class, ConstraintLayoutActivity.class,
 //            SimpleHomeActivity.class, AlertDialogActivity.class};
 
     @Override
@@ -37,8 +39,8 @@ public class MainActivity extends BaseActivity {
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//                Intent intent = new Intent(mContext, mClasses[position]);
-//                startActivity(intent);
+                Intent intent = new Intent(mContext, mClasses[position]);
+                startActivity(intent);
             }
         });
     }
