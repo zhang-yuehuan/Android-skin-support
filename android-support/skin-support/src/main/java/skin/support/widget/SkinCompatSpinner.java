@@ -94,6 +94,7 @@ public class SkinCompatSpinner extends AppCompatSpinner implements SkinCompatSup
 
         mBackgroundTintHelper = new SkinCompatBackgroundHelper(this);
         mBackgroundTintHelper.loadFromAttributes(attrs, defStyleAttr);
+        applyPopupBackground();
     }
 
     @Override
