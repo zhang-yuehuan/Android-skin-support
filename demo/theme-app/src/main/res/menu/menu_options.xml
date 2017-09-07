@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/account_balance"
+        android:title="account balance" />
+    <item
+        android:id="@+id/account_circle"
+        android:title="account circle" />
+    <item
+        android:id="@+id/bug_report"
+        android:title="bug report" />
+</menu>

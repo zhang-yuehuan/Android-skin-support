@@ -2,6 +2,7 @@ package theme.support.demo;
 
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
 import android.view.View;
 
 import skin.support.SkinCompatManager;
@@ -26,5 +27,11 @@ public class BaseActivity extends AppCompatActivity {
             }
         });
 //        toolbar.setOverflowIcon(getResources().getDrawable(R.drawable.ic_camera_24dp));
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_options, menu);
+        return true;
     }
 }
