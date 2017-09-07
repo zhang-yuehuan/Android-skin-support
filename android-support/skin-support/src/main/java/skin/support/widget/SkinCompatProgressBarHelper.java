@@ -1,7 +1,6 @@
 package skin.support.widget;
 
 import android.content.res.ColorStateList;
-import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.BitmapShader;
 import android.graphics.Shader;
@@ -19,8 +18,6 @@ import android.util.AttributeSet;
 import android.view.Gravity;
 import android.widget.ProgressBar;
 
-import skin.support.R;
-import skin.support.content.res.SkinCompatResources;
 import skin.support.content.res.SkinCompatTypedValue;
 
 /**
@@ -34,12 +31,12 @@ public class SkinCompatProgressBarHelper extends SkinCompatHelper {
             android.R.attr.progressDrawable
     };
 
-    private final ProgressBar mView;
+    protected final ProgressBar mView;
 
     private Bitmap mSampleTile;
-    private SkinCompatTypedValue mIndeterminateDrawableTypedValue = new SkinCompatTypedValue();
-    private SkinCompatTypedValue mProgressDrawableTypedValue = new SkinCompatTypedValue();
-    private SkinCompatTypedValue mIndeterminateTintTypedValue = new SkinCompatTypedValue();
+    protected SkinCompatTypedValue mIndeterminateDrawableTypedValue = new SkinCompatTypedValue();
+    protected SkinCompatTypedValue mProgressDrawableTypedValue = new SkinCompatTypedValue();
+    protected SkinCompatTypedValue mIndeterminateTintTypedValue = new SkinCompatTypedValue();
 
     SkinCompatProgressBarHelper(ProgressBar view) {
         mView = view;
@@ -148,24 +145,46 @@ public class SkinCompatProgressBarHelper extends SkinCompatHelper {
         return new RoundRectShape(roundedCorners, null, null);
     }
 
-    @Override
-    public void applySkin() {
+    Bitmap getSampleTime() {
+        return mSampleTile;
+    }
+
+    protected void applyIndeterminateDrawableRelease() {
         Drawable indeterminateDrawable = mIndeterminateDrawableTypedValue.getDrawable();
         if (indeterminateDrawable != null) {
             indeterminateDrawable.setBounds(mView.getIndeterminateDrawable().getBounds());
-            mView.setIndeterminateDrawable(tileifyIndeterminate(indeterminateDrawable));
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                mView.setIndeterminateDrawableTiled(indeterminateDrawable);
+            } else {
+                mView.setIndeterminateDrawable(tileifyIndeterminate(indeterminateDrawable));
+            }
         }
+    }
 
+    protected void applyProgressDrawableRelease() {
         Drawable progressDrawable = mProgressDrawableTypedValue.getDrawable();
         if (progressDrawable != null) {
-            mView.setProgressDrawable(tileify(progressDrawable, false));
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                mView.setProgressDrawableTiled(progressDrawable);
+            } else {
+                mView.setProgressDrawable(tileify(progressDrawable, false));
+            }
         }
+    }
 
+    protected void applyIndeterminateTintRelease() {
         if (Build.VERSION.SDK_INT > 21) {
             ColorStateList tintList = mIndeterminateTintTypedValue.getColorStateList();
             if (tintList != null) {
                 mView.setIndeterminateTintList(tintList);
             }
         }
+    }
+
+    @Override
+    public void applySkin() {
+        applyIndeterminateDrawableRelease();
+        applyProgressDrawableRelease();
+        applyIndeterminateTintRelease();
     }
 }
