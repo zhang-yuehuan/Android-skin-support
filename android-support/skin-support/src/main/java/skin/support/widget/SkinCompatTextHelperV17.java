@@ -31,12 +31,8 @@ public class SkinCompatTextHelperV17 extends SkinCompatTextHelper {
         final Context context = mView.getContext();
 
         SkinCompatTypedArray
-                .obtain(context, attrs, R.styleable.SkinCompatTextHelper,
-                        defStyleAttr, R.styleable.SkinCompatTextHelper_android_drawableStart)
-                .getValue(R.styleable.SkinCompatTextHelper_android_drawableStart, mDrawableStartTypedValue);
-        SkinCompatTypedArray
-                .obtain(context, attrs, R.styleable.SkinCompatTextHelper,
-                        defStyleAttr, R.styleable.SkinCompatTextHelper_android_drawableEnd)
+                .obtain(context, attrs, R.styleable.SkinCompatTextHelper, defStyleAttr)
+                .getValue(R.styleable.SkinCompatTextHelper_android_drawableStart, mDrawableStartTypedValue)
                 .getValue(R.styleable.SkinCompatTextHelper_android_drawableEnd, mDrawableEndTypedValue);
         super.loadFromAttributes(attrs, defStyleAttr);
     }

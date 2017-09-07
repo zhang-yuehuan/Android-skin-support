@@ -39,7 +39,7 @@ public class SkinCompatCheckedTextView extends AppCompatCheckedTextView implemen
         mTextHelper.loadFromAttributes(attrs, defStyleAttr);
 
         SkinCompatTypedArray
-                .obtain(context, attrs, TINT_ATTRS, defStyleAttr, 0)
+                .obtain(context, attrs, TINT_ATTRS, defStyleAttr)
                 .getValue(0, mCheckMarkTypedValue);
         applyCheckMark();
     }

@@ -33,7 +33,7 @@ public class SkinCompatMultiAutoCompleteTextView extends AppCompatMultiAutoCompl
     public SkinCompatMultiAutoCompleteTextView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         SkinCompatTypedArray
-                .obtain(context, attrs, TINT_ATTRS, defStyleAttr, 0)
+                .obtain(context, attrs, TINT_ATTRS, defStyleAttr)
                 .getValue(0, mDropDownBackgroundTypedValue);
         applyDropDownBackgroundResource();
         mBackgroundTintHelper = new SkinCompatBackgroundHelper(this);

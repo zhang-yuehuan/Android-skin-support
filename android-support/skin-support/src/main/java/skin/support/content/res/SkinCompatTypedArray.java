@@ -6,6 +6,8 @@ import android.support.annotation.StyleRes;
 import android.support.annotation.StyleableRes;
 import android.util.AttributeSet;
 
+import java.util.HashMap;
+
 import static skin.support.content.res.SkinCompatTypedValue.TYPE_ATTR;
 import static skin.support.content.res.SkinCompatTypedValue.TYPE_NULL;
 import static skin.support.content.res.SkinCompatTypedValue.TYPE_RES;
@@ -18,48 +20,43 @@ public class SkinCompatTypedArray {
     private int defStyleRes = INVALID_ID;
     private int[] attrs;
 
-    private int[] types;
-    private int[] data;
+    private HashMap<Integer, Value> attrValueMap = new HashMap<>();
 
     private SkinCompatTypedArray(Context context, AttributeSet set,
                                  @StyleableRes int[] attrs, @AttrRes int defStyleAttr, @StyleRes int defStyleRes,
-                                 int[] types, int[] data) {
+                                 HashMap<Integer, Value> map) {
         this.context = context;
         this.set = set;
         this.defStyleAttr = defStyleAttr;
         this.defStyleRes = defStyleRes;
         this.attrs = attrs;
-        this.types = types;
-        this.data = data;
+        this.attrValueMap.putAll(map);
     }
 
     public SkinCompatTypedArray getValue(int index, SkinCompatTypedValue outValue) {
-        if (index < types.length && index < data.length) {
+        if (index >= 0 && index < attrs.length) {
             outValue.context = context;
             outValue.set = set;
             outValue.defStyleAttr = defStyleAttr;
             outValue.defStyleRes = defStyleRes;
             outValue.attrs = attrs;
             outValue.index = index;
-            outValue.type = types[index];
-            outValue.data = data[index];
+            Value value = attrValueMap.get(attrs[index]);
+            if (value != null) {
+                outValue.type = value.type;
+                outValue.data = value.data;
+            }
         }
         return this;
     }
 
     public static SkinCompatTypedArray obtain(Context context, AttributeSet set,
                                               @StyleableRes int[] attrs, @AttrRes int defStyleAttr) {
-        return obtain(context, set, attrs, defStyleAttr, 0, -1);
+        return obtain(context, set, attrs, defStyleAttr, 0);
     }
 
     public static SkinCompatTypedArray obtain(Context context, AttributeSet set,
-                                              @StyleableRes int[] attrs, @AttrRes int defStyleAttr, int index) {
-        return obtain(context, set, attrs, defStyleAttr, 0, index);
-    }
-
-    public static SkinCompatTypedArray obtain(Context context, AttributeSet set,
-                                              @StyleableRes int[] attrs, @AttrRes int defStyleAttr,
-                                              @StyleRes int defStyleRes, int index) {
+                                              @StyleableRes int[] attrs, @AttrRes int defStyleAttr, @StyleRes int defStyleRes) {
         int styleValue = set.getStyleAttribute();
         if (styleValue != INVALID_ID) {
             String type = context.getResources().getResourceTypeName(styleValue);
@@ -72,36 +69,29 @@ public class SkinCompatTypedArray {
             }
         }
 
-        int[] types = new int[attrs.length];
-        int[] data = new int[attrs.length];
+        HashMap<Integer, Value> map = new HashMap<>();
 
-        if (index >= 0 && index < attrs.length) {
-            resolveResource(set, attrs, types, data, index);
-        } else {
-            for (int attrIndex = 0; attrIndex < attrs.length; attrIndex++) {
-                resolveResource(set, attrs, types, data, attrIndex);
+        for (int index = 0; index < set.getAttributeCount(); index++) {
+            int attrResource = set.getAttributeNameResource(index);
+            if (attrResource != INVALID_ID) {
+                Value value = new Value();
+                String attrValue = set.getAttributeValue(index);
+                if (attrValue.startsWith("?")) {
+                    value.type = TYPE_ATTR;
+                    value.data = Integer.valueOf(attrValue.substring(1));
+                } else if (attrValue.startsWith("@")) {
+                    value.type = TYPE_RES;
+                    value.data = Integer.valueOf(attrValue.substring(1));
+                }
+                map.put(attrResource, value);
             }
         }
 
-        return new SkinCompatTypedArray(context, set, attrs, defStyleAttr, defStyleRes, types, data);
+        return new SkinCompatTypedArray(context, set, attrs, defStyleAttr, defStyleRes, map);
     }
 
-    private static void resolveResource(AttributeSet set,
-                                        int[] attrs, int[] types, int[] data, int index) {
-        types[index] = TYPE_NULL;
-        data[index] = INVALID_ID;
-        for (int setIndex = 0; setIndex < set.getAttributeCount(); setIndex++) {
-            if (set.getAttributeNameResource(setIndex) == attrs[index]) {
-                String attrValue = set.getAttributeValue(setIndex);
-                if (attrValue.startsWith("?")) {
-                    types[index] = TYPE_ATTR;
-                    data[index] = Integer.valueOf(attrValue.substring(1));
-                } else if (attrValue.startsWith("@")) {
-                    types[index] = TYPE_RES;
-                    data[index] = Integer.valueOf(attrValue.substring(1));
-                }
-                break;
-            }
-        }
+    private static class Value {
+        int type = TYPE_NULL;
+        int data = INVALID_ID;
     }
 }

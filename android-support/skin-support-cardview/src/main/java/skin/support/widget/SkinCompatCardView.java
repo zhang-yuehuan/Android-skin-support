@@ -32,7 +32,7 @@ public class SkinCompatCardView extends CardView implements SkinCompatSupportabl
     public SkinCompatCardView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         SkinCompatTypedArray
-                .obtain(context, attrs, R.styleable.CardView, defStyleAttr, R.styleable.CardView_cardBackgroundColor)
+                .obtain(context, attrs, R.styleable.CardView, defStyleAttr)
                 .getValue(R.styleable.CardView_cardBackgroundColor, mBackgroundColorTypedValue);
 
         applyBackgroundColorResource();

@@ -82,7 +82,7 @@ public class SkinCompatSpinner extends AppCompatSpinner implements SkinCompatSup
 
             if (mode == MODE_DROPDOWN) {
                 SkinCompatTypedArray
-                        .obtain(context, attrs, R.styleable.Spinner, defStyleAttr, R.styleable.Spinner_android_popupBackground)
+                        .obtain(context, attrs, R.styleable.Spinner, defStyleAttr)
                         .getValue(R.styleable.Spinner_android_popupBackground, mPopupBackgroundTypedValue);
             }
         }

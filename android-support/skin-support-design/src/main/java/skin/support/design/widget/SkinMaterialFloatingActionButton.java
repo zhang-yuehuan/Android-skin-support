@@ -32,12 +32,8 @@ public class SkinMaterialFloatingActionButton extends FloatingActionButton imple
     public SkinMaterialFloatingActionButton(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         SkinCompatTypedArray
-                .obtain(context, attrs, R.styleable.FloatingActionButton, defStyleAttr,
-                        R.style.Widget_Design_FloatingActionButton, R.styleable.FloatingActionButton_backgroundTint)
-                .getValue(R.styleable.FloatingActionButton_backgroundTint, mBackgroundTintTypedValue);
-        SkinCompatTypedArray
-                .obtain(context, attrs, R.styleable.FloatingActionButton, defStyleAttr,
-                        R.style.Widget_Design_FloatingActionButton, R.styleable.FloatingActionButton_rippleColor)
+                .obtain(context, attrs, R.styleable.FloatingActionButton, defStyleAttr, R.style.Widget_Design_FloatingActionButton)
+                .getValue(R.styleable.FloatingActionButton_backgroundTint, mBackgroundTintTypedValue)
                 .getValue(R.styleable.FloatingActionButton_rippleColor, mRippleColorTypedValue);
         applyBackgroundTintResource();
         applyRippleColorResource();

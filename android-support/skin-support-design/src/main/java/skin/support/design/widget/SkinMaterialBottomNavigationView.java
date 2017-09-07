@@ -36,14 +36,8 @@ public class SkinMaterialBottomNavigationView extends BottomNavigationView imple
     public SkinMaterialBottomNavigationView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         SkinCompatTypedArray
-                .obtain(context, attrs, R.styleable.BottomNavigationView,
-                        defStyleAttr, R.style.Widget_Design_BottomNavigationView,
-                        R.styleable.BottomNavigationView_itemTextColor)
-                .getValue(R.styleable.BottomNavigationView_itemTextColor, mTextColorTypedValue);
-        SkinCompatTypedArray
-                .obtain(context, attrs, R.styleable.BottomNavigationView,
-                        defStyleAttr, R.style.Widget_Design_BottomNavigationView,
-                        R.styleable.BottomNavigationView_itemIconTint)
+                .obtain(context, attrs, R.styleable.BottomNavigationView, defStyleAttr, R.style.Widget_Design_BottomNavigationView)
+                .getValue(R.styleable.BottomNavigationView_itemTextColor, mTextColorTypedValue)
                 .getValue(R.styleable.BottomNavigationView_itemIconTint, mIconTintTypedValue);
         applyItemIconTintResource();
         applyItemTextColorResource();

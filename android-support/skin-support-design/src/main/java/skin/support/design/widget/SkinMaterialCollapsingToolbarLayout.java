@@ -31,12 +31,8 @@ public class SkinMaterialCollapsingToolbarLayout extends CollapsingToolbarLayout
     public SkinMaterialCollapsingToolbarLayout(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         SkinCompatTypedArray
-                .obtain(context, attrs, R.styleable.CollapsingToolbarLayout,
-                        defStyleAttr, R.style.Widget_Design_CollapsingToolbar, R.styleable.CollapsingToolbarLayout_contentScrim)
-                .getValue(R.styleable.CollapsingToolbarLayout_contentScrim, mContentScrimTypedValue);
-        SkinCompatTypedArray
-                .obtain(context, attrs, R.styleable.CollapsingToolbarLayout,
-                        defStyleAttr, R.style.Widget_Design_CollapsingToolbar, R.styleable.CollapsingToolbarLayout_statusBarScrim)
+                .obtain(context, attrs, R.styleable.CollapsingToolbarLayout, defStyleAttr, R.style.Widget_Design_CollapsingToolbar)
+                .getValue(R.styleable.CollapsingToolbarLayout_contentScrim, mContentScrimTypedValue)
                 .getValue(R.styleable.CollapsingToolbarLayout_statusBarScrim, mStatusBarScrimTypedValue);
         applyContentScrimResource();
         applyStatusBarScrimResource();

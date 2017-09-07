@@ -24,8 +24,7 @@ public class SkinCompatBackgroundHelper extends SkinCompatHelper {
 
     public void loadFromAttributes(AttributeSet attrs, int defStyleAttr) {
         SkinCompatTypedArray
-                .obtain(mView.getContext(), attrs, R.styleable.SkinBackgroundHelper,
-                        defStyleAttr, R.styleable.SkinBackgroundHelper_android_background)
+                .obtain(mView.getContext(), attrs, R.styleable.SkinBackgroundHelper, defStyleAttr)
                 .getValue(R.styleable.SkinBackgroundHelper_android_background, mBackgroundTypedValue);
         applySkin();
     }
