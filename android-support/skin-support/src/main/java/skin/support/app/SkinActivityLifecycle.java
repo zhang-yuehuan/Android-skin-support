@@ -2,12 +2,10 @@ package skin.support.app;
 
 import android.app.Activity;
 import android.app.Application;
-import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.view.LayoutInflaterCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 
 import java.lang.reflect.Field;
@@ -38,7 +36,7 @@ public class SkinActivityLifecycle implements Application.ActivityLifecycleCallb
         application.registerActivityLifecycleCallbacks(this);
     }
 
-    private SkinCompatDelegate getSkinDelegate(AppCompatActivity activity) {
+    private SkinCompatDelegate getSkinDelegate(Activity activity) {
         if (mSkinDelegateMap == null) {
             mSkinDelegateMap = new WeakHashMap<>();
         }
@@ -62,7 +60,7 @@ public class SkinActivityLifecycle implements Application.ActivityLifecycleCallb
                 public void updateSkin(SkinObservable observable, Object o) {
                     updateStatusBarColor(activity);
                     updateWindowBackground(activity);
-                    getSkinDelegate((AppCompatActivity) activity).applySkin();
+                    getSkinDelegate(activity).applySkin();
                 }
             };
         }
@@ -91,20 +89,18 @@ public class SkinActivityLifecycle implements Application.ActivityLifecycleCallb
 
     @Override
     public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
-        if (activity instanceof AppCompatActivity) {
-            LayoutInflater layoutInflater = activity.getLayoutInflater();
-            try {
-                Field field = LayoutInflater.class.getDeclaredField("mFactorySet");
-                field.setAccessible(true);
-                field.setBoolean(layoutInflater, false);
-                LayoutInflaterCompat.setFactory(activity.getLayoutInflater(),
-                        getSkinDelegate((AppCompatActivity) activity));
-            } catch (NoSuchFieldException | IllegalArgumentException | IllegalAccessException e) {
-                e.printStackTrace();
-            }
-            updateStatusBarColor(activity);
-            updateWindowBackground(activity);
+        LayoutInflater layoutInflater = activity.getLayoutInflater();
+        try {
+            Field field = LayoutInflater.class.getDeclaredField("mFactorySet");
+            field.setAccessible(true);
+            field.setBoolean(layoutInflater, false);
+            LayoutInflaterCompat.setFactory(activity.getLayoutInflater(),
+                    getSkinDelegate(activity));
+        } catch (NoSuchFieldException | IllegalArgumentException | IllegalAccessException e) {
+            e.printStackTrace();
         }
+        updateStatusBarColor(activity);
+        updateWindowBackground(activity);
     }
 
     @Override
@@ -114,9 +110,7 @@ public class SkinActivityLifecycle implements Application.ActivityLifecycleCallb
 
     @Override
     public void onActivityResumed(Activity activity) {
-        if (activity instanceof AppCompatActivity) {
-            SkinCompatManager.getInstance().addObserver(getObserver(activity));
-        }
+        SkinCompatManager.getInstance().addObserver(getObserver(activity));
     }
 
     @Override
@@ -135,10 +129,8 @@ public class SkinActivityLifecycle implements Application.ActivityLifecycleCallb
 
     @Override
     public void onActivityDestroyed(Activity activity) {
-        if (activity instanceof AppCompatActivity) {
-            SkinCompatManager.getInstance().deleteObserver(getObserver(activity));
-            mSkinObserverMap.remove(activity);
-            mSkinDelegateMap.remove(activity);
-        }
+        SkinCompatManager.getInstance().deleteObserver(getObserver(activity));
+        mSkinObserverMap.remove(activity);
+        mSkinDelegateMap.remove(activity);
     }
 }

@@ -1,13 +1,14 @@
 package skin.support.app;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.v4.view.LayoutInflaterFactory;
 import android.support.v4.view.ViewCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.VectorEnabledTintResources;
 import android.util.AttributeSet;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewParent;
 
@@ -23,26 +24,39 @@ import skin.support.widget.SkinCompatSupportable;
  */
 
 public class SkinCompatDelegate implements LayoutInflaterFactory {
-    private final AppCompatActivity mAppCompatActivity;
+    private final Activity mActivity;
     private SkinCompatViewInflater mSkinCompatViewInflater;
     private List<WeakReference<SkinCompatSupportable>> mSkinHelpers = new ArrayList<>();
 
-    private SkinCompatDelegate(AppCompatActivity appCompatActivity) {
-        mAppCompatActivity = appCompatActivity;
+    private SkinCompatDelegate(Activity activity) {
+        mActivity = activity;
     }
 
     @Override
     public View onCreateView(View parent, String name, Context context, AttributeSet attrs) {
-        View view = createView(parent, name, context, attrs);
+        View view = callActivityOnCreateView(parent, name, context, attrs);
 
         if (view == null) {
-            return null;
+            view = createView(parent, name, context, attrs);
         }
+
         if (view instanceof SkinCompatSupportable) {
-            mSkinHelpers.add(new WeakReference<SkinCompatSupportable>((SkinCompatSupportable) view));
+            mSkinHelpers.add(new WeakReference<>((SkinCompatSupportable) view));
         }
 
         return view;
+    }
+
+    View callActivityOnCreateView(View parent, String name, Context context, AttributeSet attrs) {
+        // Let the Activity's LayoutInflater.Factory try and handle it
+        if (mActivity.getWindow().getCallback() instanceof LayoutInflater.Factory) {
+            final View result = ((LayoutInflater.Factory) mActivity.getWindow().getCallback())
+                    .onCreateView(name, context, attrs);
+            if (result != null) {
+                return result;
+            }
+        }
+        return null;
     }
 
     public View createView(View parent, final String name, @NonNull Context context,
@@ -68,7 +82,7 @@ public class SkinCompatDelegate implements LayoutInflaterFactory {
             // The initial parent is null so just return false
             return false;
         }
-        final View windowDecor = mAppCompatActivity.getWindow().getDecorView();
+        final View windowDecor = mActivity.getWindow().getDecorView();
         while (true) {
             if (parent == null) {
                 // Bingo. We've hit a view which has a null parent before being terminated from
@@ -88,8 +102,8 @@ public class SkinCompatDelegate implements LayoutInflaterFactory {
         }
     }
 
-    public static SkinCompatDelegate create(AppCompatActivity appCompatActivity) {
-        return new SkinCompatDelegate(appCompatActivity);
+    public static SkinCompatDelegate create(Activity activity) {
+        return new SkinCompatDelegate(activity);
     }
 
     public void applySkin() {

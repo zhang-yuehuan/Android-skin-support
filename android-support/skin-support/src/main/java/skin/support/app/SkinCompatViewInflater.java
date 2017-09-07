@@ -69,8 +69,6 @@ public class SkinCompatViewInflater {
     public final View createView(View parent, final String name, @NonNull Context context,
                                  @NonNull AttributeSet attrs, boolean inheritContext,
                                  boolean readAndroidTheme, boolean readAppTheme, boolean wrapContext) {
-        final Context originalContext = context;
-
         // We can emulate Lollipop's android:theme attribute propagating down the view hierarchy
         // by using the parent's context
         if (inheritContext && parent != null) {
