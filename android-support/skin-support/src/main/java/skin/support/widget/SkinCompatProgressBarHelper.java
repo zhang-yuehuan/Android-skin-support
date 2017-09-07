@@ -151,7 +151,7 @@ public class SkinCompatProgressBarHelper extends SkinCompatHelper {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 // FIXME: Any better way without setIndeterminateTintList?
                 if (mIndeterminateDrawableTypedValue.isTypeNull() && mIndeterminateTintTypedValue.isTypeNull()) {
-                    ColorStateList colorStateList = SkinCompatThemeUtils.getColorAccent(mView.getContext());
+                    ColorStateList colorStateList = SkinCompatThemeUtils.getColorAccentList(mView.getContext());
                     if (colorStateList != null) {
                         mView.setIndeterminateTintList(colorStateList);
                     }

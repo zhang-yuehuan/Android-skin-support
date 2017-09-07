@@ -23,11 +23,10 @@ public class SkinCompatSeekBarHelper extends SkinCompatProgressBarHelper {
 
     @Override
     void loadFromAttributes(AttributeSet attrs, int defStyleAttr) {
-        super.loadFromAttributes(attrs, defStyleAttr);
         SkinCompatTypedArray
                 .obtain(mView.getContext(), attrs, R.styleable.AppCompatSeekBar, defStyleAttr)
                 .getValue(R.styleable.AppCompatSeekBar_android_thumb, mThumbTypedValue);
-        applySkin();
+        super.loadFromAttributes(attrs, defStyleAttr);
     }
 
     @Override

@@ -10,6 +10,7 @@ import android.widget.ScrollView;
  */
 public class SkinCompatScrollView extends ScrollView implements SkinCompatSupportable {
     private SkinCompatBackgroundHelper mBackgroundTintHelper;
+    private SkinCompatEdgeEffectHelper mEdgeEffectHelper;
 
     public SkinCompatScrollView(Context context) {
         this(context, null);
@@ -23,6 +24,8 @@ public class SkinCompatScrollView extends ScrollView implements SkinCompatSuppor
         super(context, attrs, defStyleAttr);
         mBackgroundTintHelper = new SkinCompatBackgroundHelper(this);
         mBackgroundTintHelper.loadFromAttributes(attrs, defStyleAttr);
+        mEdgeEffectHelper = new SkinCompatEdgeEffectHelper(this, ScrollView.class);
+        mEdgeEffectHelper.loadFromAttributes(attrs, defStyleAttr);
     }
 
     @Override
@@ -34,9 +37,20 @@ public class SkinCompatScrollView extends ScrollView implements SkinCompatSuppor
     }
 
     @Override
+    public void setOverScrollMode(int mode) {
+        super.setOverScrollMode(mode);
+        if (mEdgeEffectHelper != null) {
+            mEdgeEffectHelper.onSetOverScrollMode(mode);
+        }
+    }
+
+    @Override
     public void applySkin() {
         if (mBackgroundTintHelper != null) {
             mBackgroundTintHelper.applySkin();
+        }
+        if (mEdgeEffectHelper != null) {
+            mEdgeEffectHelper.applySkin();
         }
     }
 

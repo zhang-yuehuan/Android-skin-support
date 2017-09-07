@@ -41,7 +41,18 @@ public class SkinCompatThemeUtils {
         return getResId(context, new int[]{android.R.attr.textColorPrimary});
     }
 
-    public static ColorStateList getColorAccent(Context context) {
+    public static int getColorPrimary(Context context) {
+        int colorPrimary = 0;
+        TypedArray a = SkinCompatResources.getInstance()
+                .obtainStyledAttributes(context, APPCOMPAT_COLOR_PRIMARY_ATTRS);
+        if (a.hasValue(0)) {
+            colorPrimary = a.getColor(0, 0);
+        }
+        a.recycle();
+        return colorPrimary;
+    }
+
+    public static ColorStateList getColorAccentList(Context context) {
         ColorStateList colorAccent = null;
         TypedArray a = SkinCompatResources.getInstance()
                 .obtainStyledAttributes(context, APPCOMPAT_COLOR_ACCENT_ATTRS);

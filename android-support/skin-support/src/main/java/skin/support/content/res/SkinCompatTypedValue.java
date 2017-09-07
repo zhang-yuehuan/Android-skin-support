@@ -64,11 +64,14 @@ public class SkinCompatTypedValue {
     public int getColor() {
         int color = 0;
         if (isTypeNull()) {
+            TypedArray a;
             if (defStyleAttr != INVALID_ID || defStyleRes != INVALID_ID) {
-                TypedArray a = SkinCompatResources.getInstance().obtainStyledAttributes(context, set, attrs, defStyleAttr, defStyleRes);
-                color = a.getColor(index, 0);
-                a.recycle();
+                a = SkinCompatResources.getInstance().obtainStyledAttributes(context, set, attrs, defStyleAttr, defStyleRes);
+            } else {
+                a = SkinCompatResources.getInstance().obtainStyledAttributes(context, attrs);
             }
+            color = a.getColor(index, 0);
+            a.recycle();
         } else if (isTypeAttr()) {
             if (data != INVALID_ID) {
                 TypedArray a = SkinCompatResources.getInstance().obtainStyledAttributes(context, new int[]{data});
@@ -86,11 +89,14 @@ public class SkinCompatTypedValue {
     public ColorStateList getColorStateList() {
         ColorStateList colorStateList = null;
         if (isTypeNull()) {
+            TypedArray a;
             if (defStyleAttr != INVALID_ID || defStyleRes != INVALID_ID) {
-                TypedArray a = SkinCompatResources.getInstance().obtainStyledAttributes(context, set, attrs, defStyleAttr, defStyleRes);
-                colorStateList = a.getColorStateList(index);
-                a.recycle();
+                a = SkinCompatResources.getInstance().obtainStyledAttributes(context, set, attrs, defStyleAttr, defStyleRes);
+            } else {
+                a = SkinCompatResources.getInstance().obtainStyledAttributes(context, attrs);
             }
+            colorStateList = a.getColorStateList(index);
+            a.recycle();
         } else if (isTypeAttr()) {
             if (data != INVALID_ID) {
                 TypedArray a = SkinCompatResources.getInstance().obtainStyledAttributes(context, new int[]{data});
@@ -108,11 +114,14 @@ public class SkinCompatTypedValue {
     public Drawable getDrawable() {
         Drawable drawable = null;
         if (isTypeNull()) {
+            TypedArray a;
             if (defStyleAttr != INVALID_ID || defStyleRes != INVALID_ID) {
-                TypedArray a = SkinCompatResources.getInstance().obtainStyledAttributes(context, set, attrs, defStyleAttr, defStyleRes);
-                drawable = a.getDrawable(index);
-                a.recycle();
+                a = SkinCompatResources.getInstance().obtainStyledAttributes(context, set, attrs, defStyleAttr, defStyleRes);
+            } else {
+                a = SkinCompatResources.getInstance().obtainStyledAttributes(context, attrs);
             }
+            drawable = a.getDrawable(index);
+            a.recycle();
         } else if (isTypeAttr()) {
             if (data != INVALID_ID) {
                 TypedArray a = SkinCompatResources.getInstance().obtainStyledAttributes(context, new int[]{data});

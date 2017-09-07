@@ -39,4 +39,7 @@
     <declare-styleable name="SkinCompatProgressBar">
         <attr name="android:indeterminateDrawable" />
     </declare-styleable>
+    <declare-styleable name="SkinCompatEdgeEffect">
+        <attr name="android:colorEdgeEffect" />
+    </declare-styleable>
 </resources>
