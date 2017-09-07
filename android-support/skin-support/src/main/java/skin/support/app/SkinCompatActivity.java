@@ -10,13 +10,9 @@ import android.support.v4.view.LayoutInflaterCompat;
 import android.support.v7.app.AppCompatActivity;
 
 import skin.support.SkinCompatManager;
-import skin.support.content.res.SkinCompatResources;
 import skin.support.observe.SkinObservable;
 import skin.support.observe.SkinObserver;
 import skin.support.widget.SkinCompatThemeUtils;
-
-import static skin.support.widget.SkinCompatHelper.INVALID_ID;
-import static skin.support.widget.SkinCompatHelper.checkResourceId;
 
 /**
  * Created by ximsfei on 17-1-8.

@@ -14,13 +14,9 @@ import java.lang.reflect.Field;
 import java.util.WeakHashMap;
 
 import skin.support.SkinCompatManager;
-import skin.support.content.res.SkinCompatResources;
 import skin.support.observe.SkinObservable;
 import skin.support.observe.SkinObserver;
 import skin.support.widget.SkinCompatThemeUtils;
-
-import static skin.support.widget.SkinCompatHelper.INVALID_ID;
-import static skin.support.widget.SkinCompatHelper.checkResourceId;
 
 public class SkinActivityLifecycle implements Application.ActivityLifecycleCallbacks {
     private static volatile SkinActivityLifecycle sInstance = null;
