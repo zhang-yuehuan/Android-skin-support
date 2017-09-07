@@ -41,7 +41,8 @@
             <EditText
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
-                android:hint="Edit Text" />
+                android:hint="Edit Text"
+                android:text="Edit Text" />
 
             <ImageView
                 android:layout_width="match_parent"

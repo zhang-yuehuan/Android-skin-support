@@ -23,6 +23,7 @@ public class SkinCompatTextHelper extends SkinCompatHelper {
     private SkinCompatTypedValue mTextAppearanceTypedValue = new SkinCompatTypedValue();
     private SkinCompatTypedValue mTextColorTypedValue = new SkinCompatTypedValue();
     private SkinCompatTypedValue mTextColorHintTypedValue = new SkinCompatTypedValue();
+    private SkinCompatTypedValue mTextColorHighlightTypedValue = new SkinCompatTypedValue();
 
     private SkinCompatTypedValue mTextCursorDrawableTypedValue = new SkinCompatTypedValue();
     private SkinCompatTypedValue mSelectHandleLeftTypedValue = new SkinCompatTypedValue();
@@ -130,6 +131,13 @@ public class SkinCompatTextHelper extends SkinCompatHelper {
                 R.styleable.SkinTextAppearance,
                 R.styleable.SkinTextAppearance_android_textColorHint,
                 mTextColorHintTypedValue);
+        SkinCompatTypedValue.getValue(
+                context,
+                attrs,
+                defStyleAttr,
+                R.styleable.SkinTextAppearance,
+                R.styleable.SkinTextAppearance_android_textColorHighlight,
+                mTextColorHighlightTypedValue);
         applySkin();
     }
 
@@ -149,7 +157,20 @@ public class SkinCompatTextHelper extends SkinCompatHelper {
             if (mTextColorHintTypedValue.isTypeNull() && a.hasValue(R.styleable.SkinTextAppearance_android_textColorHint)) {
                 mView.setHintTextColor(a.getColorStateList(R.styleable.SkinTextAppearance_android_textColorHint));
             }
+            if (mTextColorHighlightTypedValue.isTypeNull() && a.hasValue(R.styleable.SkinTextAppearance_android_textColorHighlight)) {
+                int highlightColor = a.getColor(R.styleable.SkinTextAppearance_android_textColorHighlight, 0);
+                if (highlightColor != 0) {
+                    mView.setHighlightColor(highlightColor);
+                }
+            }
             a.recycle();
+        }
+    }
+
+    private void applyTextColorHighlightResource() {
+        int color = mTextColorHighlightTypedValue.getColor();
+        if (color != 0) {
+            mView.setHighlightColor(color);
         }
     }
 
@@ -296,6 +317,7 @@ public class SkinCompatTextHelper extends SkinCompatHelper {
         applyTextAppearanceResource();
         applyTextColorResource();
         applyTextColorHintResource();
+        applyTextColorHighlightResource();
         applyTextCursorDrawableResource();
         applyTextSelectHandleResource();
         applyCompoundDrawablesResource();
