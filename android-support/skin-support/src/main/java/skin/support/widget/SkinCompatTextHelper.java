@@ -13,6 +13,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
 import skin.support.R;
+import skin.support.content.res.SkinCompatTypedArray;
 import skin.support.content.res.SkinCompatTypedValue;
 
 /**
@@ -53,91 +54,23 @@ public class SkinCompatTextHelper extends SkinCompatHelper {
     public void loadFromAttributes(AttributeSet attrs, int defStyleAttr) {
         final Context context = mView.getContext();
 
-        SkinCompatTypedValue.getValue(
-                context,
-                attrs,
-                defStyleAttr,
-                R.styleable.SkinCompatTextHelper,
-                R.styleable.SkinCompatTextHelper_android_drawableLeft,
-                mDrawableLeftTypedValue);
-        SkinCompatTypedValue.getValue(
-                context,
-                attrs,
-                defStyleAttr,
-                R.styleable.SkinCompatTextHelper,
-                R.styleable.SkinCompatTextHelper_android_drawableRight,
-                mDrawableRightTypedValue);
-        SkinCompatTypedValue.getValue(
-                context,
-                attrs,
-                defStyleAttr,
-                R.styleable.SkinCompatTextHelper,
-                R.styleable.SkinCompatTextHelper_android_drawableTop,
-                mDrawableTopTypedValue);
-        SkinCompatTypedValue.getValue(
-                context,
-                attrs,
-                defStyleAttr,
-                R.styleable.SkinCompatTextHelper,
-                R.styleable.SkinCompatTextHelper_android_drawableBottom,
-                mDrawableBottomTypedValue);
-        SkinCompatTypedValue.getValue(
-                context,
-                attrs,
-                defStyleAttr,
-                R.styleable.SkinCompatTextHelper,
-                R.styleable.SkinCompatTextHelper_android_textCursorDrawable,
-                mTextCursorDrawableTypedValue);
-        SkinCompatTypedValue.getValue(
-                context,
-                attrs,
-                defStyleAttr,
-                R.styleable.SkinCompatTextHelper,
-                R.styleable.SkinCompatTextHelper_android_textSelectHandleLeft,
-                mSelectHandleLeftTypedValue);
-        SkinCompatTypedValue.getValue(
-                context,
-                attrs,
-                defStyleAttr,
-                R.styleable.SkinCompatTextHelper,
-                R.styleable.SkinCompatTextHelper_android_textSelectHandleRight,
-                mSelectHandleRightTypedValue);
-        SkinCompatTypedValue.getValue(
-                context,
-                attrs,
-                defStyleAttr,
-                R.styleable.SkinCompatTextHelper,
-                R.styleable.SkinCompatTextHelper_android_textSelectHandle,
-                mSelectHandleCenterTypedValue);
+        SkinCompatTypedArray.obtain(context, attrs, R.styleable.SkinCompatTextHelper, defStyleAttr)
+                .getValue(R.styleable.SkinCompatTextHelper_android_drawableLeft, mDrawableLeftTypedValue)
+                .getValue(R.styleable.SkinCompatTextHelper_android_drawableRight, mDrawableRightTypedValue)
+                .getValue(R.styleable.SkinCompatTextHelper_android_drawableTop, mDrawableTopTypedValue)
+                .getValue(R.styleable.SkinCompatTextHelper_android_drawableBottom, mDrawableBottomTypedValue)
+                .getValue(R.styleable.SkinCompatTextHelper_android_textCursorDrawable, mTextCursorDrawableTypedValue)
+                .getValue(R.styleable.SkinCompatTextHelper_android_textSelectHandleLeft, mSelectHandleLeftTypedValue)
+                .getValue(R.styleable.SkinCompatTextHelper_android_textSelectHandleRight, mSelectHandleRightTypedValue)
+                .getValue(R.styleable.SkinCompatTextHelper_android_textSelectHandle, mSelectHandleCenterTypedValue)
+                .getValue(R.styleable.SkinCompatTextHelper_android_textAppearance, mTextAppearanceTypedValue);
 
-        SkinCompatTypedValue.getValue(
-                context,
-                attrs,
-                defStyleAttr,
-                R.styleable.SkinCompatTextHelper,
-                R.styleable.SkinCompatTextHelper_android_textAppearance,
-                mTextAppearanceTypedValue);
-        SkinCompatTypedValue.getValue(
-                context,
-                attrs,
-                defStyleAttr,
-                R.styleable.SkinTextAppearance,
-                R.styleable.SkinTextAppearance_android_textColor,
-                mTextColorTypedValue);
-        SkinCompatTypedValue.getValue(
-                context,
-                attrs,
-                defStyleAttr,
-                R.styleable.SkinTextAppearance,
-                R.styleable.SkinTextAppearance_android_textColorHint,
-                mTextColorHintTypedValue);
-        SkinCompatTypedValue.getValue(
-                context,
-                attrs,
-                defStyleAttr,
-                R.styleable.SkinTextAppearance,
-                R.styleable.SkinTextAppearance_android_textColorHighlight,
-                mTextColorHighlightTypedValue);
+
+        SkinCompatTypedArray.obtain(context, attrs, R.styleable.SkinTextAppearance, defStyleAttr)
+                .getValue(R.styleable.SkinTextAppearance_android_textColor, mTextColorTypedValue)
+                .getValue(R.styleable.SkinTextAppearance_android_textColorHint, mTextColorHintTypedValue)
+                .getValue(R.styleable.SkinTextAppearance_android_textColorHighlight, mTextColorHighlightTypedValue);
+
         applySkin();
     }
 

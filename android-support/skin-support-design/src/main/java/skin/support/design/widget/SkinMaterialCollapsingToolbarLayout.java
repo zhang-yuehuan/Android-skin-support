@@ -1,23 +1,15 @@
 package skin.support.design.widget;
 
 import android.content.Context;
-import android.content.res.ColorStateList;
-import android.content.res.TypedArray;
-import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
-import android.os.Build;
 import android.support.design.widget.CollapsingToolbarLayout;
-import android.support.v4.graphics.drawable.DrawableCompat;
 import android.util.AttributeSet;
 
-import skin.support.content.res.SkinCompatResources;
+import skin.support.content.res.SkinCompatTypedArray;
 import skin.support.content.res.SkinCompatTypedValue;
 import skin.support.design.R;
 import skin.support.widget.SkinCompatBackgroundHelper;
-import skin.support.widget.SkinCompatHelper;
 import skin.support.widget.SkinCompatSupportable;
-
-import static skin.support.widget.SkinCompatHelper.INVALID_ID;
 
 /**
  * Created by ximsfei on 17-3-2.
@@ -38,22 +30,14 @@ public class SkinMaterialCollapsingToolbarLayout extends CollapsingToolbarLayout
 
     public SkinMaterialCollapsingToolbarLayout(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        SkinCompatTypedValue.getValue(
-                context,
-                attrs,
-                defStyleAttr,
-                R.style.Widget_Design_CollapsingToolbar,
-                R.styleable.CollapsingToolbarLayout,
-                R.styleable.CollapsingToolbarLayout_contentScrim,
-                mContentScrimTypedValue);
-        SkinCompatTypedValue.getValue(
-                context,
-                attrs,
-                defStyleAttr,
-                R.style.Widget_Design_CollapsingToolbar,
-                R.styleable.CollapsingToolbarLayout,
-                R.styleable.CollapsingToolbarLayout_statusBarScrim,
-                mStatusBarScrimTypedValue);
+        SkinCompatTypedArray
+                .obtain(context, attrs, R.styleable.CollapsingToolbarLayout,
+                        defStyleAttr, R.style.Widget_Design_CollapsingToolbar, R.styleable.CollapsingToolbarLayout_contentScrim)
+                .getValue(R.styleable.CollapsingToolbarLayout_contentScrim, mContentScrimTypedValue);
+        SkinCompatTypedArray
+                .obtain(context, attrs, R.styleable.CollapsingToolbarLayout,
+                        defStyleAttr, R.style.Widget_Design_CollapsingToolbar, R.styleable.CollapsingToolbarLayout_statusBarScrim)
+                .getValue(R.styleable.CollapsingToolbarLayout_statusBarScrim, mStatusBarScrimTypedValue);
         applyContentScrimResource();
         applyStatusBarScrimResource();
         mBackgroundTintHelper = new SkinCompatBackgroundHelper(this);

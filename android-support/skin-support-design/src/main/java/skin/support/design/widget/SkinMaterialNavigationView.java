@@ -3,23 +3,18 @@ package skin.support.design.widget;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.content.res.TypedArray;
-import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.StyleRes;
 import android.support.design.widget.NavigationView;
 import android.util.AttributeSet;
-import android.util.TypedValue;
 
 import skin.support.content.res.SkinCompatResources;
+import skin.support.content.res.SkinCompatTypedArray;
 import skin.support.content.res.SkinCompatTypedValue;
 import skin.support.design.R;
 import skin.support.widget.SkinCompatBackgroundHelper;
-import skin.support.widget.SkinCompatHelper;
 import skin.support.widget.SkinCompatSupportable;
-import skin.support.widget.SkinCompatThemeUtils;
-
-import static skin.support.widget.SkinCompatHelper.INVALID_ID;
 
 /**
  * Created by pengfengwang on 2017/1/15.
@@ -47,38 +42,12 @@ public class SkinMaterialNavigationView extends NavigationView implements SkinCo
         super(context, attrs, defStyleAttr);
         mBackgroundTintHelper = new SkinCompatBackgroundHelper(this);
         mBackgroundTintHelper.loadFromAttributes(attrs, 0);
-        SkinCompatTypedValue.getValue(
-                context,
-                attrs,
-                defStyleAttr,
-                R.style.Widget_Design_NavigationView,
-                R.styleable.NavigationView,
-                R.styleable.NavigationView_itemTextAppearance,
-                mItemTextAppearanceTypedValue);
-        SkinCompatTypedValue.getValue(
-                context,
-                attrs,
-                defStyleAttr,
-                R.style.Widget_Design_NavigationView,
-                R.styleable.NavigationView,
-                R.styleable.NavigationView_itemIconTint,
-                mIconTintTypedValue);
-        SkinCompatTypedValue.getValue(
-                context,
-                attrs,
-                defStyleAttr,
-                R.style.Widget_Design_NavigationView,
-                R.styleable.NavigationView,
-                R.styleable.NavigationView_itemTextColor,
-                mTextColorTypedValue);
-        SkinCompatTypedValue.getValue(
-                context,
-                attrs,
-                defStyleAttr,
-                R.style.Widget_Design_NavigationView,
-                R.styleable.NavigationView,
-                R.styleable.NavigationView_itemBackground,
-                mItemBackgroundTypedValue);
+        SkinCompatTypedArray
+                .obtain(context, attrs, R.styleable.NavigationView, defStyleAttr, R.style.Widget_Design_NavigationView)
+                .getValue(R.styleable.NavigationView_itemTextAppearance, mItemTextAppearanceTypedValue)
+                .getValue(R.styleable.NavigationView_itemIconTint, mIconTintTypedValue)
+                .getValue(R.styleable.NavigationView_itemTextColor, mTextColorTypedValue)
+                .getValue(R.styleable.NavigationView_itemBackground, mItemBackgroundTypedValue);
         applyItemTextAppearanceResource();
         applyItemIconTintResource();
         applyItemTextColorResource();

@@ -6,6 +6,7 @@ import android.util.AttributeSet;
 import android.view.View;
 
 import skin.support.R;
+import skin.support.content.res.SkinCompatTypedArray;
 import skin.support.content.res.SkinCompatTypedValue;
 
 /**
@@ -22,13 +23,10 @@ public class SkinCompatBackgroundHelper extends SkinCompatHelper {
     }
 
     public void loadFromAttributes(AttributeSet attrs, int defStyleAttr) {
-        SkinCompatTypedValue.getValue(
-                mView.getContext(),
-                attrs,
-                defStyleAttr,
-                R.styleable.SkinBackgroundHelper,
-                R.styleable.SkinBackgroundHelper_android_background,
-                mBackgroundTypedValue);
+        SkinCompatTypedArray
+                .obtain(mView.getContext(), attrs, R.styleable.SkinBackgroundHelper,
+                        defStyleAttr, R.styleable.SkinBackgroundHelper_android_background)
+                .getValue(R.styleable.SkinBackgroundHelper_android_background, mBackgroundTypedValue);
         applySkin();
     }
 

@@ -9,6 +9,7 @@ import android.util.AttributeSet;
 
 import skin.support.cardview.R;
 import skin.support.content.res.SkinCompatResources;
+import skin.support.content.res.SkinCompatTypedArray;
 import skin.support.content.res.SkinCompatTypedValue;
 
 /**
@@ -30,13 +31,9 @@ public class SkinCompatCardView extends CardView implements SkinCompatSupportabl
 
     public SkinCompatCardView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        SkinCompatTypedValue.getValue(
-                context,
-                attrs,
-                defStyleAttr,
-                R.styleable.CardView,
-                R.styleable.CardView_cardBackgroundColor,
-                mBackgroundColorTypedValue);
+        SkinCompatTypedArray
+                .obtain(context, attrs, R.styleable.CardView, defStyleAttr, R.styleable.CardView_cardBackgroundColor)
+                .getValue(R.styleable.CardView_cardBackgroundColor, mBackgroundColorTypedValue);
 
         applyBackgroundColorResource();
     }

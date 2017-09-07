@@ -18,6 +18,7 @@ import android.util.AttributeSet;
 import android.view.Gravity;
 import android.widget.ProgressBar;
 
+import skin.support.content.res.SkinCompatTypedArray;
 import skin.support.content.res.SkinCompatTypedValue;
 
 /**
@@ -26,10 +27,22 @@ import skin.support.content.res.SkinCompatTypedValue;
 
 public class SkinCompatProgressBarHelper extends SkinCompatHelper {
 
-    private static final int[] TINT_ATTRS = {
-            android.R.attr.indeterminateDrawable,
-            android.R.attr.progressDrawable
-    };
+    private static final int[] TINT_ATTRS;
+
+    static {
+        if (Build.VERSION.SDK_INT > 21) {
+            TINT_ATTRS = new int[]{
+                    android.R.attr.indeterminateDrawable,
+                    android.R.attr.progressDrawable,
+                    android.R.attr.indeterminateTint
+            };
+        } else {
+            TINT_ATTRS = new int[]{
+                    android.R.attr.indeterminateDrawable,
+                    android.R.attr.progressDrawable
+            };
+        }
+    }
 
     protected final ProgressBar mView;
 
@@ -43,29 +56,11 @@ public class SkinCompatProgressBarHelper extends SkinCompatHelper {
     }
 
     void loadFromAttributes(AttributeSet attrs, int defStyleAttr) {
-        SkinCompatTypedValue.getValue(
-                mView.getContext(),
-                attrs,
-                defStyleAttr,
-                TINT_ATTRS,
-                0,
-                mIndeterminateDrawableTypedValue);
-        SkinCompatTypedValue.getValue(
-                mView.getContext(),
-                attrs,
-                defStyleAttr,
-                TINT_ATTRS,
-                1,
-                mProgressDrawableTypedValue);
-        if (Build.VERSION.SDK_INT > 21) {
-            SkinCompatTypedValue.getValue(
-                    mView.getContext(),
-                    attrs,
-                    defStyleAttr,
-                    new int[]{android.R.attr.indeterminateTint},
-                    0,
-                    mIndeterminateTintTypedValue);
-        }
+        SkinCompatTypedArray
+                .obtain(mView.getContext(), attrs, TINT_ATTRS, defStyleAttr)
+                .getValue(0, mIndeterminateDrawableTypedValue)
+                .getValue(1, mProgressDrawableTypedValue)
+                .getValue(2, mIndeterminateTintTypedValue);
         applySkin();
     }
 

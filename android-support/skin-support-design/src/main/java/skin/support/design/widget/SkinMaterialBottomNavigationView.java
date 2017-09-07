@@ -2,19 +2,15 @@ package skin.support.design.widget;
 
 import android.content.Context;
 import android.content.res.ColorStateList;
-import android.content.res.TypedArray;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.util.AttributeSet;
-import android.util.TypedValue;
 
 import skin.support.content.res.SkinCompatResources;
+import skin.support.content.res.SkinCompatTypedArray;
 import skin.support.content.res.SkinCompatTypedValue;
 import skin.support.design.R;
-import skin.support.widget.SkinCompatHelper;
 import skin.support.widget.SkinCompatSupportable;
-
-import static skin.support.widget.SkinCompatHelper.INVALID_ID;
 
 /**
  * Created by ximsfei on 17-3-1.
@@ -39,22 +35,16 @@ public class SkinMaterialBottomNavigationView extends BottomNavigationView imple
 
     public SkinMaterialBottomNavigationView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        SkinCompatTypedValue.getValue(
-                context,
-                attrs,
-                defStyleAttr,
-                R.style.Widget_Design_BottomNavigationView,
-                R.styleable.BottomNavigationView,
-                R.styleable.BottomNavigationView_itemTextColor,
-                mTextColorTypedValue);
-        SkinCompatTypedValue.getValue(
-                context,
-                attrs,
-                defStyleAttr,
-                R.style.Widget_Design_BottomNavigationView,
-                R.styleable.BottomNavigationView,
-                R.styleable.BottomNavigationView_itemIconTint,
-                mIconTintTypedValue);
+        SkinCompatTypedArray
+                .obtain(context, attrs, R.styleable.BottomNavigationView,
+                        defStyleAttr, R.style.Widget_Design_BottomNavigationView,
+                        R.styleable.BottomNavigationView_itemTextColor)
+                .getValue(R.styleable.BottomNavigationView_itemTextColor, mTextColorTypedValue);
+        SkinCompatTypedArray
+                .obtain(context, attrs, R.styleable.BottomNavigationView,
+                        defStyleAttr, R.style.Widget_Design_BottomNavigationView,
+                        R.styleable.BottomNavigationView_itemIconTint)
+                .getValue(R.styleable.BottomNavigationView_itemIconTint, mIconTintTypedValue);
         applyItemIconTintResource();
         applyItemTextColorResource();
     }

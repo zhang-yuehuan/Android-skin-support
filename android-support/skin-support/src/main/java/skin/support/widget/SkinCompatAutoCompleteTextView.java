@@ -1,18 +1,13 @@
 package skin.support.widget;
 
 import android.content.Context;
-import android.content.res.ColorStateList;
-import android.content.res.TypedArray;
-import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
-import android.os.Build;
 import android.support.annotation.DrawableRes;
-import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.widget.AppCompatAutoCompleteTextView;
 import android.util.AttributeSet;
 
 import skin.support.R;
-import skin.support.content.res.SkinCompatResources;
+import skin.support.content.res.SkinCompatTypedArray;
 import skin.support.content.res.SkinCompatTypedValue;
 
 /**
@@ -37,7 +32,10 @@ public class SkinCompatAutoCompleteTextView extends AppCompatAutoCompleteTextVie
 
     public SkinCompatAutoCompleteTextView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        SkinCompatTypedValue.getValue(context, attrs, defStyleAttr, TINT_ATTRS, 0, mDropDownBackgroundTypedValue);
+        SkinCompatTypedArray
+                .obtain(context, attrs, TINT_ATTRS, defStyleAttr, 0)
+                .getValue(0, mDropDownBackgroundTypedValue);
+
         applyDropDownBackgroundResource();
         mBackgroundTintHelper = new SkinCompatBackgroundHelper(this);
         mBackgroundTintHelper.loadFromAttributes(attrs, defStyleAttr);

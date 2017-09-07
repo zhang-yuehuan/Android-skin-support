@@ -1,15 +1,13 @@
 package skin.support.widget;
 
-import android.content.pm.PackageInfo;
 import android.content.res.ColorStateList;
-import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
 import android.support.v4.widget.CompoundButtonCompat;
 import android.util.AttributeSet;
 import android.widget.CompoundButton;
 
 import skin.support.R;
-import skin.support.content.res.SkinCompatResources;
+import skin.support.content.res.SkinCompatTypedArray;
 import skin.support.content.res.SkinCompatTypedValue;
 
 /**
@@ -25,20 +23,11 @@ public class SkinCompatCompoundButtonHelper extends SkinCompatHelper {
     }
 
     void loadFromAttributes(AttributeSet attrs, int defStyleAttr) {
-        SkinCompatTypedValue.getValue(
-                mView.getContext(),
-                attrs,
-                defStyleAttr,
-                R.styleable.CompoundButton,
-                R.styleable.CompoundButton_android_button,
-                mButtonTypedValue);
-        SkinCompatTypedValue.getValue(
-                mView.getContext(),
-                attrs,
-                defStyleAttr,
-                R.styleable.CompoundButton,
-                R.styleable.CompoundButton_buttonTint,
-                mButtonTintTypedValue);
+        SkinCompatTypedArray
+                .obtain(mView.getContext(), attrs, R.styleable.CompoundButton, defStyleAttr)
+                .getValue(R.styleable.CompoundButton_android_button, mButtonTypedValue)
+                .getValue(R.styleable.CompoundButton_buttonTint, mButtonTintTypedValue);
+
         applySkin();
     }
 

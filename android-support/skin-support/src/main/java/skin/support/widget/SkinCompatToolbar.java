@@ -9,10 +9,8 @@ import android.support.v7.widget.Toolbar;
 import android.util.AttributeSet;
 
 import skin.support.R;
-import skin.support.content.res.SkinCompatResources;
+import skin.support.content.res.SkinCompatTypedArray;
 import skin.support.content.res.SkinCompatTypedValue;
-
-import static skin.support.widget.SkinCompatHelper.INVALID_ID;
 
 /**
  * Created by ximsfei on 17-1-12.
@@ -38,11 +36,13 @@ public class SkinCompatToolbar extends Toolbar implements SkinCompatSupportable 
         super(context, attrs, defStyleAttr);
         mBackgroundTintHelper = new SkinCompatBackgroundHelper(this);
         mBackgroundTintHelper.loadFromAttributes(attrs, defStyleAttr);
-        SkinCompatTypedValue.getValue(context, attrs, defStyleAttr, R.styleable.Toolbar, R.styleable.Toolbar_navigationIcon, mNavigationIconTypedValue);
-        SkinCompatTypedValue.getValue(context, attrs, defStyleAttr, R.styleable.Toolbar, R.styleable.Toolbar_titleTextAppearance, mTitleTextAppearanceTypedValue);
-        SkinCompatTypedValue.getValue(context, attrs, defStyleAttr, R.styleable.Toolbar, R.styleable.Toolbar_subtitleTextAppearance, mSubtitleTextAppearanceTypedValue);
-        SkinCompatTypedValue.getValue(context, attrs, defStyleAttr, R.styleable.Toolbar, R.styleable.Toolbar_titleTextColor, mTitleTextColorTypedValue);
-        SkinCompatTypedValue.getValue(context, attrs, defStyleAttr, R.styleable.Toolbar, R.styleable.Toolbar_subtitleTextColor, mSubtitleTextColorTypedValue);
+        SkinCompatTypedArray
+                .obtain(context, attrs, R.styleable.Toolbar, defStyleAttr)
+                .getValue(R.styleable.Toolbar_navigationIcon, mNavigationIconTypedValue)
+                .getValue(R.styleable.Toolbar_titleTextAppearance, mTitleTextAppearanceTypedValue)
+                .getValue(R.styleable.Toolbar_subtitleTextAppearance, mSubtitleTextAppearanceTypedValue)
+                .getValue(R.styleable.Toolbar_titleTextColor, mTitleTextColorTypedValue)
+                .getValue(R.styleable.Toolbar_subtitleTextColor, mSubtitleTextColorTypedValue);
 
         applyTitleTextAppearanceResource();
         applySubtitleTextAppearanceResource();

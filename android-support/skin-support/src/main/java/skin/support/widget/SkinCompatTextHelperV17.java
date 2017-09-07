@@ -2,16 +2,14 @@ package skin.support.widget;
 
 import android.annotation.TargetApi;
 import android.content.Context;
-import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.RequiresApi;
-import android.support.v7.widget.AppCompatDrawableManager;
 import android.util.AttributeSet;
 import android.widget.TextView;
 
 import skin.support.R;
-import skin.support.content.res.SkinCompatResources;
+import skin.support.content.res.SkinCompatTypedArray;
 import skin.support.content.res.SkinCompatTypedValue;
 
 /**
@@ -32,20 +30,14 @@ public class SkinCompatTextHelperV17 extends SkinCompatTextHelper {
     public void loadFromAttributes(AttributeSet attrs, int defStyleAttr) {
         final Context context = mView.getContext();
 
-        SkinCompatTypedValue.getValue(
-                context,
-                attrs,
-                defStyleAttr,
-                R.styleable.SkinCompatTextHelper,
-                R.styleable.SkinCompatTextHelper_android_drawableStart,
-                mDrawableStartTypedValue);
-        SkinCompatTypedValue.getValue(
-                context,
-                attrs,
-                defStyleAttr,
-                R.styleable.SkinCompatTextHelper,
-                R.styleable.SkinCompatTextHelper_android_drawableEnd,
-                mDrawableEndTypedValue);
+        SkinCompatTypedArray
+                .obtain(context, attrs, R.styleable.SkinCompatTextHelper,
+                        defStyleAttr, R.styleable.SkinCompatTextHelper_android_drawableStart)
+                .getValue(R.styleable.SkinCompatTextHelper_android_drawableStart, mDrawableStartTypedValue);
+        SkinCompatTypedArray
+                .obtain(context, attrs, R.styleable.SkinCompatTextHelper,
+                        defStyleAttr, R.styleable.SkinCompatTextHelper_android_drawableEnd)
+                .getValue(R.styleable.SkinCompatTextHelper_android_drawableEnd, mDrawableEndTypedValue);
         super.loadFromAttributes(attrs, defStyleAttr);
     }
 

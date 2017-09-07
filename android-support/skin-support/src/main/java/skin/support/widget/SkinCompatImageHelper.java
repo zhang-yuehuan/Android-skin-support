@@ -1,16 +1,11 @@
 package skin.support.widget;
 
-import android.content.res.ColorStateList;
-import android.content.res.TypedArray;
-import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
-import android.os.Build;
-import android.support.v4.graphics.drawable.DrawableCompat;
 import android.util.AttributeSet;
 import android.widget.ImageView;
 
 import skin.support.R;
-import skin.support.content.res.SkinCompatResources;
+import skin.support.content.res.SkinCompatTypedArray;
 import skin.support.content.res.SkinCompatTypedValue;
 
 /**
@@ -26,21 +21,11 @@ public class SkinCompatImageHelper extends SkinCompatHelper {
     }
 
     public void loadFromAttributes(AttributeSet attrs, int defStyleAttr) {
-        SkinCompatTypedValue.getValue(
-                mView.getContext(),
-                attrs,
-                defStyleAttr,
-                R.styleable.SkinCompatImageView,
-                R.styleable.SkinCompatImageView_srcCompat,
-                mSrcTypedValue);
+        SkinCompatTypedArray a = SkinCompatTypedArray.obtain(mView.getContext(),
+                attrs, R.styleable.SkinCompatImageView, defStyleAttr);
+        a.getValue(R.styleable.SkinCompatImageView_srcCompat, mSrcTypedValue);
         if (mSrcTypedValue.isDataInvalid()) {
-            SkinCompatTypedValue.getValue(
-                    mView.getContext(),
-                    attrs,
-                    defStyleAttr,
-                    R.styleable.SkinCompatImageView,
-                    R.styleable.SkinCompatImageView_android_src,
-                    mSrcTypedValue);
+            a.getValue(R.styleable.SkinCompatImageView_android_src, mSrcTypedValue);
         }
         applySkin();
     }

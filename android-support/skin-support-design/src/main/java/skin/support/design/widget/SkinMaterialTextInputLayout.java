@@ -6,23 +6,18 @@ import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.StyleRes;
 import android.support.design.widget.TextInputLayout;
-import android.support.v7.widget.TintTypedArray;
 import android.util.AttributeSet;
 import android.widget.TextView;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
-import skin.support.content.res.SkinCompatResources;
+import skin.support.content.res.SkinCompatTypedArray;
 import skin.support.content.res.SkinCompatTypedValue;
 import skin.support.design.R;
-import skin.support.utils.SkinLog;
 import skin.support.widget.SkinCompatBackgroundHelper;
 import skin.support.widget.SkinCompatEditText;
-import skin.support.widget.SkinCompatHelper;
 import skin.support.widget.SkinCompatSupportable;
-
-import static skin.support.widget.SkinCompatHelper.INVALID_ID;
 
 /**
  * Created by ximsfei on 17-3-2.
@@ -50,44 +45,15 @@ public class SkinMaterialTextInputLayout extends TextInputLayout implements Skin
         mBackgroundTintHelper = new SkinCompatBackgroundHelper(this);
         mBackgroundTintHelper.loadFromAttributes(attrs, defStyleAttr);
 
-        SkinCompatTypedValue.getValue(
-                context,
-                attrs,
-                defStyleAttr,
-                R.style.Widget_Design_TextInputLayout,
-                R.styleable.TextInputLayout,
-                R.styleable.TextInputLayout_android_textColorHint,
-                mFocusedTextColorTypedValue);
+        SkinCompatTypedArray
+                .obtain(context, attrs, R.styleable.TextInputLayout, defStyleAttr, R.style.Widget_Design_TextInputLayout)
+                .getValue(R.styleable.TextInputLayout_android_textColorHint, mFocusedTextColorTypedValue)
+                .getValue(R.styleable.TextInputLayout_errorTextAppearance, mErrorTextAppearanceTypedValue)
+                .getValue(R.styleable.TextInputLayout_counterTextAppearance, mCounterTextAppearanceTypedValue)
+                .getValue(R.styleable.TextInputLayout_passwordToggleDrawable, mPasswordToggleTypedValue);
         applyFocusedTextColorResource();
-
-        SkinCompatTypedValue.getValue(
-                context,
-                attrs,
-                defStyleAttr,
-                R.style.Widget_Design_TextInputLayout,
-                R.styleable.TextInputLayout,
-                R.styleable.TextInputLayout_errorTextAppearance,
-                mErrorTextAppearanceTypedValue);
         applyErrorTextAppearanceResource();
-
-        SkinCompatTypedValue.getValue(
-                context,
-                attrs,
-                defStyleAttr,
-                R.style.Widget_Design_TextInputLayout,
-                R.styleable.TextInputLayout,
-                R.styleable.TextInputLayout_counterTextAppearance,
-                mCounterTextAppearanceTypedValue);
         applyCounterTextAppearanceResource();
-
-        SkinCompatTypedValue.getValue(
-                context,
-                attrs,
-                defStyleAttr,
-                R.style.Widget_Design_TextInputLayout,
-                R.styleable.TextInputLayout,
-                R.styleable.TextInputLayout_passwordToggleDrawable,
-                mPasswordToggleTypedValue);
         applyPasswordToggleResource();
     }
 

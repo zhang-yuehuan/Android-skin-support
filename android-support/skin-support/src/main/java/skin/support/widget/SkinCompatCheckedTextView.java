@@ -1,14 +1,12 @@
 package skin.support.widget;
 
 import android.content.Context;
-import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.DrawableRes;
 import android.support.v7.widget.AppCompatCheckedTextView;
 import android.util.AttributeSet;
 
-import skin.support.R;
-import skin.support.content.res.SkinCompatResources;
+import skin.support.content.res.SkinCompatTypedArray;
 import skin.support.content.res.SkinCompatTypedValue;
 
 /**
@@ -40,7 +38,9 @@ public class SkinCompatCheckedTextView extends AppCompatCheckedTextView implemen
         mTextHelper = SkinCompatTextHelper.create(this);
         mTextHelper.loadFromAttributes(attrs, defStyleAttr);
 
-        SkinCompatTypedValue.getValue(context, attrs, defStyleAttr, TINT_ATTRS, 0, mCheckMarkTypedValue);
+        SkinCompatTypedArray
+                .obtain(context, attrs, TINT_ATTRS, defStyleAttr, 0)
+                .getValue(0, mCheckMarkTypedValue);
         applyCheckMark();
     }
 

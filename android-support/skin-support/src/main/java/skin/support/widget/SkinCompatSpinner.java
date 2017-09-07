@@ -12,7 +12,7 @@ import android.util.AttributeSet;
 import android.util.Log;
 
 import skin.support.R;
-import skin.support.content.res.SkinCompatResources;
+import skin.support.content.res.SkinCompatTypedArray;
 import skin.support.content.res.SkinCompatTypedValue;
 
 /**
@@ -81,13 +81,9 @@ public class SkinCompatSpinner extends AppCompatSpinner implements SkinCompatSup
             }
 
             if (mode == MODE_DROPDOWN) {
-                SkinCompatTypedValue.getValue(
-                        context,
-                        attrs,
-                        defStyleAttr,
-                        R.styleable.Spinner,
-                        R.styleable.Spinner_android_popupBackground,
-                        mPopupBackgroundTypedValue);
+                SkinCompatTypedArray
+                        .obtain(context, attrs, R.styleable.Spinner, defStyleAttr, R.styleable.Spinner_android_popupBackground)
+                        .getValue(R.styleable.Spinner_android_popupBackground, mPopupBackgroundTypedValue);
             }
         }
         a.recycle();

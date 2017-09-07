@@ -6,13 +6,10 @@ import android.content.res.TypedArray;
 import android.support.design.widget.TabLayout;
 import android.util.AttributeSet;
 
-import skin.support.content.res.SkinCompatResources;
+import skin.support.content.res.SkinCompatTypedArray;
 import skin.support.content.res.SkinCompatTypedValue;
 import skin.support.design.R;
-import skin.support.widget.SkinCompatHelper;
 import skin.support.widget.SkinCompatSupportable;
-
-import static skin.support.widget.SkinCompatHelper.INVALID_ID;
 
 /**
  * Created by ximsfei on 17-1-14.
@@ -34,34 +31,11 @@ public class SkinMaterialTabLayout extends TabLayout implements SkinCompatSuppor
 
     public SkinMaterialTabLayout(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        SkinCompatTypedValue.getValue(
-                context,
-                attrs,
-                defStyleAttr,
-                R.styleable.TabLayout,
-                R.styleable.TabLayout_tabIndicatorColor,
-                mTabIndicatorColorTypeValue);
-        SkinCompatTypedValue.getValue(
-                context,
-                attrs,
-                defStyleAttr,
-                R.styleable.TabLayout,
-                R.styleable.TabLayout_tabTextAppearance,
-                mTabTextAppearanceTypeValue);
-        SkinCompatTypedValue.getValue(
-                context,
-                attrs,
-                defStyleAttr,
-                R.styleable.TabLayout,
-                R.styleable.TabLayout_tabTextColor,
-                mTabTextColorsTypeValue);
-        SkinCompatTypedValue.getValue(
-                context,
-                attrs,
-                defStyleAttr,
-                R.styleable.TabLayout,
-                R.styleable.TabLayout_tabSelectedTextColor,
-                mTabSelectedTextColorTypeValue);
+        SkinCompatTypedArray.obtain(context, attrs, R.styleable.TabLayout, defStyleAttr)
+                .getValue(R.styleable.TabLayout_tabIndicatorColor, mTabIndicatorColorTypeValue)
+                .getValue(R.styleable.TabLayout_tabTextAppearance, mTabTextAppearanceTypeValue)
+                .getValue(R.styleable.TabLayout_tabTextColor, mTabTextColorsTypeValue)
+                .getValue(R.styleable.TabLayout_tabSelectedTextColor, mTabSelectedTextColorTypeValue);
         applySkin();
     }
 

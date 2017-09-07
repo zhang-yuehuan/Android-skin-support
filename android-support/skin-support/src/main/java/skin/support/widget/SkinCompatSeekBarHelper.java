@@ -1,12 +1,11 @@
 package skin.support.widget;
 
-import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.widget.SeekBar;
 
 import skin.support.R;
-import skin.support.content.res.SkinCompatResources;
+import skin.support.content.res.SkinCompatTypedArray;
 import skin.support.content.res.SkinCompatTypedValue;
 
 /**
@@ -25,13 +24,10 @@ public class SkinCompatSeekBarHelper extends SkinCompatProgressBarHelper {
     @Override
     void loadFromAttributes(AttributeSet attrs, int defStyleAttr) {
         super.loadFromAttributes(attrs, defStyleAttr);
-        SkinCompatTypedValue.getValue(
-                mView.getContext(),
-                attrs,
-                defStyleAttr,
-                R.styleable.AppCompatSeekBar,
-                R.styleable.AppCompatSeekBar_android_thumb,
-                mThumbTypedValue);
+        SkinCompatTypedArray
+                .obtain(mView.getContext(), attrs, R.styleable.AppCompatSeekBar,
+                        defStyleAttr, R.styleable.AppCompatSeekBar_android_thumb)
+                .getValue(R.styleable.AppCompatSeekBar_android_thumb, mThumbTypedValue);
         applySkin();
     }
 
