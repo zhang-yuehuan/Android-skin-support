@@ -1,11 +1,10 @@
 package skin.support.widget;
 
-import android.annotation.TargetApi;
 import android.content.Context;
+import android.content.res.ColorStateList;
 import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
-import android.support.annotation.RequiresApi;
 
 import skin.support.content.res.SkinCompatResources;
 
@@ -40,6 +39,17 @@ public class SkinCompatThemeUtils {
 
     public static int getTextColorPrimaryResId(Context context) {
         return getResId(context, new int[]{android.R.attr.textColorPrimary});
+    }
+
+    public static ColorStateList getColorAccent(Context context) {
+        ColorStateList colorAccent = null;
+        TypedArray a = SkinCompatResources.getInstance()
+                .obtainStyledAttributes(context, APPCOMPAT_COLOR_ACCENT_ATTRS);
+        if (a.hasValue(0)) {
+            colorAccent = a.getColorStateList(0);
+        }
+        a.recycle();
+        return colorAccent;
     }
 
     public static int getStatusBarColor(Context context) {

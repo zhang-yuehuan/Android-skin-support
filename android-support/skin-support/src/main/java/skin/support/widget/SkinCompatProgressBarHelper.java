@@ -149,19 +149,27 @@ public class SkinCompatProgressBarHelper extends SkinCompatHelper {
         return mSampleTile;
     }
 
-    protected void applyIndeterminateDrawableRelease() {
+    protected void applyIndeterminateDrawableResource() {
         Drawable indeterminateDrawable = mIndeterminateDrawableTypedValue.getDrawable();
         if (indeterminateDrawable != null) {
             indeterminateDrawable.setBounds(mView.getIndeterminateDrawable().getBounds());
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                mView.setIndeterminateDrawableTiled(indeterminateDrawable);
+                // FIXME: Any better way without setIndeterminateTintList?
+                if (mIndeterminateDrawableTypedValue.isTypeNull() && mIndeterminateTintTypedValue.isTypeNull()) {
+                    ColorStateList colorStateList = SkinCompatThemeUtils.getColorAccent(mView.getContext());
+                    if (colorStateList != null) {
+                        mView.setIndeterminateTintList(colorStateList);
+                    }
+                } else {
+                    mView.setIndeterminateDrawableTiled(indeterminateDrawable);
+                }
             } else {
                 mView.setIndeterminateDrawable(tileifyIndeterminate(indeterminateDrawable));
             }
         }
     }
 
-    protected void applyProgressDrawableRelease() {
+    protected void applyProgressDrawableResource() {
         Drawable progressDrawable = mProgressDrawableTypedValue.getDrawable();
         if (progressDrawable != null) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -172,7 +180,7 @@ public class SkinCompatProgressBarHelper extends SkinCompatHelper {
         }
     }
 
-    protected void applyIndeterminateTintRelease() {
+    protected void applyIndeterminateTintResource() {
         if (Build.VERSION.SDK_INT > 21) {
             ColorStateList tintList = mIndeterminateTintTypedValue.getColorStateList();
             if (tintList != null) {
@@ -183,8 +191,8 @@ public class SkinCompatProgressBarHelper extends SkinCompatHelper {
 
     @Override
     public void applySkin() {
-        applyIndeterminateDrawableRelease();
-        applyProgressDrawableRelease();
-        applyIndeterminateTintRelease();
+        applyIndeterminateDrawableResource();
+        applyProgressDrawableResource();
+        applyIndeterminateTintResource();
     }
 }
