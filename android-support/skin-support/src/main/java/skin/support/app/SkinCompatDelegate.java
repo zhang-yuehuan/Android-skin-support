@@ -16,7 +16,6 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
-import skin.support.utils.SkinLog;
 import skin.support.widget.SkinCompatSupportable;
 
 /**
@@ -108,7 +107,6 @@ public class SkinCompatDelegate implements LayoutInflaterFactory {
 
     public void applySkin() {
         if (mSkinHelpers != null && !mSkinHelpers.isEmpty()) {
-            SkinLog.d("size - " + mSkinHelpers.size());
             for (WeakReference ref : mSkinHelpers) {
                 if (ref != null && ref.get() != null) {
                     ((SkinCompatSupportable) ref.get()).applySkin();

@@ -1,7 +1,5 @@
 package skin.support.widget;
 
-import skin.support.utils.SkinLog;
-
 /**
  * Created by ximsfei on 2017/1/13.
  */
@@ -14,7 +12,6 @@ public abstract class SkinCompatHelper {
     @Deprecated
     public static int checkResourceId(int resId) {
         String hexResId = Integer.toHexString(resId);
-        SkinLog.d(TAG, "hexResId = " + hexResId);
         return hexResId.startsWith(SYSTEM_ID_PREFIX) ? INVALID_ID : resId;
     }
 
