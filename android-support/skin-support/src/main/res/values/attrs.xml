@@ -10,6 +10,10 @@
     </declare-styleable>
 
     <declare-styleable name="SkinCompatTextHelper">
+        <attr name="android:textCursorDrawable" />
+        <attr name="android:textSelectHandleLeft" />
+        <attr name="android:textSelectHandleRight" />
+        <attr name="android:textSelectHandle" />
         <attr name="android:drawableLeft" />
         <attr name="android:drawableTop" />
         <attr name="android:drawableRight" />

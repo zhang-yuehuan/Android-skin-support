@@ -9,8 +9,10 @@ import android.support.annotation.DrawableRes;
 import android.util.AttributeSet;
 import android.widget.TextView;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+
 import skin.support.R;
-import skin.support.content.res.SkinCompatResources;
 import skin.support.content.res.SkinCompatTypedValue;
 
 /**
@@ -21,6 +23,13 @@ public class SkinCompatTextHelper extends SkinCompatHelper {
     private SkinCompatTypedValue mTextAppearanceTypedValue = new SkinCompatTypedValue();
     private SkinCompatTypedValue mTextColorTypedValue = new SkinCompatTypedValue();
     private SkinCompatTypedValue mTextColorHintTypedValue = new SkinCompatTypedValue();
+
+    private SkinCompatTypedValue mTextCursorDrawableTypedValue = new SkinCompatTypedValue();
+    private SkinCompatTypedValue mSelectHandleLeftTypedValue = new SkinCompatTypedValue();
+    private SkinCompatTypedValue mSelectHandleRightTypedValue = new SkinCompatTypedValue();
+    private SkinCompatTypedValue mSelectHandleCenterTypedValue = new SkinCompatTypedValue();
+
+    private Object mEditor;
 
     public static SkinCompatTextHelper create(TextView textView) {
         if (Build.VERSION.SDK_INT >= 17) {
@@ -71,6 +80,34 @@ public class SkinCompatTextHelper extends SkinCompatHelper {
                 R.styleable.SkinCompatTextHelper,
                 R.styleable.SkinCompatTextHelper_android_drawableBottom,
                 mDrawableBottomTypedValue);
+        SkinCompatTypedValue.getValue(
+                context,
+                attrs,
+                defStyleAttr,
+                R.styleable.SkinCompatTextHelper,
+                R.styleable.SkinCompatTextHelper_android_textCursorDrawable,
+                mTextCursorDrawableTypedValue);
+        SkinCompatTypedValue.getValue(
+                context,
+                attrs,
+                defStyleAttr,
+                R.styleable.SkinCompatTextHelper,
+                R.styleable.SkinCompatTextHelper_android_textSelectHandleLeft,
+                mSelectHandleLeftTypedValue);
+        SkinCompatTypedValue.getValue(
+                context,
+                attrs,
+                defStyleAttr,
+                R.styleable.SkinCompatTextHelper,
+                R.styleable.SkinCompatTextHelper_android_textSelectHandleRight,
+                mSelectHandleRightTypedValue);
+        SkinCompatTypedValue.getValue(
+                context,
+                attrs,
+                defStyleAttr,
+                R.styleable.SkinCompatTextHelper,
+                R.styleable.SkinCompatTextHelper_android_textSelectHandle,
+                mSelectHandleCenterTypedValue);
 
         SkinCompatTypedValue.getValue(
                 context,
@@ -130,6 +167,87 @@ public class SkinCompatTextHelper extends SkinCompatHelper {
         }
     }
 
+    public void applyTextCursorDrawableResource() {
+        try {
+            Object editor = getEditor();
+            Class<?> clazz = editor.getClass();
+            Field cursorDrawableField = clazz.getDeclaredField("mCursorDrawable");
+            cursorDrawableField.setAccessible(true);
+
+            Drawable[] drawables = new Drawable[2];
+            drawables[0] = drawables[1] = mTextCursorDrawableTypedValue.getDrawable();
+            cursorDrawableField.set(editor, drawables);
+
+            Method updateCursorsPositionsMethod = clazz.getDeclaredMethod("updateCursorsPositions");
+            updateCursorsPositionsMethod.setAccessible(true);
+            updateCursorsPositionsMethod.invoke(editor);
+        } catch (Exception ignored) {
+        }
+    }
+
+    public void applyTextSelectHandleResource() {
+        try {
+            Object editor = getEditor();
+            Class<?> clazz = editor.getClass();
+
+            Field selectHandleLeftField = clazz.getDeclaredField("mSelectHandleLeft");
+            selectHandleLeftField.setAccessible(true);
+            Field selectHandleRightField = clazz.getDeclaredField("mSelectHandleRight");
+            selectHandleRightField.setAccessible(true);
+            Field selectHandleCenterField = clazz.getDeclaredField("mSelectHandleCenter");
+            selectHandleCenterField.setAccessible(true);
+
+            Drawable drawableLeft = mSelectHandleLeftTypedValue.getDrawable();
+            selectHandleLeftField.set(editor, drawableLeft);
+            Drawable drawableRight = mSelectHandleRightTypedValue.getDrawable();
+            selectHandleRightField.set(editor, drawableRight);
+            Drawable drawableCenter = mSelectHandleCenterTypedValue.getDrawable();
+            selectHandleCenterField.set(editor, drawableCenter);
+
+
+            applyTextSelectHandleResource(editor, "mSelectionModifierCursorController", "mStartHandle", drawableLeft, drawableRight);
+            applyTextSelectHandleResource(editor, "mSelectionModifierCursorController", "mEndHandle", drawableRight, drawableLeft);
+            applyTextSelectHandleResource(editor, "mInsertionPointCursorController", "mHandle", drawableCenter, drawableCenter);
+        } catch (Exception ignored) {
+        }
+    }
+
+    private void applyTextSelectHandleResource(Object editor, String controllerStr, String handleStr, Drawable drawableLeft, Drawable drawableRight) {
+        try {
+            Field controllerField = editor.getClass().getDeclaredField(controllerStr);
+            controllerField.setAccessible(true);
+
+            Object controller = controllerField.get(editor);
+            Class<?> controllerClazz = controller.getClass();
+
+            Field handleField = controllerClazz.getDeclaredField(handleStr);
+            handleField.setAccessible(true);
+
+            Object handle = handleField.get(controller);
+            Field drawableLtr = handle.getClass().getSuperclass().getDeclaredField("mDrawableLtr");
+            drawableLtr.setAccessible(true);
+            drawableLtr.set(handle, drawableLeft);
+
+            Field drawableRtl = handle.getClass().getSuperclass().getDeclaredField("mDrawableRtl");
+            drawableRtl.setAccessible(true);
+            drawableRtl.set(handle, drawableRight);
+
+            Method updateDrawableMethod = handle.getClass().getSuperclass().getDeclaredMethod("updateDrawable");
+            updateDrawableMethod.setAccessible(true);
+            updateDrawableMethod.invoke(handle);
+        } catch (Exception e) {
+        }
+    }
+
+    private Object getEditor() throws Exception {
+        if (mEditor == null) {
+            Field editorField = TextView.class.getDeclaredField("mEditor");
+            editorField.setAccessible(true);
+            mEditor = editorField.get(mView);
+        }
+        return mEditor;
+    }
+
     public void onSetCompoundDrawablesRelativeWithIntrinsicBounds(
             @DrawableRes int start, @DrawableRes int top, @DrawableRes int end, @DrawableRes int bottom) {
         mDrawableLeftTypedValue.setData(start);
@@ -178,6 +296,8 @@ public class SkinCompatTextHelper extends SkinCompatHelper {
         applyTextAppearanceResource();
         applyTextColorResource();
         applyTextColorHintResource();
+        applyTextCursorDrawableResource();
+        applyTextSelectHandleResource();
         applyCompoundDrawablesResource();
     }
 }
