@@ -3,6 +3,7 @@ package theme.support.demo;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 
 import skin.support.SkinCompatManager;
@@ -26,12 +27,29 @@ public class BaseActivity extends AppCompatActivity {
                 }
             }
         });
-//        toolbar.setOverflowIcon(getResources().getDrawable(R.drawable.ic_camera_24dp));
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_options, menu);
         return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.clear:
+            case R.id.clear_all:
+                SkinCompatManager.getInstance().restoreDefaultTheme();
+                return true;
+            case R.id.plug:
+            case R.id.plug_in:
+                SkinCompatManager.getInstance().loadSkin("night.theme", SkinCompatManager.SKIN_LOADER_STRATEGY_ASSETS);
+                return true;
+            case R.id.build_in:
+                SkinCompatManager.getInstance().loadSkin("white", SkinCompatManager.SKIN_LOADER_STRATEGY_BUILD_IN);
+                return true;
+        }
+        return false;
     }
 }

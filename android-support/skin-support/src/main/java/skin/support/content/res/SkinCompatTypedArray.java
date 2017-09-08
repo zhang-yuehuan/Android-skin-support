@@ -90,6 +90,14 @@ public class SkinCompatTypedArray {
         return new SkinCompatTypedArray(context, set, attrs, defStyleAttr, defStyleRes, map);
     }
 
+    public static SkinCompatTypedArray obtain(Context context, @StyleableRes int[] attrs, @AttrRes int defStyleAttr) {
+        return new SkinCompatTypedArray(context, null, attrs, defStyleAttr, 0, new HashMap<Integer, Value>());
+    }
+
+    public static SkinCompatTypedArray obtain(Context context, @StyleableRes int[] attrs, @AttrRes int defStyleAttr, @StyleRes int defStyleRes) {
+        return new SkinCompatTypedArray(context, null, attrs, defStyleAttr, defStyleRes, new HashMap<Integer, Value>());
+    }
+
     private static class Value {
         int type = TYPE_NULL;
         int data = INVALID_ID;

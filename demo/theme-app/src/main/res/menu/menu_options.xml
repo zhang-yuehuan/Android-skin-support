@@ -1,12 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/account_balance"
-        android:title="account balance" />
+        android:id="@+id/clear"
+        android:icon="@drawable/ic_clear_all_24dp"
+        android:title="恢复"
+        app:showAsAction="always" />
+
     <item
-        android:id="@+id/account_circle"
-        android:title="account circle" />
+        android:id="@+id/plug"
+        android:title="plug-in"
+        app:showAsAction="always" />
+
     <item
-        android:id="@+id/bug_report"
-        android:title="bug report" />
+        android:id="@+id/clear_all"
+        android:icon="@drawable/ic_clear_all_24dp"
+        android:title="恢复默认"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/build_in"
+        android:title="应用内换肤" />
+
+    <item
+        android:id="@+id/plug_in"
+        android:title="插件式换肤" />
 </menu>

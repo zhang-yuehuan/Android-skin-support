@@ -22,6 +22,7 @@ public class SkinCompatToolbar extends Toolbar implements SkinCompatSupportable 
     private SkinCompatTypedValue mTitleTextColorTypedValue = new SkinCompatTypedValue();
     private SkinCompatTypedValue mSubtitleTextColorTypedValue = new SkinCompatTypedValue();
     private SkinCompatTypedValue mNavigationIconTypedValue = new SkinCompatTypedValue();
+    private SkinCompatTypedValue mOverflowIconTypedValue = new SkinCompatTypedValue();
     private SkinCompatBackgroundHelper mBackgroundTintHelper;
 
     public SkinCompatToolbar(Context context) {
@@ -44,6 +45,12 @@ public class SkinCompatToolbar extends Toolbar implements SkinCompatSupportable 
                 .getValue(R.styleable.Toolbar_titleTextColor, mTitleTextColorTypedValue)
                 .getValue(R.styleable.Toolbar_subtitleTextColor, mSubtitleTextColorTypedValue);
 
+        SkinCompatTypedArray a = SkinCompatTypedArray.obtain(context, R.styleable.SkinCompatImageView, R.attr.actionOverflowButtonStyle);
+        a.getValue(R.styleable.SkinCompatImageView_srcCompat, mOverflowIconTypedValue);
+        if (mOverflowIconTypedValue.isDataInvalid()) {
+            a.getValue(R.styleable.SkinCompatImageView_android_src, mOverflowIconTypedValue);
+        }
+
         applyTitleTextAppearanceResource();
         applySubtitleTextAppearanceResource();
 
@@ -51,6 +58,7 @@ public class SkinCompatToolbar extends Toolbar implements SkinCompatSupportable 
         applySubtitleTextColor();
 
         applyNavigationIcon();
+        applyOverflowIcon();
     }
 
     private void applyTitleTextAppearanceResource() {
@@ -100,6 +108,13 @@ public class SkinCompatToolbar extends Toolbar implements SkinCompatSupportable 
         }
     }
 
+    private void applyOverflowIcon() {
+        Drawable drawable = mOverflowIconTypedValue.getDrawable();
+        if (drawable != null) {
+            setOverflowIcon(drawable);
+        }
+    }
+
     @Override
     public void setBackgroundResource(@DrawableRes int resId) {
         super.setBackgroundResource(resId);
@@ -128,6 +143,7 @@ public class SkinCompatToolbar extends Toolbar implements SkinCompatSupportable 
         applySubtitleTextColor();
 
         applyNavigationIcon();
+        applyOverflowIcon();
     }
 
 }

@@ -22,6 +22,8 @@ import java.lang.reflect.Method;
 import java.util.Map;
 
 import skin.support.SkinCompatManager;
+import skin.support.view.menu.SkinCompatActionMenuItemView;
+import skin.support.view.menu.SkinCompatListMenuItemView;
 import skin.support.widget.SkinCompatAutoCompleteTextView;
 import skin.support.widget.SkinCompatButton;
 import skin.support.widget.SkinCompatCheckBox;
@@ -197,6 +199,12 @@ public class SkinCompatViewInflater {
         switch (name) {
             case "android.support.v7.widget.Toolbar":
                 view = new SkinCompatToolbar(context, attrs);
+                break;
+            case "android.support.v7.view.menu.ActionMenuItemView":
+                view = new SkinCompatActionMenuItemView(context, attrs);
+                break;
+            case "android.support.v7.view.menu.ListMenuItemView":
+                view = new SkinCompatListMenuItemView(context, attrs);
                 break;
         }
         return view;
