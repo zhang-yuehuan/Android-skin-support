@@ -27,5 +27,13 @@
     <android.support.v4.view.ViewPager
         android:id="@+id/view_pager"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+    <android.support.design.widget.BottomNavigationView
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        app:itemIconTint="@color/navigation_item_tint"
+        app:itemTextColor="@color/navigation_item_tint"
+        app:menu="@menu/bottom_navigation_view_menu" />
 </LinearLayout>
