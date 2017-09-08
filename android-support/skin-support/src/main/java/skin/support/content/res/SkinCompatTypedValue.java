@@ -21,6 +21,7 @@ public class SkinCompatTypedValue {
     protected int index;
     protected int type = TYPE_NULL;
     protected int data = INVALID_ID;
+    protected boolean valid = true;
 
     public int getType() {
         return type;
@@ -33,11 +34,13 @@ public class SkinCompatTypedValue {
     public void setData(int data) {
         this.data = data;
         this.type = TYPE_RES;
+        this.valid = true;
     }
 
     public void setData(int type, int data) {
         this.type = type;
         this.data = data;
+        this.valid = true;
     }
 
     public boolean isTypeNull() {
@@ -56,6 +59,14 @@ public class SkinCompatTypedValue {
         return data == INVALID_ID;
     }
 
+    public void setValid(boolean valid) {
+        this.valid = valid;
+    }
+
+    public boolean isValid() {
+        return valid;
+    }
+
     public void reset() {
         type = TYPE_NULL;
         data = INVALID_ID;
@@ -63,6 +74,9 @@ public class SkinCompatTypedValue {
 
     public int getColor() {
         int color = 0;
+        if (!isValid()) {
+            return color;
+        }
         if (isTypeNull()) {
             TypedArray a;
             if (defStyleAttr != INVALID_ID || defStyleRes != INVALID_ID) {
@@ -88,6 +102,9 @@ public class SkinCompatTypedValue {
 
     public ColorStateList getColorStateList() {
         ColorStateList colorStateList = null;
+        if (!isValid()) {
+            return colorStateList;
+        }
         if (isTypeNull()) {
             TypedArray a;
             if (defStyleAttr != INVALID_ID || defStyleRes != INVALID_ID) {
@@ -113,6 +130,9 @@ public class SkinCompatTypedValue {
 
     public Drawable getDrawable() {
         Drawable drawable = null;
+        if (!isValid()) {
+            return drawable;
+        }
         if (isTypeNull()) {
             TypedArray a;
             if (defStyleAttr != INVALID_ID || defStyleRes != INVALID_ID) {
@@ -137,23 +157,44 @@ public class SkinCompatTypedValue {
     }
 
     public TypedArray obtainStyledAttributes(int[] as) {
-        int resourceId = INVALID_ID;
+        return obtainStyledAttributes(as, INVALID_ID);
+    }
+
+    public TypedArray obtainStyledAttributes(int[] as, int defRes) {
+        if (!isValid()) {
+            return null;
+        }
+        int resourceId;
         if (type == TYPE_NULL) {
             TypedArray a = SkinCompatResources.getInstance().obtainStyledAttributes(context, set, attrs, defStyleAttr, defStyleRes);
             resourceId = a.getResourceId(this.index, INVALID_ID);
             a.recycle();
-            return SkinCompatResources.getInstance().obtainStyledAttributes(context, resourceId, false, as, true);
+            if (resourceId == INVALID_ID) {
+                return SkinCompatResources.getInstance().obtainStyledAttributes(context, defRes, as);
+            } else {
+                return SkinCompatResources.getInstance().obtainStyledAttributes(context, resourceId, false, as, true);
+            }
         } else if (data != INVALID_ID) {
             if (type == TYPE_ATTR) {
                 TypedArray a = SkinCompatResources.getInstance().obtainStyledAttributes(context, new int[]{data});
                 resourceId = a.getResourceId(0, INVALID_ID);
                 a.recycle();
-                return SkinCompatResources.getInstance().obtainStyledAttributes(context, resourceId, false, as, true);
+                if (resourceId == INVALID_ID) {
+                    return SkinCompatResources.getInstance().obtainStyledAttributes(context, defRes, as);
+                } else {
+                    return SkinCompatResources.getInstance().obtainStyledAttributes(context, resourceId, false, as, true);
+                }
             } else if (type == TYPE_RES) {
                 resourceId = data;
                 return SkinCompatResources.getInstance().obtainStyledAttributes(context, resourceId, as);
             }
         }
-        return SkinCompatResources.getInstance().obtainStyledAttributes(context, resourceId, as);
+        return SkinCompatResources.getInstance().obtainStyledAttributes(context, defRes, as);
+    }
+
+    @Override
+    public String toString() {
+        return "SkinCompatTypedValue type = " + type + ", data = " + data
+                + ", defStyleAttr = " + defStyleAttr + ", defStyleRes = " + defStyleRes;
     }
 }

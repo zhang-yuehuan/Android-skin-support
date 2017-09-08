@@ -33,21 +33,21 @@ public class SkinCompatTextHelper extends SkinCompatHelper {
 
     private Object mEditor;
 
-    public static SkinCompatTextHelper create(TextView textView) {
+    public static SkinCompatTextHelper create(SkinableTextView textView) {
         if (Build.VERSION.SDK_INT >= 17) {
             return new SkinCompatTextHelperV17(textView);
         }
         return new SkinCompatTextHelper(textView);
     }
 
-    final TextView mView;
+    final SkinableTextView mView;
 
     SkinCompatTypedValue mDrawableBottomTypedValue = new SkinCompatTypedValue();
     SkinCompatTypedValue mDrawableLeftTypedValue = new SkinCompatTypedValue();
     SkinCompatTypedValue mDrawableRightTypedValue = new SkinCompatTypedValue();
     SkinCompatTypedValue mDrawableTopTypedValue = new SkinCompatTypedValue();
 
-    public SkinCompatTextHelper(TextView view) {
+    public SkinCompatTextHelper(SkinableTextView view) {
         mView = view;
     }
 
@@ -78,22 +78,31 @@ public class SkinCompatTextHelper extends SkinCompatHelper {
         mTextAppearanceTypedValue.setData(resId);
         mTextColorTypedValue.reset();
         mTextColorHintTypedValue.reset();
+        mTextColorHighlightTypedValue.reset();
         applyTextAppearanceResource();
+    }
+
+    public void onSetTextColor() {
+        mTextAppearanceTypedValue.setValid(false);
+        mTextColorTypedValue.setValid(false);
     }
 
     private void applyTextAppearanceResource() {
         if (mTextColorTypedValue.isTypeNull() || mTextColorHintTypedValue.isTypeNull()) {
             TypedArray a = mTextAppearanceTypedValue.obtainStyledAttributes(R.styleable.SkinTextAppearance);
+            if (a == null) {
+                return;
+            }
             if (mTextColorTypedValue.isTypeNull() && a.hasValue(R.styleable.SkinTextAppearance_android_textColor)) {
-                mView.setTextColor(a.getColorStateList(R.styleable.SkinTextAppearance_android_textColor));
+                mView.setSkinTextColor(a.getColorStateList(R.styleable.SkinTextAppearance_android_textColor));
             }
             if (mTextColorHintTypedValue.isTypeNull() && a.hasValue(R.styleable.SkinTextAppearance_android_textColorHint)) {
-                mView.setHintTextColor(a.getColorStateList(R.styleable.SkinTextAppearance_android_textColorHint));
+                mView.setSkinHintTextColor(a.getColorStateList(R.styleable.SkinTextAppearance_android_textColorHint));
             }
             if (mTextColorHighlightTypedValue.isTypeNull() && a.hasValue(R.styleable.SkinTextAppearance_android_textColorHighlight)) {
                 int highlightColor = a.getColor(R.styleable.SkinTextAppearance_android_textColorHighlight, 0);
                 if (highlightColor != 0) {
-                    mView.setHighlightColor(highlightColor);
+                    mView.setSkinHighlightColor(highlightColor);
                 }
             }
             a.recycle();
@@ -103,21 +112,21 @@ public class SkinCompatTextHelper extends SkinCompatHelper {
     private void applyTextColorHighlightResource() {
         int color = mTextColorHighlightTypedValue.getColor();
         if (color != 0) {
-            mView.setHighlightColor(color);
+            mView.setSkinHighlightColor(color);
         }
     }
 
     private void applyTextColorHintResource() {
         ColorStateList colorStateList = mTextColorHintTypedValue.getColorStateList();
         if (colorStateList != null) {
-            mView.setHintTextColor(colorStateList);
+            mView.setSkinHintTextColor(colorStateList);
         }
     }
 
     private void applyTextColorResource() {
         ColorStateList colorStateList = mTextColorTypedValue.getColorStateList();
         if (colorStateList != null) {
-            mView.setTextColor(colorStateList);
+            mView.setSkinTextColor(colorStateList);
         }
     }
 
@@ -234,7 +243,7 @@ public class SkinCompatTextHelper extends SkinCompatHelper {
                 || drawableTop != null
                 || drawableRight != null
                 || drawableBottom != null) {
-            mView.setCompoundDrawablesWithIntrinsicBounds(drawableLeft, drawableTop, drawableRight, drawableBottom);
+            mView.setSkinCompoundDrawablesWithIntrinsicBounds(drawableLeft, drawableTop, drawableRight, drawableBottom);
         }
     }
 

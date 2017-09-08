@@ -1,8 +1,12 @@
 package skin.support.widget;
 
 import android.content.Context;
+import android.content.res.ColorStateList;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
+import android.support.annotation.ColorInt;
 import android.support.annotation.DrawableRes;
+import android.support.annotation.RequiresApi;
 import android.support.v7.widget.AppCompatMultiAutoCompleteTextView;
 import android.util.AttributeSet;
 
@@ -14,7 +18,7 @@ import skin.support.content.res.SkinCompatTypedValue;
  * Created by ximsfei on 17-1-14.
  */
 
-public class SkinCompatMultiAutoCompleteTextView extends AppCompatMultiAutoCompleteTextView implements SkinCompatSupportable {
+public class SkinCompatMultiAutoCompleteTextView extends AppCompatMultiAutoCompleteTextView implements SkinCompatSupportable, SkinableTextView {
     private static final int[] TINT_ATTRS = {
             android.R.attr.popupBackground
     };
@@ -93,6 +97,53 @@ public class SkinCompatMultiAutoCompleteTextView extends AppCompatMultiAutoCompl
         if (mTextHelper != null) {
             mTextHelper.onSetCompoundDrawablesWithIntrinsicBounds(left, top, right, bottom);
         }
+    }
+
+    @Override
+    public void setTextColor(@ColorInt int color) {
+        super.setTextColor(color);
+        if (mTextHelper != null) {
+            mTextHelper.onSetTextColor();
+        }
+    }
+
+    @Override
+    public void setTextColor(ColorStateList colors) {
+        super.setTextColor(colors);
+        if (mTextHelper != null) {
+            mTextHelper.onSetTextColor();
+        }
+    }
+
+    @Override
+    public void setSkinTextColor(int textColor) {
+        super.setTextColor(textColor);
+    }
+
+    @Override
+    public void setSkinTextColor(ColorStateList textColor) {
+        super.setTextColor(textColor);
+    }
+
+    @Override
+    public void setSkinHintTextColor(ColorStateList hintColor) {
+        super.setHintTextColor(hintColor);
+    }
+
+    @Override
+    public void setSkinHighlightColor(int highlightColor) {
+        super.setHighlightColor(highlightColor);
+    }
+
+    @Override
+    public void setSkinCompoundDrawablesWithIntrinsicBounds(Drawable left, Drawable top, Drawable right, Drawable bottom) {
+        super.setCompoundDrawablesWithIntrinsicBounds(left, top, right, bottom);
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
+    @Override
+    public void setSkinCompoundDrawablesRelativeWithIntrinsicBounds(Drawable start, Drawable top, Drawable end, Drawable bottom) {
+        super.setCompoundDrawablesRelativeWithIntrinsicBounds(start, top, end, bottom);
     }
 
     @Override

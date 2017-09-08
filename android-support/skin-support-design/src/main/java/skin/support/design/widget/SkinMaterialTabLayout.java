@@ -5,6 +5,7 @@ import android.content.res.ColorStateList;
 import android.content.res.TypedArray;
 import android.support.design.widget.TabLayout;
 import android.util.AttributeSet;
+import android.util.Log;
 
 import skin.support.content.res.SkinCompatTypedArray;
 import skin.support.content.res.SkinCompatTypedValue;
@@ -31,7 +32,7 @@ public class SkinMaterialTabLayout extends TabLayout implements SkinCompatSuppor
 
     public SkinMaterialTabLayout(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        SkinCompatTypedArray.obtain(context, attrs, R.styleable.TabLayout, defStyleAttr)
+        SkinCompatTypedArray.obtain(context, attrs, R.styleable.TabLayout, defStyleAttr, R.style.Widget_Design_TabLayout)
                 .getValue(R.styleable.TabLayout_tabIndicatorColor, mTabIndicatorColorTypeValue)
                 .getValue(R.styleable.TabLayout_tabTextAppearance, mTabTextAppearanceTypeValue)
                 .getValue(R.styleable.TabLayout_tabTextColor, mTabTextColorsTypeValue)
@@ -45,21 +46,21 @@ public class SkinMaterialTabLayout extends TabLayout implements SkinCompatSuppor
         if (indicatorColor != 0) {
             setSelectedTabIndicatorColor(indicatorColor);
         }
+        ColorStateList textColors;
         if (mTabTextColorsTypeValue.isTypeNull()) {
-            TypedArray a = mTabTextAppearanceTypeValue.obtainStyledAttributes(R.styleable.SkinTextAppearance);
-            if (a.hasValue(R.styleable.SkinTextAppearance_android_textColor)) {
-                setTabTextColors(a.getColorStateList(R.styleable.SkinTextAppearance_android_textColor));
-            }
+            TypedArray a = mTabTextAppearanceTypeValue.obtainStyledAttributes(R.styleable.SkinTextAppearance, R.style.TextAppearance_Design_Tab);
+            textColors = a.getColorStateList(R.styleable.SkinTextAppearance_android_textColor);
             a.recycle();
         } else {
-            ColorStateList textColors = mTabTextColorsTypeValue.getColorStateList();
-            if (textColors != null) {
+            textColors = mTabTextColorsTypeValue.getColorStateList();
+        }
+        if (textColors != null) {
+            int selectedTextColor = mTabSelectedTextColorTypeValue.getColor();
+            if (selectedTextColor != 0) {
+                setTabTextColors(textColors.getDefaultColor(), selectedTextColor);
+            } else {
                 setTabTextColors(textColors);
             }
-        }
-        int selectedTextColor = mTabSelectedTextColorTypeValue.getColor();
-        if (getTabTextColors() != null) {
-            setTabTextColors(getTabTextColors().getDefaultColor(), selectedTextColor);
         }
     }
 

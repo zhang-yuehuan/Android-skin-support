@@ -6,7 +6,6 @@ import android.graphics.drawable.Drawable;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.RequiresApi;
 import android.util.AttributeSet;
-import android.widget.TextView;
 
 import skin.support.R;
 import skin.support.content.res.SkinCompatTypedArray;
@@ -22,7 +21,7 @@ public class SkinCompatTextHelperV17 extends SkinCompatTextHelper {
     private SkinCompatTypedValue mDrawableStartTypedValue = new SkinCompatTypedValue();
     private SkinCompatTypedValue mDrawableEndTypedValue = new SkinCompatTypedValue();
 
-    public SkinCompatTextHelperV17(TextView view) {
+    public SkinCompatTextHelperV17(SkinableTextView view) {
         super(view);
     }
 
@@ -65,7 +64,7 @@ public class SkinCompatTextHelperV17 extends SkinCompatTextHelper {
                 || drawableTop != null
                 || drawableEnd != null
                 || drawableBottom != null) {
-            mView.setCompoundDrawablesRelativeWithIntrinsicBounds(drawableStart, drawableTop, drawableEnd, drawableBottom);
+            mView.setSkinCompoundDrawablesRelativeWithIntrinsicBounds(drawableStart, drawableTop, drawableEnd, drawableBottom);
         }
     }
 
