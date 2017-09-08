@@ -57,8 +57,15 @@
                 android:background="@drawable/picture"
                 android:scaleType="fitXY" />
 
-            <MultiAutoCompleteTextView
+            <AutoCompleteTextView
                 android:id="@+id/auto"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:text="AutoCompleteTextView" />
+
+
+            <MultiAutoCompleteTextView
+                android:id="@+id/multi_auto"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 android:text="MultiAutoCompleteTextView" />
