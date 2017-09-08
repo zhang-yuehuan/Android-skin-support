@@ -1,6 +1,5 @@
 package theme.support.demo;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -17,13 +16,13 @@ import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import theme.support.demo.basic.BasicWidgetActivity;
+import theme.support.demo.basic.WidgetActivity;
 
 public class MainActivity extends BaseActivity {
     private ListView mListView;
     private Context mContext = this;
     private final String[] mItems = {"基础控件"}; //, "Material Design", "ConstraintLayout", "FlycoTabLayout", "AlertDialog"
-    private final Class<?>[] mClasses = {BasicWidgetActivity.class};//MainActivity.class, MaterialDesignActivity.class, ConstraintLayoutActivity.class,
+    private final Class<?>[] mClasses = {WidgetActivity.class};//MainActivity.class, MaterialDesignActivity.class, ConstraintLayoutActivity.class,
 //            SimpleHomeActivity.class, AlertDialogActivity.class};
 
     @Override

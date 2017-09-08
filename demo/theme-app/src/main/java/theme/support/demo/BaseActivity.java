@@ -42,12 +42,13 @@ public class BaseActivity extends AppCompatActivity {
             case R.id.clear_all:
                 SkinCompatManager.getInstance().restoreDefaultTheme();
                 return true;
+            case R.id.build:
+            case R.id.build_in:
+                SkinCompatManager.getInstance().loadSkin("white", SkinCompatManager.SKIN_LOADER_STRATEGY_BUILD_IN);
+                return true;
             case R.id.plug:
             case R.id.plug_in:
                 SkinCompatManager.getInstance().loadSkin("night.theme", SkinCompatManager.SKIN_LOADER_STRATEGY_ASSETS);
-                return true;
-            case R.id.build_in:
-                SkinCompatManager.getInstance().loadSkin("white", SkinCompatManager.SKIN_LOADER_STRATEGY_BUILD_IN);
                 return true;
         }
         return false;

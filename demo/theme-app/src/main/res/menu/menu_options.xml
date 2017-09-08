@@ -8,6 +8,11 @@
         app:showAsAction="always" />
 
     <item
+        android:id="@+id/build"
+        android:title="build-in"
+        app:showAsAction="always" />
+
+    <item
         android:id="@+id/plug"
         android:title="plug-in"
         app:showAsAction="always" />

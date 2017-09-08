@@ -20,7 +20,7 @@
             </intent-filter>
         </activity>
 
-        <activity android:name="theme.support.demo.basic.BasicWidgetActivity" />
+        <activity android:name="theme.support.demo.basic.WidgetActivity" />
 
     </application>
 
