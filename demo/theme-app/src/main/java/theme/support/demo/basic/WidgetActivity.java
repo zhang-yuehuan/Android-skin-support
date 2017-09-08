@@ -13,7 +13,7 @@ import theme.support.demo.BaseActivity;
 import theme.support.demo.R;
 import theme.support.demo.TabFragmentPagerAdapter;
 import theme.support.demo.basic.fragment.BasicWidgetFragment;
-import theme.support.demo.basic.fragment.CardViewFragment;
+import theme.support.demo.basic.fragment.SupportWidgetFragment;
 
 public class WidgetActivity extends BaseActivity {
     @Override
@@ -27,7 +27,7 @@ public class WidgetActivity extends BaseActivity {
     private void configFragments() {
         List<Fragment> list = new ArrayList<>();
         list.add(new BasicWidgetFragment());
-        list.add(new CardViewFragment());
+        list.add(new SupportWidgetFragment());
 //        list.add(new TFragment());
 //        list.add(new LastFragment());
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
@@ -35,7 +35,7 @@ public class WidgetActivity extends BaseActivity {
         viewPager.setAdapter(new TabFragmentPagerAdapter(getSupportFragmentManager(), list));
         List<String> listTitle = new ArrayList<>();
         listTitle.add("Basic Widget");
-        listTitle.add("CardView");
+        listTitle.add("Support Widget");
 //        listTitle.add("List");
 //        listTitle.add("第三方库控件");
         TabFragmentPagerAdapter tabFragmentPagerAdapter = new TabFragmentPagerAdapter(getSupportFragmentManager(), list, listTitle);

@@ -8,11 +8,11 @@ import android.view.ViewGroup;
 
 import theme.support.demo.R;
 
-public class CardViewFragment extends Fragment {
+public class SupportWidgetFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_card_view, null);
+        View view = inflater.inflate(R.layout.fragment_support_widget, null);
         return view;
     }
 }
