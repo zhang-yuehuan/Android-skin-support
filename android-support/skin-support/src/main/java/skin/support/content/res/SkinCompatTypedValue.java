@@ -7,6 +7,8 @@ import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 
+import skin.support.widget.SkinCompatDrawableManager;
+
 import static skin.support.widget.SkinCompatHelper.INVALID_ID;
 
 public class SkinCompatTypedValue {
@@ -154,6 +156,27 @@ public class SkinCompatTypedValue {
             }
         }
         return drawable;
+    }
+
+    public ColorStateList getTintList() {
+        ColorStateList tint = null;
+        if (!isValid()) {
+            return null;
+        }
+        if (isTypeNull()) {
+            TypedArray a;
+            if (defStyleAttr != INVALID_ID || defStyleRes != INVALID_ID) {
+                a = context.obtainStyledAttributes(set, attrs, defStyleAttr, defStyleRes);
+            } else {
+                a = context.obtainStyledAttributes(attrs);
+            }
+            if (a.hasValue(index)) {
+                int resourceId = a.getResourceId(index, INVALID_ID);
+                tint = SkinCompatDrawableManager.get().getTintList(context, resourceId);
+            }
+            a.recycle();
+        }
+        return tint;
     }
 
     public TypedArray obtainStyledAttributes(int[] as) {
