@@ -17,12 +17,13 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import theme.support.demo.basic.WidgetActivity;
+import theme.support.demo.mdtab.MaterialDesignActivity;
 
 public class MainActivity extends BaseActivity {
     private ListView mListView;
     private Context mContext = this;
-    private final String[] mItems = {"基础控件"}; //, "Material Design", "ConstraintLayout", "FlycoTabLayout", "AlertDialog"
-    private final Class<?>[] mClasses = {WidgetActivity.class};//MainActivity.class, MaterialDesignActivity.class, ConstraintLayoutActivity.class,
+    private final String[] mItems = {"基础控件", "Material Design"}; //, "ConstraintLayout", "FlycoTabLayout", "AlertDialog"
+    private final Class<?>[] mClasses = {WidgetActivity.class, MaterialDesignActivity.class};//, ConstraintLayoutActivity.class,
 //            SimpleHomeActivity.class, AlertDialogActivity.class};
 
     @Override

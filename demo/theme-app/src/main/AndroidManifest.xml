@@ -22,6 +22,14 @@
 
         <activity android:name="theme.support.demo.basic.WidgetActivity" />
 
+        <activity
+            android:name="theme.support.demo.mdtab.CollapsingToolbarLayoutActivity"
+            android:label="CollapsingToolbarLayoutActivity" />
+
+        <activity
+            android:name="theme.support.demo.mdtab.MaterialDesignActivity"
+            android:label="Material Design" />
+
     </application>
 
 </manifest>
