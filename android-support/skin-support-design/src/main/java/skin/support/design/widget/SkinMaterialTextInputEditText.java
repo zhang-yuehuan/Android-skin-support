@@ -90,16 +90,6 @@ public class SkinMaterialTextInputEditText extends TextInputEditText implements 
     }
 
     @Override
-    public void setSkinTextColor(int textColor) {
-        super.setTextColor(textColor);
-    }
-
-    @Override
-    public void setSkinTextColor(ColorStateList textColor) {
-        super.setTextColor(textColor);
-    }
-
-    @Override
     public void setTextColor(@ColorInt int color) {
         super.setTextColor(color);
         if (mTextHelper != null) {
@@ -113,6 +103,24 @@ public class SkinMaterialTextInputEditText extends TextInputEditText implements 
         if (mTextHelper != null) {
             mTextHelper.onSetTextColor();
         }
+    }
+
+    @Override
+    public void setError(CharSequence error, Drawable icon) {
+        super.setError(error, icon);
+        if (mTextHelper != null) {
+            mTextHelper.onSetError(error);
+        }
+    }
+
+    @Override
+    public void setSkinTextColor(int textColor) {
+        super.setTextColor(textColor);
+    }
+
+    @Override
+    public void setSkinTextColor(ColorStateList textColor) {
+        super.setTextColor(textColor);
     }
 
     @Override

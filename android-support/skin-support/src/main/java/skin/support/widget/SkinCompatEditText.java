@@ -102,6 +102,14 @@ public class SkinCompatEditText extends AppCompatEditText implements SkinCompatS
     }
 
     @Override
+    public void setError(CharSequence error, Drawable icon) {
+        super.setError(error, icon);
+        if (mTextHelper != null) {
+            mTextHelper.onSetError(error);
+        }
+    }
+
+    @Override
     public void setSkinTextColor(int textColor) {
         super.setTextColor(textColor);
     }

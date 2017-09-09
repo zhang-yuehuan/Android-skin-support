@@ -73,6 +73,9 @@ public class SkinMaterialTextInputLayout extends TextInputLayout implements Skin
     }
 
     private void applyCounterTextAppearanceResource() {
+        if (mCounterTextAppearanceTypedValue == null) {
+            return;
+        }
         TypedArray a = mCounterTextAppearanceTypedValue.obtainStyledAttributes(R.styleable.SkinTextAppearance);
         int counterTextColor = a.getColor(R.styleable.SkinTextAppearance_android_textColor, 0);
         if (counterTextColor != 0) {
@@ -112,7 +115,7 @@ public class SkinMaterialTextInputLayout extends TextInputLayout implements Skin
     }
 
     private void applyErrorTextAppearanceResource() {
-        TypedArray a = mCounterTextAppearanceTypedValue.obtainStyledAttributes(R.styleable.SkinTextAppearance);
+        TypedArray a = mErrorTextAppearanceTypedValue.obtainStyledAttributes(R.styleable.SkinTextAppearance);
         int errorTextColor = a.getColor(R.styleable.SkinTextAppearance_android_textColor, 0);
         if (errorTextColor != 0) {
             TextView errorView = getErrorView();

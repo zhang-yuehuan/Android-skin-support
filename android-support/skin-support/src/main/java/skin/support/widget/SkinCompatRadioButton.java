@@ -101,6 +101,14 @@ public class SkinCompatRadioButton extends AppCompatRadioButton implements SkinC
     }
 
     @Override
+    public void setError(CharSequence error, Drawable icon) {
+        super.setError(error, icon);
+        if (mTextHelper != null) {
+            mTextHelper.onSetError(error);
+        }
+    }
+
+    @Override
     public void setSkinTextColor(int textColor) {
         super.setTextColor(textColor);
     }

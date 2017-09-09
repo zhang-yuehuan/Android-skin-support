@@ -21,6 +21,8 @@
         <attr name="android:drawableStart" />
         <attr name="android:drawableEnd" />
         <attr name="android:textAppearance" />
+        <attr name="android:errorMessageBackground" />
+        <attr name="android:errorMessageAboveBackground" />
     </declare-styleable>
 
     <declare-styleable name="SkinTextAppearance">
