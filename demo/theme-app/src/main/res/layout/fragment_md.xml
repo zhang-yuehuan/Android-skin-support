@@ -35,36 +35,6 @@
                     android:padding="5dp" />
             </android.support.design.widget.TextInputLayout>
 
-            <Button
-                android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                android:text="CollapsingToolbarLayout_CoordinatorLayout" />
-
-            <Button
-                android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                android:text="CollapsingToolbarLayout_CoordinatorLayout" />
-
-            <Button
-                android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                android:text="CollapsingToolbarLayout_CoordinatorLayout" />
-
-            <Button
-                android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                android:text="CollapsingToolbarLayout_CoordinatorLayout" />
-
-            <Button
-                android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                android:text="CollapsingToolbarLayout_CoordinatorLayout" />
-
-            <Button
-                android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                android:text="CollapsingToolbarLayout_CoordinatorLayout" />
-
             <android.support.design.widget.TextInputLayout
                 android:id="@+id/textInputLayout2"
                 android:layout_width="match_parent"
